@@ -2,7 +2,7 @@ import { z } from "zod";
 import { defineCommand, inputFailure } from "../runtime/command";
 import listCategories from "../operations/listCategories";
 import searchProducts from "../operations/searchProducts";
-import { apiDate, bookingUrl, clock } from "../lib/links";
+import { apiDate, bookingUrl, clock, kroner } from "../lib/links";
 import { areaAt } from "../lib/cph-boundary";
 
 const MAX_PAGES = 5;
@@ -53,8 +53,8 @@ export default defineCommand({
             return {
               name: p.name.trim(),
               type: p.type ?? null,
-              priceMinDKK: p.rangePriceMin ?? null,
-              priceMaxDKK: p.rangePriceMax ?? null,
+              priceMinDKK: kroner(p.rangePriceMin),
+              priceMaxDKK: kroner(p.rangePriceMax),
               times,
               url: bookingUrl(f.slug, p.slug),
             };

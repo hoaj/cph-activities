@@ -1,5 +1,17 @@
 import { describe, expect, test } from "bun:test";
-import { apiDate, bookingUrl, clock } from "../src/lib/links";
+import { apiDate, bookingUrl, clock, kroner } from "../src/lib/links";
+
+describe("kroner", () => {
+  test("whole kroner, as wannasport averages prices into fractions", () => {
+    expect(kroner(186.66666666666666)).toBe(187);
+    expect(kroner(110)).toBe(110);
+    expect(kroner(0)).toBe(0);
+  });
+  test("no price stays null", () => {
+    expect(kroner(null)).toBeNull();
+    expect(kroner(undefined)).toBeNull();
+  });
+});
 
 describe("bookingUrl", () => {
   test("the product page for a venue and court", () => {
