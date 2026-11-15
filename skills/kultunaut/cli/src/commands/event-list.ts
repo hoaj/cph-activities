@@ -3,10 +3,11 @@ import { defineCommand, inputFailure } from "../runtime/command";
 import listEvents from "../operations/listEvents";
 import site from "../site";
 import { parseWhen } from "../lib/when";
+import { firstPageAtOrAfter } from "../lib/paging";
 
 const AREA = "Kbh. og Frederiksberg"; // Copenhagen here means Københavns + Frederiksberg Kommune
 const PAGE_SIZE = 12;
-const MAX_PAGES = 20;
+const MAX_REQUESTS = 30; // probes and pages together
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "use YYYY-MM-DD");
 const clock = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "use HH:MM");
 const today = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Copenhagen" });
@@ -42,8 +43,29 @@ export default defineCommand({
       genre = known.find((g) => g.toLowerCase() === args.genre!.toLowerCase());
       if (!genre) inputFailure(`Unknown --genre "${args.genre}". Genres: ${known.join(", ")}.`);
     }
-    for (let page = 0; page < MAX_PAGES; page++) {
-      const r = await call(listEvents, { ...base, ...(genre ? { Genre: genre } : {}), startnr: String(page * PAGE_SIZE + 1) });
+    let requests = 0;
+    const fetchPage = async (page: number) => {
+      requests++;
+      return call(listEvents, { ...base, ...(genre ? { Genre: genre } : {}), startnr: String(page * PAGE_SIZE + 1) });
+    };
+    // The day is in start-time order and can hold 600+ rows: for a late --from-time on one day, search for
+    // the page the time falls on instead of paging from the morning.
+    let startPage = 0;
+    let cache = new Map<number, Awaited<ReturnType<typeof fetchPage>>>();
+    if (args.fromTime && from === to && !args.includeOngoing) {
+      const found = await firstPageAtOrAfter(async (page) => {
+        const r = await fetchPage(page);
+        const times = r.events.map((e) => {
+          const w = parseWhen(e.when, e.venue);
+          return w.multiDay ? null : w.startTime;
+        });
+        return { ...r, times, full: r.events.length >= PAGE_SIZE };
+      }, args.fromTime);
+      startPage = found.page;
+      cache = found.cache;
+    }
+    for (let page = startPage; requests < MAX_REQUESTS || cache.has(page); page++) {
+      const r = cache.get(page) ?? (await fetchPage(page));
       for (const e of r.events) {
         const w = parseWhen(e.when, e.venue);
         const ongoing = w.multiDay && w.startDate !== null && w.startDate < from;
@@ -74,8 +96,8 @@ export default defineCommand({
         break;
       }
       if (events.length >= args.limit) break;
-      if (page > 0 && page % 5 === 0) note(`read ${page + 1} pages, ${events.length} matches so far`);
     }
+    note(`${requests} requests`);
     return { total: events.length, complete, events: events.slice(0, args.limit) };
   },
 });

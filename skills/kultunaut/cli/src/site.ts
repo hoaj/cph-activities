@@ -6,7 +6,7 @@ export default defineSite({
   skill: "kultunaut",
   repo: "hoaj/cph-activities",
   version: "0.5.0",
-  generatedWith: "0.12.1",
+  generatedWith: "0.15.0",
   origin: "https://www.kultunaut.dk",
   graphqlPath: "/graphql",
   auth: "none" as Auth,
