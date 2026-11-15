@@ -11,13 +11,16 @@ const inside: Array<[string, number, number]> = [
   ["Amagerbrogade", 12.605, 55.662],
   ["Ørestad", 12.58, 55.63],
   ["Refshaleøen", 12.611, 55.693],
+  ["Frederiksberg Rådhus", 12.5326, 55.6786],
+  ["Frederiksberg Have", 12.527, 55.674],
+  ["Forum", 12.5525, 55.6818],
 ];
 const outside: Array<[string, number, number]> = [
-  ["Frederiksberg Rådhus", 12.5326, 55.6786],
   ["Gentofte", 12.552, 55.75],
   ["Hvidovre", 12.474, 55.642],
   ["Rødovre", 12.453, 55.68],
   ["Taastrup", 12.3, 55.65],
+  ["Kastrup", 12.645, 55.635],
 ];
 
 describe("Københavns Kommune boundary", () => {

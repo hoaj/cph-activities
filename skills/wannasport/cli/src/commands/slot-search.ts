@@ -12,14 +12,14 @@ const today = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/C
 
 export default defineCommand({
   name: "slot search",
-  summary: "Free times for a sport (padel, tennis, badminton, squash, swimming …) at venues in Københavns Kommune on one day, nearest first, with price and a link to book it yourself",
+  summary: "Free times for a sport (padel, tennis, badminton, squash, swimming …) at venues in Københavns and Frederiksberg Kommune on one day, nearest first, with price and a link to book it yourself",
   args: z.object({
     sport: z.string().min(1).describe("sport slug or Danish name from `sport list`, e.g. padel, tennis, badminton, fodbold"),
     date: isoDate.optional().describe("the day, YYYY-MM-DD (default: today)"),
     from: hhmm.optional().describe("earliest start time, HH:MM"),
     to: hhmm.optional().describe("latest start time, HH:MM"),
     radiusKm: z.coerce.number().int().min(1).max(50).default(10).describe("search radius from central Copenhagen in km (default 10)"),
-    includeOutside: z.boolean().default(false).describe("also venues outside Københavns Kommune (Frederiksberg, Gentofte, Hvidovre …)"),
+    includeOutside: z.boolean().default(false).describe("also venues outside Copenhagen (Københavns and Frederiksberg Kommune), e.g. Gentofte, Hvidovre, Tårnby …"),
     limit: z.coerce.number().int().min(1).max(100).default(20).describe("most venues to return, nearest first (default 20)"),
   }),
   uses: [listCategories, searchProducts],
