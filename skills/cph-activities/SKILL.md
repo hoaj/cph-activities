@@ -1,8 +1,8 @@
 ---
 name: cph-activities
-description: Use when the user asks what to do in Copenhagen in general terms (a date, an evening out, the weekend, something with friends or kids, "what's on Wednesday"), so the answer needs events and activities from several sources at once. Says which of this plugin's CLI skills to ask (kulturkbh, billetto, wannasport), and how to merge events two sources both list into one, keeping the most complete and most current details and every link.
+description: Use when the user asks what to do in Copenhagen in general terms (a date, an evening out, the weekend, something with friends or kids, "what's on Wednesday"), so the answer needs events and activities from several sources at once. Says which of this plugin's CLI skills to ask (kulturkbh, billetto, kultunaut, wannasport), and how to merge events several sources list into one, keeping the most complete and most current details and every link.
 ---
-<!-- version: 0.6.0 -->
+<!-- version: 0.7.0 -->
 
 # cph-activities: what to do in Copenhagen
 
@@ -12,20 +12,21 @@ This skill has no CLI of its own. It runs the plugin's CLI skills and combines w
 |---|---|---|---|
 | kulturKBH | `kulturkbh event list` | Hand-picked, mostly free or cheap culture: talks, exhibitions, music, film, theatre, food, runs | Link to the organiser's page |
 | Billetto | `billetto event search` | Small venues, culture houses, libraries, clubs, comedy, workshops, courses, church concerts | Link to the ticket page |
+| KultuNaut | `kultunaut event list` | The broadest calendar: concerts, theatre, exhibitions, talks, church, sport, children; no prices | Link to the event's KultuNaut page |
 | wannasport | `wannasport slot search --sport <slug>` (`sport list` for the slugs) | Free times to play a sport: padel, tennis, squash, table tennis, badminton … | Link to the venue's booking page |
 
-Every source is limited to Københavns Kommune by default (`area`), and none of them books anything: the user always books or buys through the `url`.
+Every source is limited to Københavns and Frederiksberg Kommune by default (`area`), and none of them books anything: the user always books or buys through the `url`.
 
 ## Which to ask
 
-- **Events on a day or a weekend:** `kulturkbh event list` and `billetto event search` with the same `--from`/`--to`. Pass `--free` to both when the user wants free things.
+- **Events on a day or a weekend:** `kulturkbh event list`, `billetto event search` and `kultunaut event list` with the same `--from`/`--to`. Pass `--free` to the first two when the user wants free things (KultuNaut has no prices). KultuNaut can return hundreds a day: narrow it with `--genre`, `--from-time`/`--to-time` and `--limit`.
 - **Something active or playful** (a date, a group of friends): also `wannasport slot search` for one to three sports that fit, with `--date` and an evening `--from`/`--to`. Don't ask for every sport: `sport list` has 41.
 - **One kind of thing** (comedy, jazz, a talk): Billetto takes `--query` and `--category`; kulturKBH takes `--type` and `--query`.
 - Run the independent commands in parallel.
 
-## Merging events from kulturKBH and Billetto
+## Merging events from kulturKBH, Billetto and KultuNaut
 
-The two often list the same event. One may be more current or say more (a price where the other says "Se billetsiden", a time where the other has none). Merge them into one event; never just drop one.
+The sources often list the same event. One may be more current or say more (a price where the other says "Se billetsiden", a time where the other has none). Merge them into one event; never just drop one.
 
 **Same event** when all of these hold:
 
@@ -33,7 +34,7 @@ The two often list the same event. One may be more current or say more (a price 
 2. Start times within 30 minutes of each other, or one of them has no time.
 3. The same title once both are normalised: lower case, accents kept, punctuation, emoji and quotes removed, whitespace collapsed. One title containing the other counts too ("Vin & Videnskab: Mikroorganismer" and "Vin & Videnskab: Mikroorganismer – nyt fra forskningsfronten").
 
-Don't require the same venue: the two sources name venues differently, and a venue that differs is exactly what the user must hear about.
+Don't require the same venue: the sources name venues differently, and a venue that differs is exactly what the user must hear about.
 
 **Probably the same event** when the titles differ but the date, the exact start time and the venue match (one venue name contains the other once normalised, e.g. "Københavns Museum" and "Københavns Museum, Stormgade 18"), and the price agrees if both give one. Merge these too, but say so: "kulturKBH calls it 'Juletræstænding', Billetto 'Syng julen ind' — same time and place, probably one event."
 
@@ -42,15 +43,15 @@ Don't require the same venue: the two sources name venues differently, and a ven
 | Field | Keep |
 |---|---|
 | time | an exact time over none |
-| price | a number or range over a pointer ("Se billetsiden", "Se eventet"); "free" from either |
+| price | a number or range over a pointer ("Se billetsiden", "Se eventet"); "free" from either; KultuNaut has no price, so it comes from the others |
 | description | the longer one |
 | venue and address | the one with a street and postcode |
 | on sale / sold out | Billetto's (it is the ticket system) |
-| links | both: the ticket link first, then the other as "more info" |
+| links | every source's: the ticket link first, then the others as "more info" |
 
-**When they disagree** on time, price or venue, Billetto's value leads, because it is where tickets are sold and so usually the most current. Show both and say which source says what, e.g. "Billetto: Chr. Hansen Auditorium; kulturKBH: Universitetets Festsal, Frue Plads 4 — check the ticket page." Never pick one silently.
+**When they disagree** (Billetto, kulturKBH or KultuNaut) on time, price or venue, Billetto's value leads, because it is where tickets are sold and so usually the most current. Show the values and say which source says what, e.g. "Billetto: Chr. Hansen Auditorium; kulturKBH: Universitetets Festsal, Frue Plads 4 — check the ticket page." Never pick one silently.
 
-Keep a `sources` list on every merged event (`kulturkbh`, `billetto`), so the user can see that two sources confirm it.
+Keep a `sources` list on every merged event (`kulturkbh`, `billetto`, `kultunaut`), so the user can see which sources confirm it.
 
 ## Answering
 

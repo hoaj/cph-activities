@@ -1,0 +1,47 @@
+{
+  "task": "explore",
+  "explore": true,
+  "startPath": "/perl/arrlist/type-nynaut",
+  "write": false,
+  "pages": [
+    {
+      "path": "/perl/arrlist/type-nynaut",
+      "document": "GET /perl/arrlist/type-nynaut",
+      "operations": [
+        "POST /nautlog"
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "operation": "GET /perl/arrlist/type-nynaut",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "www.kultunaut.dk",
+      "path": "/perl/arrlist/type-nynaut",
+      "file": "GET-perl-arrlist-type-nynaut.shape.json",
+      "pages": [
+        "/perl/arrlist/type-nynaut"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /nautlog",
+      "kind": "rest",
+      "effect": "write",
+      "method": "POST",
+      "host": "www.kultunaut.dk",
+      "path": "/nautlog",
+      "file": "POST-nautlog.shape.json",
+      "pages": [
+        "/perl/arrlist/type-nynaut"
+      ],
+      "seen": 1,
+      "aborted": 1
+    }
+  ]
+}

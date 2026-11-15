@@ -1,0 +1,21 @@
+// The site this CLI skill wraps. Public, no sign-in.
+import { defineSite, type Auth } from "./runtime/site";
+
+export default defineSite({
+  plugin: "cph-activities",
+  skill: "kultunaut",
+  repo: "hoaj/cph-activities",
+  version: "0.7.0",
+  generatedWith: "0.15.0",
+  origin: "https://www.kultunaut.dk",
+  graphqlPath: "/graphql",
+  auth: "none" as Auth,
+  needsChrome: false,
+  // The page is server-rendered ISO-8859-1 HTML, read through an HTML Operation (operations/listEvents.ts);
+  // runtime/charset.ts decodes the encoding.
+  bootstrap: async () => ({ headers: {} }),
+  // Non-GET requests the pages send that change no data (token refresh, post-login), so
+  // check --writes lets them through; every other non-GET is aborted while a trigger runs.
+  readOnlyRequests: [],
+  accounts: async () => [],
+});

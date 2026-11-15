@@ -1,0 +1,1732 @@
+{
+  "operation": "GET /perl/arrlist/type-nynaut",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "www.kultunaut.dk",
+  "method": "GET",
+  "path": "/perl/arrlist/type-nynaut",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/html",
+      "headers": {
+        "connection": null,
+        "content-encoding": null,
+        "content-language": null,
+        "content-length": null,
+        "content-type": "text/html",
+        "date": null,
+        "keep-alive": null,
+        "link": null,
+        "p3p": null,
+        "server": null,
+        "vary": null
+      },
+      "body": {
+        "kind": "html",
+        "outline": [
+          {
+            "tag": "body",
+            "classes": [
+              "notranslate"
+            ],
+            "children": [
+              {
+                "tag": "div",
+                "classes": [
+                  "header_new"
+                ],
+                "attrs": [
+                  "aria-labelledby"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "wrap"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "logo"
+                        ],
+                        "attrs": [
+                          "onclick"
+                        ],
+                        "children": [
+                          {
+                            "tag": "a",
+                            "attrs": [
+                              "href"
+                            ],
+                            "children": [
+                              {
+                                "tag": "img",
+                                "attrs": [
+                                  "alt",
+                                  "height",
+                                  "src",
+                                  "width"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "h1",
+                            "id": "pagelogo",
+                            "classes": [
+                              "text_kultunaut"
+                            ],
+                            "attrs": [
+                              "aria-level"
+                            ],
+                            "text": true,
+                            "children": [
+                              {
+                                "tag": "span",
+                                "text": true
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "mid-flag-search",
+                          "noprint"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "language"
+                            ],
+                            "attrs": [
+                              "aria-label",
+                              "role"
+                            ],
+                            "children": [
+                              {
+                                "tag": "a",
+                                "id": "language",
+                                "attrs": [
+                                  "href",
+                                  "onclick"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "img",
+                                    "attrs": [
+                                      "alt",
+                                      "height",
+                                      "src",
+                                      "width"
+                                    ]
+                                  },
+                                  {
+                                    "tag": "span",
+                                    "text": true
+                                  },
+                                  {
+                                    "tag": "img",
+                                    "classes": [
+                                      "arrow_lang"
+                                    ],
+                                    "attrs": [
+                                      "alt",
+                                      "height",
+                                      "src",
+                                      "width"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "id": "flag",
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "attrs": [
+                                      "href"
+                                    ],
+                                    "text": true,
+                                    "many": true
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "icon_mobile"
+                            ],
+                            "attrs": [
+                              "aria-label",
+                              "role"
+                            ],
+                            "children": [
+                              {
+                                "tag": "a",
+                                "id": "search_icon_mb",
+                                "attrs": [
+                                  "href",
+                                  "onclick",
+                                  "title"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "i",
+                                    "classes": [
+                                      "fa-search",
+                                      "fas"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "mob-nav-icon"
+                                ],
+                                "attrs": [
+                                  "onclick"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "id": "icon_bar_mobile",
+                                    "classes": [
+                                      "cmn-toggle-switch",
+                                      "cmn-toggle-switch__htx"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "span",
+                                        "text": true
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "id": "right-search",
+                            "classes": [
+                              "right-search"
+                            ],
+                            "attrs": [
+                              "aria-label",
+                              "role"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "id": "backgroundOverlay",
+                                "attrs": [
+                                  "onclick"
+                                ]
+                              },
+                              {
+                                "tag": "form",
+                                "id": "search_form_emre",
+                                "attrs": [
+                                  "action",
+                                  "method"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "children": [
+                                      {
+                                        "tag": "input",
+                                        "attrs": [
+                                          "name",
+                                          "type",
+                                          "value"
+                                        ],
+                                        "type": "hidden"
+                                      },
+                                      {
+                                        "tag": "table",
+                                        "children": [
+                                          {
+                                            "tag": "tbody",
+                                            "children": [
+                                              {
+                                                "tag": "tr",
+                                                "children": [
+                                                  {
+                                                    "tag": "td",
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "children": [
+                                                          {
+                                                            "tag": "input",
+                                                            "id": "findarrangementer",
+                                                            "attrs": [
+                                                              "aria-label",
+                                                              "autocomplete",
+                                                              "name",
+                                                              "onfocus",
+                                                              "placeholder",
+                                                              "size",
+                                                              "type",
+                                                              "value"
+                                                            ],
+                                                            "type": "text"
+                                                          },
+                                                          {
+                                                            "tag": "input",
+                                                            "classes": [
+                                                              "soeg"
+                                                            ],
+                                                            "attrs": [
+                                                              "aria-label",
+                                                              "type",
+                                                              "value"
+                                                            ],
+                                                            "type": "submit"
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "id": "suggest-box",
+                                "classes": [
+                                  "suggest-box"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "children": [
+                                      {
+                                        "tag": "i",
+                                        "classes": [
+                                          "fa-circle",
+                                          "fas"
+                                        ],
+                                        "attrs": [
+                                          "aria-hidden"
+                                        ]
+                                      },
+                                      {
+                                        "tag": "a",
+                                        "classes": [
+                                          "kantdark"
+                                        ],
+                                        "attrs": [
+                                          "href"
+                                        ],
+                                        "text": true
+                                      }
+                                    ],
+                                    "many": true
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "ads-top",
+                  "noprint"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "id": "topbanner",
+                    "classes": [
+                      "noprint"
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "id": "nautpagebig",
+                "classes": [
+                  "xxgoog-trans-section"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "left-side",
+                      "noprint",
+                      "notranslate"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "left-side-nav"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "nautbox",
+                              "nautbox:id"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "boxtop"
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "boxcontent"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "nautnavi"
+                                    ],
+                                    "attrs": [
+                                      "aria-label",
+                                      "role"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "id": "menu_search",
+                                        "classes": [
+                                          "nautnavi1"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "a",
+                                            "attrs": [
+                                              "href",
+                                              "title"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "text": true
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "menu_avanced",
+                                            "classes": [
+                                              "nautnavi2"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "href",
+                                                  "title"
+                                                ],
+                                                "text": true
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "menu_places",
+                                            "classes": [
+                                              "nautnavi2"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "href",
+                                                  "title"
+                                                ],
+                                                "text": true
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "menu_organizers",
+                                            "classes": [
+                                              "nautnavi2"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "href",
+                                                  "title"
+                                                ],
+                                                "text": true
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "menu_film",
+                                            "classes": [
+                                              "nautnavi2"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "href",
+                                                  "title"
+                                                ],
+                                                "text": true
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "menu_likes",
+                                            "classes": [
+                                              "nautnavi2"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "href",
+                                                  "title"
+                                                ],
+                                                "text": true
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "id": "menu_addevent",
+                                        "classes": [
+                                          "nautnavi1"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "a",
+                                            "attrs": [
+                                              "href",
+                                              "title"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "text": true
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "menu_editevent",
+                                            "classes": [
+                                              "nautnavi2"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "href",
+                                                  "title"
+                                                ],
+                                                "text": true
+                                              }
+                                            ],
+                                            "many": true
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "menu_login",
+                                            "classes": [
+                                              "nautnavi2"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "href",
+                                                  "title"
+                                                ],
+                                                "text": true
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "id": "menu_getdata",
+                                        "classes": [
+                                          "nautnavi1"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "a",
+                                            "attrs": [
+                                              "href",
+                                              "title"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "text": true
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "menu_widget",
+                                            "classes": [
+                                              "nautnavi2"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "href",
+                                                  "title"
+                                                ],
+                                                "text": true
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "menu_examples",
+                                            "classes": [
+                                              "nautnavi2"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "href",
+                                                  "title"
+                                                ],
+                                                "text": true
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "id": ":id"
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "boxbottom"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "hidden-box-mobile",
+                                  "nautbox",
+                                  "nautbox:id",
+                                  "nautbox_black"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "boxcontent"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "boxinnercontent"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "children": [
+                                              {
+                                                "tag": "p",
+                                                "classes": [
+                                                  "dato_left"
+                                                ],
+                                                "text": true
+                                              },
+                                              {
+                                                "tag": "span",
+                                                "classes": [
+                                                  "nautmstor"
+                                                ],
+                                                "text": true
+                                              },
+                                              {
+                                                "tag": "br"
+                                              },
+                                              {
+                                                "tag": "span",
+                                                "classes": [
+                                                  "arrangementer"
+                                                ],
+                                                "text": true
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ],
+                            "many": true
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "fosider_left",
+                              "hidden-box-mobile"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "forside-list"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "nyhedbox"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "children": [
+                                          {
+                                            "tag": "div"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "nohandheld"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "an-unit"
+                                ]
+                              }
+                            ],
+                            "many": true
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "navbar-toggle"
+                        ],
+                        "attrs": [
+                          "onclick",
+                          "type"
+                        ],
+                        "children": [
+                          {
+                            "tag": "span",
+                            "classes": [
+                              "icon-bar"
+                            ],
+                            "many": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "nautpage"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "id": "navbarToggle",
+                        "classes": [
+                          "container-fluid"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "mid-side"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "mid-content",
+                                  "printbredde",
+                                  "translate"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "id": "nautcontent",
+                                        "classes": [
+                                          "arrlist",
+                                          "nautcontent"
+                                        ],
+                                        "attrs": [
+                                          "role"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "noprint"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "notranslate"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "h2",
+                                                    "classes": [
+                                                      "title_form"
+                                                    ],
+                                                    "text": true
+                                                  },
+                                                  {
+                                                    "tag": "form",
+                                                    "classes": [
+                                                      "arrlist-search",
+                                                      "topmenu"
+                                                    ],
+                                                    "attrs": [
+                                                      "action",
+                                                      "method",
+                                                      "name",
+                                                      "role"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "input",
+                                                        "attrs": [
+                                                          "name",
+                                                          "type",
+                                                          "value"
+                                                        ],
+                                                        "type": "hidden"
+                                                      },
+                                                      {
+                                                        "tag": "div",
+                                                        "id": "sort-row",
+                                                        "children": [
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "sort-left"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "sort-area"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "select",
+                                                                    "id": "area",
+                                                                    "attrs": [
+                                                                      "aria-label",
+                                                                      "multiselect-hide-x",
+                                                                      "multiselect-search",
+                                                                      "multiselect-single",
+                                                                      "name",
+                                                                      "size"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "option",
+                                                                        "attrs": [
+                                                                          "disabled",
+                                                                          "hidden",
+                                                                          "value"
+                                                                        ],
+                                                                        "text": true,
+                                                                        "many": true
+                                                                      }
+                                                                    ]
+                                                                  },
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "id": "modalNearMe",
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "div",
+                                                                        "text": true,
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "div",
+                                                                            "id": "nearmemapdiv"
+                                                                          },
+                                                                          {
+                                                                            "tag": "input",
+                                                                            "id": "nearmeradius",
+                                                                            "attrs": [
+                                                                              "name",
+                                                                              "onchange",
+                                                                              "value"
+                                                                            ]
+                                                                          },
+                                                                          {
+                                                                            "tag": "button",
+                                                                            "classes": [
+                                                                              "nautbutton"
+                                                                            ],
+                                                                            "attrs": [
+                                                                              "onclick"
+                                                                            ],
+                                                                            "text": true,
+                                                                            "many": true
+                                                                          }
+                                                                        ],
+                                                                        "many": true
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "sort-periode"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "date_picker"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "div",
+                                                                        "id": "naut-datepicker",
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "div",
+                                                                            "classes": [
+                                                                              "nautdate_data"
+                                                                            ],
+                                                                            "children": [
+                                                                              {
+                                                                                "tag": "div",
+                                                                                "classes": [
+                                                                                  "nautdate",
+                                                                                  "nautramme"
+                                                                                ],
+                                                                                "children": [
+                                                                                  {
+                                                                                    "tag": "div",
+                                                                                    "classes": [
+                                                                                      "button",
+                                                                                      "input-group"
+                                                                                    ],
+                                                                                    "children": [
+                                                                                      {
+                                                                                        "tag": "input",
+                                                                                        "id": "ArrStartdato",
+                                                                                        "attrs": [
+                                                                                          "aria-label",
+                                                                                          "name",
+                                                                                          "readonly",
+                                                                                          "type",
+                                                                                          "value"
+                                                                                        ],
+                                                                                        "type": "text"
+                                                                                      },
+                                                                                      {
+                                                                                        "tag": "input",
+                                                                                        "id": "ArrSlutdato",
+                                                                                        "attrs": [
+                                                                                          "aria-label",
+                                                                                          "name",
+                                                                                          "readonly",
+                                                                                          "type",
+                                                                                          "value"
+                                                                                        ],
+                                                                                        "type": "text"
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ],
+                                                                                "many": true
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "right-part1",
+                                                                  "sort-genre"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "id": "pleaseHide3",
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "select",
+                                                                        "id": "Genre_kategori",
+                                                                        "attrs": [
+                                                                          "aria-label",
+                                                                          "multiple",
+                                                                          "multiselect-hide-x",
+                                                                          "multiselect-search",
+                                                                          "name",
+                                                                          "parentstate",
+                                                                          "placeholder",
+                                                                          "size"
+                                                                        ],
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "option",
+                                                                            "attrs": [
+                                                                              "value"
+                                                                            ],
+                                                                            "text": true,
+                                                                            "many": true
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "sort-liste"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "input",
+                                                                        "attrs": [
+                                                                          "onclick",
+                                                                          "type",
+                                                                          "value"
+                                                                        ],
+                                                                        "type": "submit"
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "img",
+                                                "attrs": [
+                                                  "alt",
+                                                  "height",
+                                                  "src",
+                                                  "width"
+                                                ],
+                                                "many": true
+                                              },
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "href"
+                                                ],
+                                                "text": true,
+                                                "many": true
+                                              },
+                                              {
+                                                "tag": "br",
+                                                "many": true
+                                              }
+                                            ],
+                                            "many": true
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "layout-arrlist",
+                                            "classes": [
+                                              "grid"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "noprint",
+                                                  "notranslate",
+                                                  "search-results-top"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "id": "nautorder",
+                                                        "classes": [
+                                                          "nautorder"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "label",
+                                                            "children": [
+                                                              {
+                                                                "tag": "select",
+                                                                "attrs": [
+                                                                  "aria-labelledby",
+                                                                  "name",
+                                                                  "onchange"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "option",
+                                                                    "attrs": [
+                                                                      "value"
+                                                                    ],
+                                                                    "text": true,
+                                                                    "many": true
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "btn-group",
+                                                          "layout-options"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "div",
+                                                            "id": "grid",
+                                                            "classes": [
+                                                              "btn",
+                                                              "btn-default",
+                                                              "btn-tab"
+                                                            ],
+                                                            "attrs": [
+                                                              "onclick",
+                                                              "title"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "i",
+                                                                "classes": [
+                                                                  "fa-th-large",
+                                                                  "fas"
+                                                                ]
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "div",
+                                                            "id": "list",
+                                                            "classes": [
+                                                              "btn",
+                                                              "btn-default",
+                                                              "btn-tab"
+                                                            ],
+                                                            "attrs": [
+                                                              "onclick",
+                                                              "title"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "i",
+                                                                "classes": [
+                                                                  "fa-list",
+                                                                  "fas"
+                                                                ]
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "div",
+                                                            "id": "map",
+                                                            "classes": [
+                                                              "btn",
+                                                              "btn-default",
+                                                              "btn-tab"
+                                                            ],
+                                                            "attrs": [
+                                                              "onclick",
+                                                              "title"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "i",
+                                                                "classes": [
+                                                                  "fa-map-marker-alt",
+                                                                  "fas"
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ],
+                                                    "many": true
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "noprint"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "result-count"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "span",
+                                                            "text": true,
+                                                            "children": [
+                                                              {
+                                                                "tag": "strong",
+                                                                "text": true
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "strong",
+                                                            "children": [
+                                                              {
+                                                                "tag": "span"
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "result-count-map"
+                                                        ],
+                                                        "text": true,
+                                                        "children": [
+                                                          {
+                                                            "tag": "strong",
+                                                            "text": true,
+                                                            "children": [
+                                                              {
+                                                                "tag": "span"
+                                                              }
+                                                            ],
+                                                            "many": true
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "clearfix"
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "id": "product-row",
+                                                "classes": [
+                                                  "arrlist",
+                                                  "products"
+                                                ],
+                                                "attrs": [
+                                                  "data-coloumn-class",
+                                                  "data-page"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "col-lg-6",
+                                                      "col-md-6",
+                                                      "col-sm-6",
+                                                      "col-xs-6",
+                                                      "product"
+                                                    ],
+                                                    "attrs": [
+                                                      "data-arrnr"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "many": true,
+                                                        "children": [
+                                                          {
+                                                            "tag": "a",
+                                                            "classes": [
+                                                              "product-content"
+                                                            ],
+                                                            "attrs": [
+                                                              "data-id",
+                                                              "data-position",
+                                                              "data-price",
+                                                              "href"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "kult-image"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "img",
+                                                                    "attrs": [
+                                                                      "alt",
+                                                                      "src"
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "arr-info"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "arr-genre"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "span",
+                                                                        "classes": [
+                                                                          "genre_cat",
+                                                                          "notranslate"
+                                                                        ],
+                                                                        "text": true
+                                                                      },
+                                                                      {
+                                                                        "tag": "h3",
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "strong",
+                                                                            "text": true
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  },
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "arr-description"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "span",
+                                                                        "text": true
+                                                                      }
+                                                                    ]
+                                                                  },
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "kult-month-day"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "time",
+                                                                        "text": true,
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "b",
+                                                                            "classes": [
+                                                                              "notranslate"
+                                                                            ],
+                                                                            "text": true
+                                                                          }
+                                                                        ]
+                                                                      },
+                                                                      {
+                                                                        "tag": "div",
+                                                                        "classes": [
+                                                                          "arrow_right",
+                                                                          "noprint"
+                                                                        ],
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "img",
+                                                                            "attrs": [
+                                                                              "alt",
+                                                                              "src"
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "c-husk",
+                                                              "naut-button",
+                                                              "noprint",
+                                                              "notranslate"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "nautrating"
+                                                                ],
+                                                                "attrs": [
+                                                                  "data-ratingid"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "like"
+                                                                    ],
+                                                                    "attrs": [
+                                                                      "aria-label",
+                                                                      "data-rating",
+                                                                      "role"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "div",
+                                                                        "classes": [
+                                                                          "likeinfo"
+                                                                        ],
+                                                                        "attrs": [
+                                                                          "aria-label",
+                                                                          "data-rating"
+                                                                        ]
+                                                                      },
+                                                                      {
+                                                                        "tag": "div",
+                                                                        "classes": [
+                                                                          "showrating"
+                                                                        ],
+                                                                        "attrs": [
+                                                                          "data-rating",
+                                                                          "onclick"
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ],
+                                                    "many": true
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "nautclicknext",
+                                                      "noprint"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "a",
+                                                        "attrs": [
+                                                          "data-nautclicknext",
+                                                          "href"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "span",
+                                                            "text": true
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "clear"
+                                                ]
+                                              },
+                                              {
+                                                "tag": "br"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "ads",
+                      "noprint"
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "newsbottom",
+                  "noprint"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "nyhedbox"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "children": [
+                          {
+                            "tag": "div"
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "nohandheld"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div"
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "footer",
+                  "noprint"
+                ],
+                "attrs": [
+                  "role"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "an-unit"
+                    ]
+                  },
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "wrap"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "left_ft"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "info_ft"
+                            ],
+                            "children": [
+                              {
+                                "tag": "h2",
+                                "text": true
+                              },
+                              {
+                                "tag": "p",
+                                "text": true
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "noprint"
+                            ],
+                            "children": [
+                              {
+                                "tag": "p",
+                                "classes": [
+                                  "nautlille"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "attrs": [
+                                      "href"
+                                    ],
+                                    "text": true,
+                                    "many": true
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "right_ft"
+                        ],
+                        "children": [
+                          {
+                            "tag": "img",
+                            "attrs": [
+                              "alt",
+                              "height",
+                              "src",
+                              "width"
+                            ]
+                          },
+                          {
+                            "tag": "p",
+                            "classes": [
+                              "text_right_ft"
+                            ],
+                            "text": true,
+                            "children": [
+                              {
+                                "tag": "a",
+                                "attrs": [
+                                  "href"
+                                ],
+                                "text": true,
+                                "many": true
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "naut-print-header"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0,
+  "html": true
+}

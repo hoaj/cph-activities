@@ -1,0 +1,73 @@
+{
+  "operation": "POST /nautlog",
+  "kind": "rest",
+  "effect": "write",
+  "resourceType": "ping",
+  "host": "www.kultunaut.dk",
+  "method": "POST",
+  "path": "/nautlog",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "content-type": "application/json",
+      "origin": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    },
+    "body": {
+      "kind": "json",
+      "shape": {
+        "type": "object",
+        "fields": {
+          "version": {
+            "type": "number"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "fields": {
+                "type": {
+                  "type": "string"
+                },
+                "hostname": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object",
+                  "fields": {
+                    "referrer": {
+                      "type": "string"
+                    }
+                  },
+                  "optional": [
+                    "referrer"
+                  ]
+                },
+                "table": {
+                  "type": "string"
+                },
+                "table_id": {
+                  "type": "number"
+                }
+              },
+              "optional": [
+                "table",
+                "table_id"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": [],
+  "seen": 1,
+  "aborted": 1
+}

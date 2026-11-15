@@ -1,7 +1,7 @@
 {
   "name": "cph-activities",
   "description": "Find events and things to do in Copenhagen, with links to book them yourself.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "author": {
     "name": "hoaj"
   },
@@ -15,6 +15,7 @@
     "./skills/cph-activities",
     "./skills/cph-activities-deploy",
     "./skills/cph-activities-feedback",
+    "./skills/kultunaut",
     "./skills/kulturkbh",
     "./skills/wannasport"
   ]
