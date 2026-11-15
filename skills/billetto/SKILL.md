@@ -2,7 +2,7 @@
 name: billetto
 description: Use when the user asks what is on in Copenhagen at small venues, culture houses, clubs, talks, workshops, courses or parties, or searches for an event by words, date, category or free entry. Searches Billetto (https://billetto.dk) around the city centre, soonest first, with a link to each event's page where the user buys tickets themselves. Needs Google Chrome, which it opens unseen to read the search settings billetto.dk's own page uses.
 ---
-<!-- version: 0.3.0 -->
+<!-- version: 0.4.0 -->
 
 # billetto
 
@@ -49,3 +49,4 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 - Anything the Commands table does not list: offer a feature request instead of improvising.
 - Bulk scraping or automated polling of the site.
 - Remote mode (`mcp --http` on a host from `cph-activities-deploy`): the container has no Chrome, which this skill needs to read billetto.dk's search settings. Run it on your own machine.
+- `area` comes from the event's coordinates and Københavns Kommune's own district boundaries, or from its postcode when it has no coordinates; events `outside` the municipality are left out unless `--include-outside`.

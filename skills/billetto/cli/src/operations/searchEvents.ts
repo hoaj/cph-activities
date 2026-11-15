@@ -45,6 +45,7 @@ export default defineOperation({
         location: z.string().nullish(),
         city: z.string().nullish(),
         postal_code: z.union([z.number(), z.string()]).nullish(),
+        _geoloc: z.object({ lat: z.number(), lng: z.number() }).nullish(),
         price: z.number().nullish(),
         price_range: z.string().nullish(),
         currency: z.string().nullish(),

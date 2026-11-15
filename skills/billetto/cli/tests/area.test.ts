@@ -3,7 +3,7 @@ import { areaOf, dayBoundary } from "../src/lib/area";
 
 describe("areaOf", () => {
   test("Københavns Kommune postcodes", () => {
-    for (const p of ["1000", "1440", "1799", "2100", "2150", "2200", "2300", "2400", "2450", "2500"]) expect(areaOf(p)).toBe("cph");
+    for (const p of ["1000", "1440", "1799", "2100", "2150", "2200", "2300", "2400", "2450", "2500", "2700", "2720"]) expect(areaOf(p)).toBe("cph");
   });
   test("Frederiksberg and other municipalities are outside", () => {
     for (const p of ["1800", "1999", "2000", "2635", "2770", "3050"]) expect(areaOf(p)).toBe("outside");
@@ -11,6 +11,8 @@ describe("areaOf", () => {
   test("no postcode or not a number is unknown", () => {
     expect(areaOf(null)).toBe("unknown");
     expect(areaOf("abc")).toBe("unknown");
+    expect(areaOf("0")).toBe("unknown");
+    expect(areaOf("999")).toBe("unknown");
   });
 });
 
