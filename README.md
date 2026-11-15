@@ -10,7 +10,7 @@ A plugin for coding agents (Claude Code, Cursor, Codex, GitHub Copilot CLI). Eac
 
 - `curl`, which macOS, Linux and Git Bash on Windows already have. The CLI binaries download over HTTPS from this repo's public releases, with no GitHub account.
 - [GitHub CLI](https://cli.github.com), logged in (`gh auth login`), only to report a problem with the Feedback skill, or to install from [`hoaj/cph-activities`](https://github.com/hoaj/cph-activities) if it is private (then you also need read access).
-- [Google Chrome](https://www.google.com/chrome/), for CLI skills that sign in to a site or have write commands. The skill tells you when it needs it.
+- [Google Chrome](https://www.google.com/chrome/), for CLI skills that sign in to a site or have write commands, and for `billetto`, which opens it unseen to read billetto.dk's search settings. The skill tells you when it needs it.
 - macOS (Apple silicon or Intel), Linux (x64 or arm64) or Windows x64. On Windows the install step runs in Git Bash.
 
 ## Install

@@ -1,0 +1,667 @@
+{
+  "operation": "POST /1/indexes/events/query",
+  "kind": "rest",
+  "effect": "write",
+  "allowedRead": true,
+  "resourceType": "xhr",
+  "host": "yneuy03z8q-dsn.algolia.net",
+  "method": "POST",
+  "path": "/1/indexes/events/query",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "content-type": "application/x-www-form-urlencoded",
+      "origin": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "x-algolia-agent": {
+          "type": "string"
+        },
+        "x-algolia-api-key": {
+          "type": "string"
+        },
+        "x-algolia-application-id": {
+          "type": "string"
+        }
+      }
+    },
+    "body": {
+      "kind": "form",
+      "shape": {
+        "type": "record",
+        "values": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "accept-encoding": null,
+        "access-control-allow-origin": null,
+        "access-control-expose-headers": null,
+        "cache-control": null,
+        "connection": null,
+        "content-disposition": null,
+        "content-encoding": null,
+        "content-length": null,
+        "content-type": "application/json",
+        "correlation-id": null,
+        "date": null,
+        "server": null,
+        "strict-transport-security": null,
+        "timing-allow-origin": null,
+        "transfer-encoding": null,
+        "x-alg-pt": null,
+        "x-content-type-options": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "object",
+          "fields": {
+            "hits": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "fields": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "subcategory": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "currency": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "venue_type": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "organization_id": {
+                    "type": "number"
+                  },
+                  "billetto_score": {
+                    "type": "null"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "name_truncated": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "price_range": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "uses_generic_billetto_image": {
+                    "type": "boolean"
+                  },
+                  "keywords": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "organizer_id": {
+                    "type": "number"
+                  },
+                  "organizer_image": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "brand": {
+                    "type": "string"
+                  },
+                  "stock": {
+                    "type": "number"
+                  },
+                  "on_sale": {
+                    "type": "boolean"
+                  },
+                  "total_clicks": {
+                    "type": "number"
+                  },
+                  "starts_at": {
+                    "type": "string"
+                  },
+                  "ends_at": {
+                    "type": "string"
+                  },
+                  "hide_end_date": {
+                    "type": "boolean"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "macroregion": {
+                    "type": "string"
+                  },
+                  "region": {
+                    "type": "string"
+                  },
+                  "subregion": {
+                    "type": "string"
+                  },
+                  "neighborhood": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "postal_code": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "location_slug": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "venue_name": {
+                    "type": "string"
+                  },
+                  "published_time": {
+                    "type": "number"
+                  },
+                  "created_at": {
+                    "type": "number"
+                  },
+                  "start_time": {
+                    "type": "number"
+                  },
+                  "end_time": {
+                    "type": "number"
+                  },
+                  "unique": {
+                    "type": "boolean"
+                  },
+                  "quick_buy": {
+                    "type": "boolean"
+                  },
+                  "major_purchase": {
+                    "type": "boolean"
+                  },
+                  "experience_more_enabled": {
+                    "type": "boolean"
+                  },
+                  "experience_more_code": {
+                    "type": "null"
+                  },
+                  "experience_more_limit": {
+                    "type": "null"
+                  },
+                  "promoted": {
+                    "type": "boolean"
+                  },
+                  "billetto_advertising_percentage": {
+                    "type": "number"
+                  },
+                  "bucket": {
+                    "type": "string"
+                  },
+                  "average_advertised_ticket_price": {
+                    "type": "number"
+                  },
+                  "time_zone": {
+                    "type": "string"
+                  },
+                  "year": {
+                    "type": "number"
+                  },
+                  "week_number": {
+                    "type": "number"
+                  },
+                  "weekend_event": {
+                    "type": "boolean"
+                  },
+                  "org_channel_discovery": {
+                    "type": "boolean"
+                  },
+                  "org_channel_email": {
+                    "type": "boolean"
+                  },
+                  "ba_tickets_sold": {
+                    "type": "number"
+                  },
+                  "ba_tickets_remaining": {
+                    "type": "number"
+                  },
+                  "ba_tickets_limit_reached": {
+                    "type": "boolean"
+                  },
+                  "short_header": {
+                    "type": "string"
+                  },
+                  "short_description": {
+                    "type": "string"
+                  },
+                  "video_url": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "square_banner": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "portrait_banner": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "alternative_banner": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "age_rating": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "billetto_weighting": {
+                    "type": "number"
+                  },
+                  "local_dates": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  "event_availability": {
+                    "type": "string"
+                  },
+                  "schema": {
+                    "type": "string"
+                  },
+                  "total_organizer_revenue": {
+                    "type": "string",
+                    "format": "numeric"
+                  },
+                  "premium": {
+                    "type": "boolean"
+                  },
+                  "eqs_score": {
+                    "type": "number"
+                  },
+                  "host_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  "_tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "culture_pass_enabled": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
+                  },
+                  "_geoloc": {
+                    "type": "object",
+                    "fields": {
+                      "lng": {
+                        "type": "number"
+                      },
+                      "lat": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "objectID": {
+                    "type": "string",
+                    "format": "numeric"
+                  },
+                  "_highlightResult": {
+                    "type": "object",
+                    "fields": {
+                      "category": {
+                        "type": "object",
+                        "fields": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "matchLevel": {
+                            "type": "string"
+                          },
+                          "matchedWords": {
+                            "type": "array"
+                          }
+                        }
+                      },
+                      "subcategory": {
+                        "type": "object",
+                        "fields": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "matchLevel": {
+                            "type": "string"
+                          },
+                          "matchedWords": {
+                            "type": "array"
+                          }
+                        }
+                      },
+                      "type": {
+                        "type": "object",
+                        "fields": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "matchLevel": {
+                            "type": "string"
+                          },
+                          "matchedWords": {
+                            "type": "array"
+                          }
+                        }
+                      },
+                      "name": {
+                        "type": "object",
+                        "fields": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "matchLevel": {
+                            "type": "string"
+                          },
+                          "matchedWords": {
+                            "type": "array"
+                          }
+                        }
+                      },
+                      "description": {
+                        "type": "object",
+                        "fields": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "matchLevel": {
+                            "type": "string"
+                          },
+                          "matchedWords": {
+                            "type": "array"
+                          }
+                        }
+                      },
+                      "brand": {
+                        "type": "object",
+                        "fields": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "matchLevel": {
+                            "type": "string"
+                          },
+                          "matchedWords": {
+                            "type": "array"
+                          }
+                        }
+                      },
+                      "city": {
+                        "type": "object",
+                        "fields": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "matchLevel": {
+                            "type": "string"
+                          },
+                          "matchedWords": {
+                            "type": "array"
+                          }
+                        }
+                      },
+                      "location_slug": {
+                        "type": "object",
+                        "fields": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "matchLevel": {
+                            "type": "string"
+                          },
+                          "matchedWords": {
+                            "type": "array"
+                          }
+                        }
+                      },
+                      "venue_name": {
+                        "type": "object",
+                        "fields": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "matchLevel": {
+                            "type": "string"
+                          },
+                          "matchedWords": {
+                            "type": "array"
+                          }
+                        }
+                      },
+                      "_tags": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "fields": {
+                            "value": {
+                              "type": "string"
+                            },
+                            "matchLevel": {
+                              "type": "string"
+                            },
+                            "matchedWords": {
+                              "type": "array"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "optional": [
+                      "_tags",
+                      "location_slug"
+                    ]
+                  }
+                }
+              }
+            },
+            "nbHits": {
+              "type": "number"
+            },
+            "page": {
+              "type": "number"
+            },
+            "nbPages": {
+              "type": "number"
+            },
+            "hitsPerPage": {
+              "type": "number"
+            },
+            "exhaustiveNbHits": {
+              "type": "boolean"
+            },
+            "exhaustive": {
+              "type": "object",
+              "fields": {
+                "nbHits": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "query": {
+              "type": "string"
+            },
+            "params": {
+              "type": "string"
+            },
+            "queryID": {
+              "type": "string"
+            },
+            "_automaticInsights": {
+              "type": "boolean"
+            },
+            "processingTimeMS": {
+              "type": "number"
+            },
+            "processingTimingsMS": {
+              "type": "object",
+              "fields": {
+                "_request": {
+                  "type": "object",
+                  "fields": {
+                    "queue": {
+                      "type": "number"
+                    },
+                    "roundTrip": {
+                      "type": "number"
+                    }
+                  },
+                  "optional": [
+                    "queue"
+                  ]
+                },
+                "total": {
+                  "type": "number"
+                },
+                "afterFetch": {
+                  "type": "object",
+                  "fields": {
+                    "format": {
+                      "type": "object",
+                      "fields": {
+                        "highlighting": {
+                          "type": "number"
+                        },
+                        "total": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "optional": [
+                "afterFetch"
+              ]
+            },
+            "serverTimeMS": {
+              "type": "number"
+            }
+          },
+          "optional": [
+            "serverTimeMS"
+          ]
+        }
+      }
+    }
+  ],
+  "seen": 6,
+  "aborted": 0
+}

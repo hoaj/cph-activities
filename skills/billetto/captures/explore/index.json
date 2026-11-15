@@ -1,0 +1,57 @@
+{
+  "task": "explore",
+  "explore": true,
+  "startPath": "/da",
+  "write": false,
+  "pages": [],
+  "operations": [
+    {
+      "operation": "POST /1/indexes/:id/query",
+      "kind": "rest",
+      "effect": "write",
+      "allowedRead": true,
+      "method": "POST",
+      "host": "yneuy03z8q-dsn.algolia.net",
+      "path": "/1/indexes/:id/query",
+      "file": "POST-1-indexes-id-query.shape.json",
+      "seen": 2,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /1/indexes/events/query",
+      "kind": "rest",
+      "effect": "write",
+      "allowedRead": true,
+      "method": "POST",
+      "host": "yneuy03z8q-dsn.algolia.net",
+      "path": "/1/indexes/events/query",
+      "file": "POST-1-indexes-events-query.shape.json",
+      "seen": 6,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /1/indexes/events_by_sponsored/query",
+      "kind": "rest",
+      "effect": "write",
+      "allowedRead": true,
+      "method": "POST",
+      "host": "yneuy03z8q-dsn.algolia.net",
+      "path": "/1/indexes/events_by_sponsored/query",
+      "file": "POST-1-indexes-events_by_sponsored-query.shape.json",
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /1/indexes/:id/queries",
+      "kind": "rest",
+      "effect": "write",
+      "allowedRead": true,
+      "method": "POST",
+      "host": "yneuy03z8q-dsn.algolia.net",
+      "path": "/1/indexes/:id/queries",
+      "file": "POST-1-indexes-id-queries.shape.json",
+      "seen": 1,
+      "aborted": 0
+    }
+  ]
+}
