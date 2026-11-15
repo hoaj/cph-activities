@@ -12,14 +12,14 @@ describe("postcodeOf", () => {
 });
 
 describe("areaOf", () => {
-  test("splits Københavns Kommune from Frederiksberg and the rest", () => {
+  test("splits Københavns and Frederiksberg Kommune from the rest", () => {
     expect(areaOf("1415")).toBe("cph");
     expect(areaOf("2450")).toBe("cph");
     expect(areaOf("2700")).toBe("cph"); // Brønshøj
     expect(areaOf("2720")).toBe("cph"); // Vanløse
     expect(areaOf("0")).toBe("unknown");
-    expect(areaOf("2000")).toBe("outside");
-    expect(areaOf("1850")).toBe("outside");
+    expect(areaOf("2000")).toBe("cph");
+    expect(areaOf("1850")).toBe("cph");
     expect(areaOf("2635")).toBe("outside");
     expect(areaOf(null)).toBe("unknown");
   });

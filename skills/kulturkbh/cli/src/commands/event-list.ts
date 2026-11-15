@@ -16,7 +16,7 @@ export default defineCommand({
     type: z.string().optional().describe("category, e.g. musik, foredrag, udstilling, film, teater, litteratur, mad, active"),
     query: z.string().optional().describe("words to find in the title or description"),
     free: z.boolean().default(false).describe("only events whose price says they are free"),
-    includeOutside: z.boolean().default(false).describe("also events outside Københavns Kommune (Frederiksberg, Louisiana …)"),
+    includeOutside: z.boolean().default(false).describe("also events outside Copenhagen (Københavns and Frederiksberg Kommune), e.g. Gentofte, Hvidovre, Tårnby …"),
     limit: z.coerce.number().int().min(1).max(500).default(50).describe("most events to return (default 50)"),
   }),
   uses: [listEvents],

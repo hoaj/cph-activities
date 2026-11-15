@@ -2,7 +2,7 @@
 name: billetto
 description: Use when the user asks what is on in Copenhagen at small venues, culture houses, clubs, talks, workshops, courses or parties, or searches for an event by words, date, category or free entry. Searches Billetto (https://billetto.dk) around the city centre, soonest first, with a link to each event's page where the user buys tickets themselves. Needs Google Chrome, which it opens unseen to read the search settings billetto.dk's own page uses.
 ---
-<!-- version: 0.5.0 -->
+<!-- version: 0.6.0 -->
 
 # billetto
 
@@ -16,7 +16,7 @@ description: Use when the user asks what is on in Copenhagen at small venues, cu
 <!-- commands:start -->
 | Command | Flags | Does |
 |---|---|---|
-| `billetto event search` | `[--query <query>]` words to search for (default: everything)<br>`[--from <from>]` first date, YYYY-MM-DD (default: today)<br>`[--to <to>]` last date, YYYY-MM-DD (default: no limit)<br>`[--category <category>]` Billetto category or subcategory, as printed in `category`/`subcategory` (e.g. music, rock, science)<br>`[--free]` only free events (price 0)<br>`[--include-outside]` also events whose postcode is outside Københavns Kommune (Frederiksberg, suburbs)<br>`[--radius-km <n>]` search radius around the city centre in km (default 10)<br>`[--limit <n>]` most events to return (default 50) | Events on Billetto around Copenhagen (small venues, culture houses, clubs, talks, workshops), soonest first, with a link to each event's page to buy tickets |
+| `billetto event search` | `[--query <query>]` words to search for (default: everything)<br>`[--from <from>]` first date, YYYY-MM-DD (default: today)<br>`[--to <to>]` last date, YYYY-MM-DD (default: no limit)<br>`[--category <category>]` Billetto category or subcategory, as printed in `category`/`subcategory` (e.g. music, rock, science)<br>`[--free]` only free events (price 0)<br>`[--include-outside]` also events whose postcode is outside Copenhagen (Københavns and Frederiksberg Kommune), e.g. Gentofte, Hvidovre, Tårnby …<br>`[--radius-km <n>]` search radius around the city centre in km (default 10)<br>`[--limit <n>]` most events to return (default 50) | Events on Billetto around Copenhagen (small venues, culture houses, clubs, talks, workshops), soonest first, with a link to each event's page to buy tickets |
 <!-- commands:end -->
 
 Built-ins: `help` (commands, flags, exit codes as JSON; `<command> --help` prints one command's flags), `check [--op <name>] [--writes]`, `doctor`, `version`, and `login` when the site needs one. Global flags: `--account <id>`, `--confirm`.
@@ -49,4 +49,4 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 - Anything the Commands table does not list: offer a feature request instead of improvising.
 - Bulk scraping or automated polling of the site.
 - Remote mode (`mcp --http` on a host from `cph-activities-deploy`): the container has no Chrome, which this skill needs to read billetto.dk's search settings. Run it on your own machine.
-- `area` comes from the event's coordinates and Københavns Kommune's own district boundaries, or from its postcode when it has no coordinates; events `outside` the municipality are left out unless `--include-outside`.
+- `area` comes from the event's coordinates and the districts of Københavns Kommune plus Frederiksberg Kommune, or from its postcode when it has no coordinates; events `outside` Copenhagen are left out unless `--include-outside`.

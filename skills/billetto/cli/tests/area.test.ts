@@ -2,11 +2,11 @@ import { describe, expect, test } from "bun:test";
 import { areaOf, dayBoundary } from "../src/lib/area";
 
 describe("areaOf", () => {
-  test("Københavns Kommune postcodes", () => {
-    for (const p of ["1000", "1440", "1799", "2100", "2150", "2200", "2300", "2400", "2450", "2500", "2700", "2720"]) expect(areaOf(p)).toBe("cph");
+  test("Københavns and Frederiksberg Kommune postcodes", () => {
+    for (const p of ["1000", "1440", "1799", "1800", "1850", "1999", "2000", "2100", "2150", "2200", "2300", "2400", "2450", "2500", "2700", "2720"]) expect(areaOf(p)).toBe("cph");
   });
-  test("Frederiksberg and other municipalities are outside", () => {
-    for (const p of ["1800", "1999", "2000", "2635", "2770", "3050"]) expect(areaOf(p)).toBe("outside");
+  test("other municipalities are outside", () => {
+    for (const p of ["2635", "2770", "2900", "2650", "3050"]) expect(areaOf(p)).toBe("outside");
   });
   test("no postcode or not a number is unknown", () => {
     expect(areaOf(null)).toBe("unknown");

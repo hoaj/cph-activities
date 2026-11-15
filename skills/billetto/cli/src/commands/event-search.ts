@@ -27,7 +27,7 @@ export default defineCommand({
     to: isoDate.optional().describe("last date, YYYY-MM-DD (default: no limit)"),
     category: z.string().optional().describe("Billetto category or subcategory, as printed in `category`/`subcategory` (e.g. music, rock, science)"),
     free: z.boolean().default(false).describe("only free events (price 0)"),
-    includeOutside: z.boolean().default(false).describe("also events whose postcode is outside Københavns Kommune (Frederiksberg, suburbs)"),
+    includeOutside: z.boolean().default(false).describe("also events whose postcode is outside Copenhagen (Københavns and Frederiksberg Kommune), e.g. Gentofte, Hvidovre, Tårnby …"),
     radiusKm: z.coerce.number().min(1).max(50).default(10).describe("search radius around the city centre in km (default 10)"),
     limit: z.coerce.number().int().min(1).max(500).default(50).describe("most events to return (default 50)"),
   }),

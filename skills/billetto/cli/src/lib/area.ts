@@ -1,12 +1,12 @@
-// Whether a Danish postcode lies in Københavns Kommune (same rule as the kulturkbh skill;
-// skills share no code, so it is copied). Frederiksberg (1800–1999, 2000) is "outside".
+// Whether a Danish postcode lies in Copenhagen: Københavns or Frederiksberg Kommune (same rule as the kulturkbh skill;
+// skills share no code, so it is copied). Frederiksberg (1800–1999, 2000) counts as Copenhagen; other municipalities are "outside".
 // A postcode does not follow the municipal border exactly; the coordinates decide when there are some.
 const CPH_POSTCODES = [2100, 2150, 2200, 2300, 2400, 2450, 2500, 2700, 2720]; // Ø, Nordhavn, N, S, NV, SV, Valby, Brønshøj, Vanløse
 export const areaOf = (postcode: string | null): "cph" | "outside" | "unknown" => {
   if (postcode === null) return "unknown";
   const n = Number(postcode);
   if (!Number.isInteger(n) || n < 1000 || n > 9999) return "unknown"; // not a Danish postcode
-  if (n >= 1000 && n <= 1799) return "cph"; // København K and V
+  if (n >= 1000 && n <= 2000) return "cph"; // København K and V, Frederiksberg (1800–1999, 2000)
   if (CPH_POSTCODES.includes(n)) return "cph";
   return "outside";
 };
