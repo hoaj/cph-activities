@@ -2,7 +2,7 @@
 name: kulturkbh
 description: Use when the user asks what is on in Copenhagen (talks, exhibitions, concerts, film, theatre, literature, food, active events), especially free or cheap ones, on a date, in a category or matching words. Lists events from kulturKBH (https://kulturkbh.dk) with a link to each event's own page, where the user reads more and books or buys tickets themselves.
 ---
-<!-- version: 0.5.0 -->
+<!-- version: 0.6.0 -->
 
 # kulturkbh
 
@@ -16,7 +16,7 @@ description: Use when the user asks what is on in Copenhagen (talks, exhibitions
 <!-- commands:start -->
 | Command | Flags | Does |
 |---|---|---|
-| `kulturkbh event list` | `[--from <from>]` first date, YYYY-MM-DD (default: today)<br>`[--to <to>]` last date, YYYY-MM-DD (default: no limit)<br>`[--type <type>]` category, e.g. musik, foredrag, udstilling, film, teater, litteratur, mad, active<br>`[--query <query>]` words to find in the title or description<br>`[--free]` only events whose price says they are free<br>`[--include-outside]` also events outside Københavns Kommune (Frederiksberg, Louisiana …)<br>`[--limit <n>]` most events to return (default 50) | Free and cheap culture events in Copenhagen from kulturKBH, with a link to each event's own page |
+| `kulturkbh event list` | `[--from <from>]` first date, YYYY-MM-DD (default: today)<br>`[--to <to>]` last date, YYYY-MM-DD (default: no limit)<br>`[--type <type>]` category, e.g. musik, foredrag, udstilling, film, teater, litteratur, mad, active<br>`[--query <query>]` words to find in the title or description<br>`[--free]` only events whose price says they are free<br>`[--include-outside]` also events outside Copenhagen (Københavns and Frederiksberg Kommune), e.g. Gentofte, Hvidovre, Tårnby …<br>`[--limit <n>]` most events to return (default 50) | Free and cheap culture events in Copenhagen from kulturKBH, with a link to each event's own page |
 <!-- commands:end -->
 
 Built-ins: `help` (commands, flags, exit codes as JSON; `<command> --help` prints one command's flags), `check [--op <name>] [--writes]`, `doctor`, `version`, and `login` when the site needs one. Global flags: `--account <id>`, `--confirm`.
