@@ -1,0 +1,20 @@
+{
+  "task": "event-search",
+  "startPath": "/da",
+  "write": false,
+  "from": "explore",
+  "operations": [
+    {
+      "operation": "POST /1/indexes/events/query",
+      "kind": "rest",
+      "effect": "write",
+      "allowedRead": true,
+      "method": "POST",
+      "host": "yneuy03z8q-dsn.algolia.net",
+      "path": "/1/indexes/events/query",
+      "file": "POST-1-indexes-events-query.shape.json",
+      "seen": 6,
+      "aborted": 0
+    }
+  ]
+}
