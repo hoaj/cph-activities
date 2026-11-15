@@ -1,0 +1,35 @@
+{
+  "operation": "POST /api/public/Purchases/info",
+  "kind": "rest",
+  "effect": "write",
+  "resourceType": "fetch",
+  "host": "wsapi.wannasport.com",
+  "method": "POST",
+  "path": "/api/public/Purchases/info",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "accept-language": null,
+      "content-type": "application/json",
+      "country": null,
+      "currency": null,
+      "origin": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null,
+      "x-ws-client": null
+    },
+    "body": {
+      "kind": "json",
+      "shape": {
+        "type": "object",
+        "fields": {}
+      }
+    }
+  },
+  "responses": [],
+  "seen": 1,
+  "aborted": 1
+}

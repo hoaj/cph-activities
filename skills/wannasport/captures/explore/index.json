@@ -1,0 +1,169 @@
+{
+  "task": "explore",
+  "explore": true,
+  "startPath": "/:id/da/:id/:id",
+  "write": false,
+  "loginHosts": [
+    "accounts.google.com"
+  ],
+  "pages": [
+    {
+      "path": "/:id/da/:id/:id",
+      "operations": [
+        "GET /api/public/Categories/populated",
+        "GET /api/public/Product/search",
+        "POST /api/public/Purchases/info"
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "operation": "GET /:id/da/:id/:id",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "rsc": true,
+      "method": "GET",
+      "host": "www.wannasport.com",
+      "path": "/:id/da/:id/:id",
+      "file": "GET-id-da-id-id.shape.json",
+      "pages": [
+        "/:id/da/:id/:id"
+      ],
+      "seen": 25,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /api/public/Categories/populated",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "wsapi.wannasport.com",
+      "path": "/api/public/Categories/populated",
+      "file": "wsapi.wannasport.com-GET-api-public-Categories-populated.shape.json",
+      "pages": [
+        "/:id/da/:id/:id"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /api/public/Product/search",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "wsapi.wannasport.com",
+      "path": "/api/public/Product/search",
+      "file": "wsapi.wannasport.com-GET-api-public-Product-search.shape.json",
+      "pages": [
+        "/:id/da/:id/:id"
+      ],
+      "seen": 2,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /api/public/Purchases/info",
+      "kind": "rest",
+      "effect": "write",
+      "method": "POST",
+      "host": "wsapi.wannasport.com",
+      "path": "/api/public/Purchases/info",
+      "file": "wsapi.wannasport.com-POST-api-public-Purchases-info.shape.json",
+      "pages": [
+        "/:id/da/:id/:id"
+      ],
+      "seen": 1,
+      "aborted": 1
+    },
+    {
+      "operation": "GET /gsi/status",
+      "kind": "rest",
+      "effect": "read",
+      "loginFlow": true,
+      "method": "GET",
+      "host": "accounts.google.com",
+      "path": "/gsi/status",
+      "file": "accounts.google.com-GET-gsi-status.shape.json",
+      "pages": [
+        "/:id/da/:id/:id"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /:id/da",
+      "kind": "rest",
+      "effect": "read",
+      "rsc": true,
+      "method": "GET",
+      "host": "www.wannasport.com",
+      "path": "/:id/da",
+      "file": "GET-id-da.shape.json",
+      "pages": [
+        "/:id/da/:id/:id"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /:id/da/:id",
+      "kind": "rest",
+      "effect": "read",
+      "rsc": true,
+      "method": "GET",
+      "host": "www.wannasport.com",
+      "path": "/:id/da/:id",
+      "file": "GET-id-da-id.shape.json",
+      "pages": [
+        "/:id/da/:id/:id"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /:id/da/facility/:id",
+      "kind": "rest",
+      "effect": "read",
+      "rsc": true,
+      "method": "GET",
+      "host": "www.wannasport.com",
+      "path": "/:id/da/facility/:id",
+      "file": "GET-id-da-facility-id.shape.json",
+      "pages": [
+        "/:id/da/:id/:id"
+      ],
+      "seen": 14,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /:id/da/product/:id/:id",
+      "kind": "rest",
+      "effect": "read",
+      "rsc": true,
+      "method": "GET",
+      "host": "www.wannasport.com",
+      "path": "/:id/da/product/:id/:id",
+      "file": "GET-id-da-product-id-id.shape.json",
+      "pages": [
+        "/:id/da/:id/:id"
+      ],
+      "seen": 19,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /api/public/Profile/RenewToken",
+      "kind": "rest",
+      "effect": "write",
+      "loginFlow": true,
+      "method": "POST",
+      "host": "wsapi.wannasport.com",
+      "path": "/api/public/Profile/RenewToken",
+      "file": "wsapi.wannasport.com-POST-api-public-Profile-RenewToken.shape.json",
+      "pages": [
+        "/:id/da/:id/:id"
+      ],
+      "seen": 1,
+      "aborted": 0
+    }
+  ]
+}

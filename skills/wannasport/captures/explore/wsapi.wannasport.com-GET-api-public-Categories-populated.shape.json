@@ -1,0 +1,69 @@
+{
+  "operation": "GET /api/public/Categories/populated",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "wsapi.wannasport.com",
+  "method": "GET",
+  "path": "/api/public/Categories/populated",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "accept-language": null,
+      "content-type": "application/json",
+      "country": null,
+      "currency": null,
+      "origin": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null,
+      "x-ws-client": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "access-control-allow-origin": null,
+        "content-type": "application/json",
+        "date": null,
+        "strict-transport-security": null,
+        "vary": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "fields": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "sportsIds": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "schemes": {
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0
+}
