@@ -48,3 +48,4 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 - Free and cheap museum and culture events picked by hand: that is the `kulturkbh` skill; ask both when the user wants everything.
 - Anything the Commands table does not list: offer a feature request instead of improvising.
 - Bulk scraping or automated polling of the site.
+- Remote mode (`mcp --http` on a host from `cph-activities-deploy`): the container has no Chrome, which this skill needs to read billetto.dk's search settings. Run it on your own machine.

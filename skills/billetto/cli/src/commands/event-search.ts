@@ -4,8 +4,9 @@ import searchEvents from "../operations/searchEvents";
 import { areaOf, dayBoundary } from "../lib/area";
 
 const CPH_CENTER = "55.6761,12.5683"; // Rådhuspladsen
-const PAGE_SIZE = 100;
-const MAX_PAGES = 10;
+// Algolia serves at most 1000 hits per query, and up to 1000 per page: one request reads them all.
+const PAGE_SIZE = 1000;
+const MAX_PAGES = 1;
 const PLACEHOLDER_AFTER_S = 3 * 365 * 24 * 3600; // listings dated years ahead are memberships and tests, not events
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "use YYYY-MM-DD");
 const today = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Copenhagen" });
@@ -39,7 +40,7 @@ export default defineCommand({
     const latest = Math.floor(Date.now() / 1000) + PLACEHOLDER_AFTER_S;
     const wanted = args.category?.toLowerCase();
 
-    // Algolia ranks by relevance, so read every result page (up to MAX_PAGES), then sort by time.
+    // Algolia ranks by relevance, so read every hit it serves, then sort by time.
     const matches: Array<{ start: number; ongoing: boolean; event: Record<string, unknown> }> = [];
     let complete = false;
     for (let page = 0; page < MAX_PAGES; page++) {
