@@ -98,6 +98,10 @@ export default defineCommand({
       if (events.length >= args.limit) break;
     }
     note(`${requests} requests`);
+    // KultuNaut orders a day by end date, so its timed rows come in more than one run: sort by
+    // date and time (no time last) before cutting to --limit.
+    const key = (e: Record<string, unknown>) => `${e.date ?? "9999-99-99"} ${e.time ?? "99:99"}`;
+    events.sort((a, b) => key(a).localeCompare(key(b)));
     return { total: events.length, complete, events: events.slice(0, args.limit) };
   },
 });
