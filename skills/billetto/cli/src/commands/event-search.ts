@@ -2,6 +2,7 @@ import { z } from "zod";
 import { defineCommand, inputFailure } from "../runtime/command";
 import searchEvents from "../operations/searchEvents";
 import { areaOf, dayBoundary } from "../lib/area";
+import { areaAt } from "../lib/cph-boundary";
 
 const CPH_CENTER = "55.6761,12.5683"; // Rådhuspladsen
 // Algolia serves at most 1000 hits per query, and up to 1000 per page: one request reads them all.
@@ -55,7 +56,10 @@ export default defineCommand({
       for (const h of r.hits) {
         if (h.start_time != null && h.start_time > latest) continue;
         const postcode = h.postal_code == null || h.postal_code === "" ? null : String(h.postal_code);
-        const area = areaOf(postcode);
+        // The event's coordinates against the municipality's boundaries; the postcode decides
+        // only when there are none, or when they fall in the 300 m band along the border.
+        const fromPlace = h._geoloc ? areaAt(h._geoloc.lng, h._geoloc.lat) : "unknown";
+        const area = fromPlace !== "unknown" ? fromPlace : areaOf(postcode);
         const free = h.price == null ? null : h.price === 0;
         if (!args.includeOutside && area === "outside") continue;
         if (args.free && free !== true) continue;
