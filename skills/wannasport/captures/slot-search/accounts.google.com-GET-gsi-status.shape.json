@@ -1,0 +1,67 @@
+{
+  "operation": "GET /gsi/status",
+  "kind": "rest",
+  "effect": "read",
+  "loginFlow": true,
+  "resourceType": "xhr",
+  "host": "accounts.google.com",
+  "method": "GET",
+  "path": "/gsi/status",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "origin": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "client_id": {
+          "type": "string"
+        },
+        "cas": {
+          "type": "string"
+        },
+        "bs": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "access-control-allow-credentials": null,
+        "access-control-allow-methods": null,
+        "access-control-allow-origin": null,
+        "alt-svc": null,
+        "cache-control": null,
+        "content-disposition": null,
+        "content-encoding": null,
+        "content-security-policy": null,
+        "content-type": "application/json",
+        "cross-origin-opener-policy-report-only": null,
+        "date": null,
+        "expires": null,
+        "pragma": null,
+        "report-to": null,
+        "server": null,
+        "vary": null,
+        "x-content-type-options": null,
+        "x-frame-options": null,
+        "x-xss-protection": null
+      },
+      "body": {
+        "kind": "binary"
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0
+}

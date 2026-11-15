@@ -1,0 +1,372 @@
+{
+  "operation": "GET /api/public/Product/search",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "wsapi.wannasport.com",
+  "method": "GET",
+  "path": "/api/public/Product/search",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "accept-language": null,
+      "content-type": "application/json",
+      "country": null,
+      "currency": null,
+      "origin": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null,
+      "x-ws-client": null
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "area": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "distance": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "page": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "access-control-allow-origin": null,
+        "content-type": "application/json",
+        "date": null,
+        "strict-transport-security": null,
+        "vary": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "object",
+          "fields": {
+            "area": {
+              "type": "object",
+              "fields": {
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "coordinates": {
+                  "type": "object",
+                  "fields": {
+                    "lat": {
+                      "type": "number"
+                    },
+                    "lng": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            },
+            "durations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "fields": {
+                  "label": {
+                    "type": "string",
+                    "format": "numeric"
+                  },
+                  "value": {
+                    "type": "string",
+                    "format": "numeric"
+                  }
+                }
+              }
+            },
+            "filters": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "fields": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "options": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "fields": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "isActive": {
+                          "type": "boolean"
+                        },
+                        "number": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "facilities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "fields": {
+                  "score": {
+                    "type": "number"
+                  },
+                  "coordinates": {
+                    "type": "object",
+                    "fields": {
+                      "lat": {
+                        "type": "number"
+                      },
+                      "lng": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "distance": {
+                    "type": "number"
+                  },
+                  "productGroups": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "fields": {
+                        "groupName": {
+                          "type": "string"
+                        },
+                        "products": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "fields": {
+                              "showProductLink": {
+                                "type": "boolean"
+                              },
+                              "availabilityMessage": {
+                                "type": "string"
+                              },
+                              "picturePreview": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "category": {
+                                "type": "string"
+                              },
+                              "picture": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "timeSpans": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "fields": {
+                                    "time": {
+                                      "type": "string",
+                                      "format": "datetime"
+                                    }
+                                  }
+                                }
+                              },
+                              "id": {
+                                "type": "string"
+                              },
+                              "availabilityType": {
+                                "type": "string"
+                              },
+                              "availableDatesSuggestion": {
+                                "type": "union",
+                                "anyOf": [
+                                  {
+                                    "type": "null"
+                                  },
+                                  {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string",
+                                      "format": "datetime"
+                                    }
+                                  }
+                                ]
+                              },
+                              "rangePriceMin": {
+                                "type": "number"
+                              },
+                              "rangePriceMax": {
+                                "type": "number"
+                              },
+                              "integrationType": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "page": {
+              "type": "number"
+            },
+            "pageSize": {
+              "type": "number"
+            },
+            "totalPages": {
+              "type": "number"
+            },
+            "isLast": {
+              "type": "boolean"
+            },
+            "total": {
+              "type": "number"
+            },
+            "totalFacilitiesWithAvailability": {
+              "type": "number"
+            },
+            "totalAvailableVariants": {
+              "type": "number"
+            },
+            "seoContent": {
+              "type": "string"
+            },
+            "seoH1": {
+              "type": "string"
+            },
+            "seoTopText": {
+              "type": "string"
+            },
+            "meta": {
+              "type": "object",
+              "fields": {
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "keywords": {
+                  "type": "string"
+                }
+              }
+            },
+            "nearbyAreasWithSameSport": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "fields": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "distance": {
+                    "type": "number"
+                  },
+                  "isMainArea": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "nearbyAvailableSports": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "fields": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "availabilitySlots": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "fields": {
+                  "time": {
+                    "type": "string"
+                  },
+                  "availableLocations": {
+                    "type": "number"
+                  },
+                  "totalLocations": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "disabled": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0
+}
