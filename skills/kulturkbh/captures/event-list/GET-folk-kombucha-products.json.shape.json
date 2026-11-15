@@ -1,0 +1,81 @@
+{
+  "operation": "GET /folk-kombucha-products.json",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "kulturkbh.dk",
+  "method": "GET",
+  "path": "/folk-kombucha-products.json",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "v": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "accept-ranges": null,
+        "age": null,
+        "content-encoding": null,
+        "content-length": null,
+        "content-type": "application/json",
+        "date": null,
+        "etag": null,
+        "last-modified": null,
+        "server": null,
+        "vary": null,
+        "via": null,
+        "x-varnish": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "fields": {
+              "navn": {
+                "type": "string"
+              },
+              "brand": {
+                "type": "string"
+              },
+              "pris": {
+                "type": "number"
+              },
+              "img": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0
+}

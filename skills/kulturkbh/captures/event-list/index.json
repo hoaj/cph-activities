@@ -1,0 +1,148 @@
+{
+  "task": "event-list",
+  "startPath": "/",
+  "write": false,
+  "operations": [
+    {
+      "operation": "GET /",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "method": "GET",
+      "host": "kulturkbh.dk",
+      "path": "/",
+      "file": "GET-root.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /kilder.html",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "kulturkbh.dk",
+      "path": "/kilder.html",
+      "file": "GET-kilder.html.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 2,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /events-list.json",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "kulturkbh.dk",
+      "path": "/events-list.json",
+      "file": "GET-events-list.json.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 3,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /louisiana-products.json",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "kulturkbh.dk",
+      "path": "/louisiana-products.json",
+      "file": "GET-louisiana-products.json.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /folk-kombucha-products.json",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "kulturkbh.dk",
+      "path": "/folk-kombucha-products.json",
+      "file": "GET-folk-kombucha-products.json.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /ellens-products.json",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "kulturkbh.dk",
+      "path": "/ellens-products.json",
+      "file": "GET-ellens-products.json.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /plusbog-products.json",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "kulturkbh.dk",
+      "path": "/plusbog-products.json",
+      "file": "GET-plusbog-products.json.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /editorial.json",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "kulturkbh.dk",
+      "path": "/editorial.json",
+      "file": "GET-editorial.json.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /adhesion.json",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "kulturkbh.dk",
+      "path": "/adhesion.json",
+      "file": "GET-adhesion.json.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /gallerier.json",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "kulturkbh.dk",
+      "path": "/gallerier.json",
+      "file": "GET-gallerier.json.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "operation": "GET /kilder.html",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "kulturkbh.dk",
+  "method": "GET",
+  "path": "/kilder.html",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/html",
+      "headers": {
+        "accept-ranges": null,
+        "age": null,
+        "content-encoding": null,
+        "content-length": null,
+        "content-type": "text/html",
+        "date": null,
+        "etag": null,
+        "last-modified": null,
+        "server": null,
+        "vary": null,
+        "via": null,
+        "x-varnish": null
+      },
+      "body": {
+        "kind": "html"
+      }
+    }
+  ],
+  "seen": 2,
+  "aborted": 0
+}

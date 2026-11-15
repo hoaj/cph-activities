@@ -1,0 +1,16 @@
+{
+  "name": "cph-activities",
+  "owner": {
+    "name": "hoaj"
+  },
+  "metadata": {
+    "description": "Find events and things to do in Copenhagen, with links to book them yourself."
+  },
+  "plugins": [
+    {
+      "name": "cph-activities",
+      "source": "./",
+      "description": "Find events and things to do in Copenhagen, with links to book them yourself."
+    }
+  ]
+}

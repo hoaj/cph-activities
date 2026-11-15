@@ -1,0 +1,20 @@
+{
+  "name": "cph-activities",
+  "interface": {
+    "displayName": "cph-activities"
+  },
+  "plugins": [
+    {
+      "name": "cph-activities",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
