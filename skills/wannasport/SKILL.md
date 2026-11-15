@@ -16,7 +16,7 @@ description: Use when the user wants to play a sport in Copenhagen and asks wher
 <!-- commands:start -->
 | Command | Flags | Does |
 |---|---|---|
-| `wannasport slot search` | `--sport <sport>` sport slug from `sport list`, e.g. padel, tennis, badminton<br>`[--date <date>]` the day, YYYY-MM-DD (default: today)<br>`[--from <from>]` earliest start time, HH:MM<br>`[--to <to>]` latest start time, HH:MM<br>`[--radius-km <n>]` search radius from central Copenhagen in km (default 10)<br>`[--include-outside]` also venues outside Københavns Kommune (Frederiksberg, Gentofte, Hvidovre …)<br>`[--limit <n>]` most venues to return, nearest first (default 20) | Free times for a sport (padel, tennis, badminton, squash, swimming …) at venues near central Copenhagen on one day, with price and a link to book it yourself |
+| `wannasport slot search` | `--sport <sport>` sport slug or Danish name from `sport list`, e.g. padel, tennis, badminton, fodbold<br>`[--date <date>]` the day, YYYY-MM-DD (default: today)<br>`[--from <from>]` earliest start time, HH:MM<br>`[--to <to>]` latest start time, HH:MM<br>`[--radius-km <n>]` search radius from central Copenhagen in km (default 10)<br>`[--include-outside]` also venues outside Københavns Kommune (Frederiksberg, Gentofte, Hvidovre …)<br>`[--limit <n>]` most venues to return, nearest first (default 20) | Free times for a sport (padel, tennis, badminton, squash, swimming …) at venues in Københavns Kommune on one day, nearest first, with price and a link to book it yourself |
 | `wannasport sport list` |  | The sports wannasport lists, with the slug `slot search --sport` takes |
 <!-- commands:end -->
 

@@ -12,9 +12,9 @@ const today = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/C
 
 export default defineCommand({
   name: "slot search",
-  summary: "Free times for a sport (padel, tennis, badminton, squash, swimming …) at venues near central Copenhagen on one day, with price and a link to book it yourself",
+  summary: "Free times for a sport (padel, tennis, badminton, squash, swimming …) at venues in Københavns Kommune on one day, nearest first, with price and a link to book it yourself",
   args: z.object({
-    sport: z.string().min(1).describe("sport slug from `sport list`, e.g. padel, tennis, badminton"),
+    sport: z.string().min(1).describe("sport slug or Danish name from `sport list`, e.g. padel, tennis, badminton, fodbold"),
     date: isoDate.optional().describe("the day, YYYY-MM-DD (default: today)"),
     from: hhmm.optional().describe("earliest start time, HH:MM"),
     to: hhmm.optional().describe("latest start time, HH:MM"),
@@ -25,8 +25,9 @@ export default defineCommand({
   uses: [listCategories, searchProducts],
   run: async (args, { call }) => {
     const sports = await call(listCategories, {});
-    const sport = sports.find((s) => s.slug === args.sport.toLowerCase());
-    if (!sport) inputFailure(`No sport with --sport ${args.sport}: run \`sport list\` to see the slugs.`);
+    const wanted = args.sport.trim().toLowerCase();
+    const sport = sports.find((s) => s.slug.toLowerCase() === wanted || s.name.trim().toLowerCase() === wanted);
+    if (!sport) inputFailure(`No sport "${args.sport}". --sport takes one of: ${sports.map((s) => s.slug).join(", ")}.`);
     if (args.from && args.to && args.to < args.from) inputFailure("--to is before --from.");
     const date = args.date ?? today();
 
