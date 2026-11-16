@@ -22,6 +22,7 @@ Every source is limited to Københavns and Frederiksberg Kommune by default (`ar
 
 - **Events on a day or a weekend:** `kulturkbh event list`, `billetto event search` and `kultunaut event list` with the same `--from`/`--to`. Pass `--free` to the first two when the user wants free things (KultuNaut has no prices). KultuNaut can return hundreds a day: narrow it with `--genre`, `--from-time`/`--to-time` and `--limit`. Pass `--exclude-kids` to `kultunaut event list` when the question is for adults or teenagers: KultuNaut lists many children's club trainings. kulturKBH merges its own duplicates: an event several sources announce comes once, with the others in `alsoAt`. Also ask `brugbyen event list` with the same dates: pass `--group` for the audience (e.g. `--group unge,voksne` for an adult with a teenager) and `--free` when the user asks for free things (brugbyen filters on the site, and has no prices).
 - **Something active or playful** (a date, a group of friends): also `wannasport slot search` for one to three sports that fit, with `--date` and an evening `--from`/`--to`. Don't ask for every sport: `sport list` has 41.
+- **Bowling (DGI Byen):** no source here can see free lanes (DGI Byen's EasyBowl booking only shows them after a reservation is started). Give the user the link https://www.easybowl.com/bc/dgi/booking to pick a time and book themselves.
 - **One kind of thing** (comedy, jazz, a talk): Billetto takes `--query` and `--category`; kulturKBH takes `--type` and `--query`.
 - Run the independent commands in parallel.
 
