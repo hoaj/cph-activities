@@ -9,7 +9,7 @@ export default defineSite({
   skill: "teaterbilletter",
   repo: "hoaj/cph-activities",
   version: "0.9.0",
-  generatedWith: "0.12.1",
+  generatedWith: "0.16.0",
   // The apex answers; www redirects every request to it, which the runtime reads as Drift.
   origin: "https://teaterbilletter.dk",
   graphqlPath: "/graphql",
