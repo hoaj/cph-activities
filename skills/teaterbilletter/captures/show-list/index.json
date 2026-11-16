@@ -1,0 +1,36 @@
+{
+  "task": "show-list",
+  "startPath": "teaterbilletter.dk/forestillinger",
+  "write": false,
+  "from": "explore",
+  "operations": [
+    {
+      "operation": "GET /api/categories",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/api/categories",
+      "file": "teaterbilletter.dk-GET-api-categories.shape.json",
+      "pages": [
+        "teaterbilletter.dk/forestillinger"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /api/events",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/api/events",
+      "file": "teaterbilletter.dk-GET-api-events.shape.json",
+      "pages": [
+        "teaterbilletter.dk/forestillinger"
+      ],
+      "seen": 1,
+      "aborted": 0
+    }
+  ]
+}

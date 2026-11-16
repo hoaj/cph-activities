@@ -18,6 +18,7 @@
     "./skills/cph-activities-feedback",
     "./skills/kultunaut",
     "./skills/kulturkbh",
+    "./skills/teaterbilletter",
     "./skills/wannasport"
   ]
 }

@@ -1,0 +1,82 @@
+{
+  "operation": "GET /forestillinger",
+  "kind": "rest",
+  "effect": "read",
+  "rsc": true,
+  "resourceType": "fetch",
+  "host": "teaterbilletter.dk",
+  "method": "GET",
+  "path": "/forestillinger",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "accept-encoding": null,
+      "accept-language": null,
+      "cache-control": null,
+      "cookie": null,
+      "next-router-prefetch": null,
+      "next-router-segment-prefetch": null,
+      "next-url": null,
+      "pragma": null,
+      "priority": null,
+      "referer": null,
+      "rsc": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "sec-fetch-dest": null,
+      "sec-fetch-mode": null,
+      "sec-fetch-site": null,
+      "sec-fetch-user": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null,
+      "x-deployment-id": null
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "_rsc": {
+          "type": "string"
+        }
+      },
+      "optional": [
+        "_rsc"
+      ]
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/x-component",
+      "headers": {
+        "accept-ranges": null,
+        "access-control-allow-origin": null,
+        "age": null,
+        "cache-control": null,
+        "content-disposition": null,
+        "content-encoding": null,
+        "content-length": null,
+        "content-type": "text/x-component",
+        "date": null,
+        "etag": null,
+        "server": null,
+        "strict-transport-security": null,
+        "vary": null,
+        "x-matched-path": null,
+        "x-nextjs-deployment-id": null,
+        "x-nextjs-postponed": null,
+        "x-nextjs-prerender": null,
+        "x-nextjs-stale-time": null,
+        "x-vercel-cache": null,
+        "x-vercel-id": null
+      },
+      "body": {
+        "kind": "text"
+      }
+    }
+  ],
+  "seen": 17,
+  "aborted": 0,
+  "navigation": true,
+  "html": true
+}

@@ -1,0 +1,717 @@
+{
+  "operation": "GET /kalender",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "teaterbilletter.dk",
+  "method": "GET",
+  "path": "/kalender",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "accept-encoding": null,
+      "accept-language": null,
+      "cache-control": null,
+      "cookie": null,
+      "pragma": null,
+      "priority": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "sec-fetch-dest": null,
+      "sec-fetch-mode": null,
+      "sec-fetch-site": null,
+      "sec-fetch-user": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/html",
+      "headers": {
+        "access-control-allow-origin": null,
+        "age": null,
+        "cache-control": null,
+        "content-disposition": null,
+        "content-encoding": null,
+        "content-type": "text/html",
+        "date": null,
+        "etag": null,
+        "server": null,
+        "strict-transport-security": null,
+        "vary": null,
+        "x-matched-path": null,
+        "x-nextjs-prerender": null,
+        "x-nextjs-stale-time": null,
+        "x-vercel-cache": null,
+        "x-vercel-id": null
+      },
+      "body": {
+        "kind": "html",
+        "outline": [
+          {
+            "tag": "body",
+            "classes": [
+              "bg-off-white",
+              "min-h-svh"
+            ],
+            "children": [
+              {
+                "tag": "div",
+                "attrs": [
+                  "aria-label",
+                  "hidden",
+                  "role",
+                  "tabindex"
+                ],
+                "children": [
+                  {
+                    "tag": "ol",
+                    "classes": [
+                      "fixed",
+                      "flex",
+                      "flex-col-reverse",
+                      "max-h-screen",
+                      "p-4",
+                      "top-0",
+                      "w-full"
+                    ],
+                    "attrs": [
+                      "tabindex"
+                    ]
+                  }
+                ],
+                "many": true
+              },
+              {
+                "tag": "nav",
+                "classes": [
+                  "backdrop-blur-md",
+                  "bg-opacity-0",
+                  "bg-white",
+                  "duration-:id",
+                  "ease-in-out",
+                  "fixed",
+                  "flex",
+                  "h-:id",
+                  "items-center",
+                  "justify-between",
+                  "px-4",
+                  "text-black",
+                  "transition-all",
+                  "w-full",
+                  "z-:id"
+                ],
+                "attrs": [
+                  "data-datocms-noindex"
+                ],
+                "children": [
+                  {
+                    "tag": "a",
+                    "classes": [
+                      "-ml-2",
+                      "flex",
+                      "gap-2",
+                      "items-center",
+                      "p-2",
+                      "rounded-md"
+                    ],
+                    "attrs": [
+                      "aria-label",
+                      "href"
+                    ],
+                    "children": [
+                      {
+                        "tag": "svg",
+                        "classes": [
+                          "duration-:id",
+                          "ease-in-out",
+                          "fill-black",
+                          "transition-all"
+                        ],
+                        "attrs": [
+                          "fill",
+                          "height",
+                          "viewbox",
+                          "width",
+                          "xmlns"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "ul",
+                    "classes": [
+                      "gap-4",
+                      "hidden",
+                      "items-center",
+                      "justify-center"
+                    ],
+                    "children": [
+                      {
+                        "tag": "li",
+                        "children": [
+                          {
+                            "tag": "a",
+                            "classes": [
+                              "font-medium",
+                              "group",
+                              "p-2",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label",
+                              "href",
+                              "target"
+                            ],
+                            "children": [
+                              {
+                                "tag": "span",
+                                "text": true
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "bg-black"
+                            ]
+                          }
+                        ],
+                        "many": true
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "ul",
+                    "classes": [
+                      "flex",
+                      "gap-1",
+                      "justify-end"
+                    ],
+                    "children": [
+                      {
+                        "tag": "li",
+                        "attrs": [
+                          "data-search-sheet-trigger"
+                        ],
+                        "children": [
+                          {
+                            "tag": "button",
+                            "classes": [
+                              "flex",
+                              "gap-2",
+                              "items-center",
+                              "p-2",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "attrs": [
+                                  "fill",
+                                  "height",
+                                  "viewbox",
+                                  "width",
+                                  "xmlns"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "button",
+                            "classes": [
+                              "basm",
+                              "basm_basket_btn",
+                              "flex",
+                              "font-medium",
+                              "gap-2",
+                              "items-center",
+                              "p-2",
+                              "relative",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "attrs": [
+                                  "fill",
+                                  "height",
+                                  "viewbox",
+                                  "width",
+                                  "xmlns"
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "many": true
+                      },
+                      {
+                        "tag": "li",
+                        "classes": [
+                          "hidden"
+                        ],
+                        "children": [
+                          {
+                            "tag": "a",
+                            "classes": [
+                              "flex",
+                              "gap-2",
+                              "items-center",
+                              "p-2",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label",
+                              "href"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "attrs": [
+                                  "fill",
+                                  "height",
+                                  "viewbox",
+                                  "width",
+                                  "xmlns"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "li",
+                        "classes": [
+                          "gap-2",
+                          "hidden",
+                          "items-center"
+                        ],
+                        "children": [
+                          {
+                            "tag": "button",
+                            "classes": [
+                              "basm",
+                              "basm_profile_btn",
+                              "flex",
+                              "font-medium",
+                              "gap-2",
+                              "items-center",
+                              "p-2",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "w-6"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "svg",
+                                    "attrs": [
+                                      "fill",
+                                      "height",
+                                      "viewbox",
+                                      "width",
+                                      "xmlns"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "li",
+                        "classes": [
+                          "block"
+                        ],
+                        "children": [
+                          {
+                            "tag": "button",
+                            "classes": [
+                              "-mr-2",
+                              "flex",
+                              "font-bold",
+                              "gap-2",
+                              "items-center",
+                              "p-2",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "attrs": [
+                                  "fill",
+                                  "height",
+                                  "viewbox",
+                                  "width",
+                                  "xmlns"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "flex",
+                  "flex-col",
+                  "items-stretch",
+                  "min-h-svh"
+                ],
+                "children": [
+                  {
+                    "tag": "main",
+                    "classes": [
+                      "pt-:id",
+                      "section-container"
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "footer",
+                "classes": [
+                  "bg-black",
+                  "mt-auto"
+                ],
+                "attrs": [
+                  "data-datocms-noindex"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "gap-x-6",
+                      "grid",
+                      "grid-cols-1",
+                      "mx-auto",
+                      "section-container",
+                      "text-white"
+                    ],
+                    "children": [
+                      {
+                        "tag": "nav",
+                        "children": [
+                          {
+                            "tag": "ul",
+                            "classes": [
+                              "flex",
+                              "flex-col",
+                              "gap-y-4"
+                            ],
+                            "children": [
+                              {
+                                "tag": "li",
+                                "classes": [
+                                  "overflow-hidden"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "classes": [
+                                      "group",
+                                      "relative",
+                                      "rounded-md",
+                                      "text-base"
+                                    ],
+                                    "attrs": [
+                                      "aria-label",
+                                      "href",
+                                      "target"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "span",
+                                        "text": true
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "many": true
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "nav",
+                        "classes": [
+                          "col-span-1"
+                        ],
+                        "children": [
+                          {
+                            "tag": "ul",
+                            "classes": [
+                              "gap-y-6",
+                              "grid",
+                              "grid-cols-1"
+                            ],
+                            "children": [
+                              {
+                                "tag": "li",
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "classes": [
+                                      "duration-:id",
+                                      "ease-in-out",
+                                      "group",
+                                      "p0",
+                                      "relative",
+                                      "rounded-md",
+                                      "transition-opacity"
+                                    ],
+                                    "attrs": [
+                                      "aria-label",
+                                      "href",
+                                      "target"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "span",
+                                        "text": true
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "many": true
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "children": [
+                              {
+                                "tag": "h3",
+                                "classes": [
+                                  "font-bold",
+                                  "mb-2",
+                                  "text-sm"
+                                ],
+                                "text": true
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "prose",
+                                  "text-off-white",
+                                  "text-sm"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "p",
+                                    "text": true,
+                                    "children": [
+                                      {
+                                        "tag": "em",
+                                        "text": true,
+                                        "many": true
+                                      },
+                                      {
+                                        "tag": "br",
+                                        "many": true
+                                      },
+                                      {
+                                        "tag": "span",
+                                        "text": true,
+                                        "children": [
+                                          {
+                                            "tag": "br"
+                                          },
+                                          {
+                                            "tag": "a",
+                                            "attrs": [
+                                              "href"
+                                            ],
+                                            "text": true
+                                          }
+                                        ],
+                                        "many": true
+                                      },
+                                      {
+                                        "tag": "a",
+                                        "attrs": [
+                                          "href"
+                                        ],
+                                        "text": true,
+                                        "many": true
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "p",
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "attrs": [
+                                      "href",
+                                      "rel",
+                                      "target"
+                                    ],
+                                    "text": true,
+                                    "many": true
+                                  },
+                                  {
+                                    "tag": "br"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "a",
+                            "attrs": [
+                              "aria-label",
+                              "href"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "classes": [
+                                  "mb-4"
+                                ],
+                                "attrs": [
+                                  "fill",
+                                  "height",
+                                  "viewbox",
+                                  "width",
+                                  "xmlns"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "section",
+                        "classes": [
+                          "flex",
+                          "flex-col",
+                          "gap-y-8"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "children": [
+                              {
+                                "tag": "h3",
+                                "classes": [
+                                  "font-bold",
+                                  "mb-2",
+                                  "text-sm"
+                                ],
+                                "text": true
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "prose",
+                                  "text-off-white",
+                                  "text-sm"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "p",
+                                    "classes": [
+                                      "p1"
+                                    ],
+                                    "text": true,
+                                    "children": [
+                                      {
+                                        "tag": "br",
+                                        "many": true
+                                      },
+                                      {
+                                        "tag": "a",
+                                        "attrs": [
+                                          "href"
+                                        ],
+                                        "text": true,
+                                        "many": true
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "nav",
+                        "classes": [
+                          "text-right"
+                        ],
+                        "children": [
+                          {
+                            "tag": "ul",
+                            "children": [
+                              {
+                                "tag": "li",
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "classes": [
+                                      "pb-1",
+                                      "pt-2"
+                                    ],
+                                    "attrs": [
+                                      "href",
+                                      "target"
+                                    ],
+                                    "text": true
+                                  }
+                                ],
+                                "many": true
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "many": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0,
+  "html": true
+}

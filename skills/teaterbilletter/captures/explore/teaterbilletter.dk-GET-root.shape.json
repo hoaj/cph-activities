@@ -1,0 +1,1623 @@
+{
+  "operation": "GET /",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "teaterbilletter.dk",
+  "method": "GET",
+  "path": "/",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "accept-encoding": null,
+      "accept-language": null,
+      "cache-control": null,
+      "cookie": null,
+      "next-router-prefetch": null,
+      "next-router-segment-prefetch": null,
+      "next-url": null,
+      "pragma": null,
+      "priority": null,
+      "referer": null,
+      "rsc": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "sec-fetch-dest": null,
+      "sec-fetch-mode": null,
+      "sec-fetch-site": null,
+      "sec-fetch-user": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null,
+      "x-deployment-id": null
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "_rsc": {
+          "type": "string"
+        }
+      },
+      "optional": [
+        "_rsc"
+      ]
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/html",
+      "headers": {
+        "age": null,
+        "cache-control": null,
+        "content-encoding": null,
+        "content-length": null,
+        "content-type": "text/html",
+        "date": null,
+        "etag": null,
+        "server": null,
+        "strict-transport-security": null,
+        "vary": null,
+        "x-matched-path": null,
+        "x-nextjs-deployment-id": null,
+        "x-nextjs-postponed": null,
+        "x-nextjs-prerender": null,
+        "x-nextjs-stale-time": null,
+        "x-powered-by": null,
+        "x-vercel-cache": null,
+        "x-vercel-id": null
+      },
+      "body": {
+        "kind": "html",
+        "outline": [
+          {
+            "tag": "body",
+            "classes": [
+              "bg-off-white",
+              "min-h-svh"
+            ],
+            "children": [
+              {
+                "tag": "div",
+                "id": ":id",
+                "attrs": [
+                  "aria-label",
+                  "hidden",
+                  "role",
+                  "tabindex"
+                ],
+                "children": [
+                  {
+                    "tag": "ol",
+                    "classes": [
+                      "fixed",
+                      "flex",
+                      "flex-col-reverse",
+                      "max-h-screen",
+                      "p-4",
+                      "top-0",
+                      "w-full"
+                    ],
+                    "attrs": [
+                      "tabindex"
+                    ]
+                  },
+                  {
+                    "tag": "main",
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "_"
+                        ],
+                        "children": [
+                          {
+                            "tag": "section",
+                            "classes": [
+                              "bg-black",
+                              "h-screen",
+                              "mb-:id"
+                            ],
+                            "children": [
+                              {
+                                "tag": "param",
+                                "id": "header-color-white"
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "h-full",
+                                  "relative",
+                                  "swiper"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "swiper-wrapper"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "h-full",
+                                          "swiper-slide"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "h-full",
+                                              "w-full"
+                                            ],
+                                            "many": true,
+                                            "children": [
+                                              {
+                                                "tag": "picture"
+                                              }
+                                            ]
+                                          }
+                                        ],
+                                        "many": true
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "absolute",
+                                      "flex",
+                                      "flex-col",
+                                      "gap-y-4",
+                                      "inset-x-4",
+                                      "inset-y-0",
+                                      "justify-end",
+                                      "z-:id"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "h1",
+                                        "classes": [
+                                          "text-off-white"
+                                        ],
+                                        "text": true
+                                      },
+                                      {
+                                        "tag": "ul",
+                                        "classes": [
+                                          "flex-col",
+                                          "gap-1",
+                                          "hidden",
+                                          "mb-2"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "li",
+                                            "classes": [
+                                              "opacity-:id",
+                                              "text-white",
+                                              "transition-opacity"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "classes": [
+                                                  "flex",
+                                                  "flex-col",
+                                                  "gap-x-2",
+                                                  "justify-start",
+                                                  "overflow-hidden",
+                                                  "rounded-md"
+                                                ],
+                                                "attrs": [
+                                                  "href"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "h2",
+                                                    "classes": [
+                                                      "display-lg",
+                                                      "font-semibold",
+                                                      "truncate"
+                                                    ],
+                                                    "text": true
+                                                  },
+                                                  {
+                                                    "tag": "span",
+                                                    "classes": [
+                                                      "pt-1",
+                                                      "text-sm"
+                                                    ],
+                                                    "text": true
+                                                  }
+                                                ]
+                                              }
+                                            ],
+                                            "many": true
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "block",
+                                          "mb-4"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "li",
+                                            "classes": [
+                                              "opacity-:id",
+                                              "text-white",
+                                              "transition-opacity"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "classes": [
+                                                  "flex",
+                                                  "flex-col",
+                                                  "gap-x-2",
+                                                  "justify-start",
+                                                  "overflow-hidden",
+                                                  "rounded-md"
+                                                ],
+                                                "attrs": [
+                                                  "href"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "h2",
+                                                    "classes": [
+                                                      "display-lg",
+                                                      "font-semibold",
+                                                      "truncate"
+                                                    ],
+                                                    "text": true
+                                                  },
+                                                  {
+                                                    "tag": "span",
+                                                    "classes": [
+                                                      "pt-1",
+                                                      "text-sm"
+                                                    ],
+                                                    "text": true
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "absolute",
+                                              "bottom-:id",
+                                              "flex",
+                                              "flex-col",
+                                              "gap-1",
+                                              "right-0",
+                                              "text-off-white"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "button",
+                                                "classes": [
+                                                  "-mr-2",
+                                                  "p-3",
+                                                  "rounded-full"
+                                                ],
+                                                "many": true,
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "bg-off-white",
+                                                      "h-2",
+                                                      "rounded-full",
+                                                      "w-2"
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "section",
+                            "classes": [
+                              "mb-:id",
+                              "section-container"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "gap-6"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "many": true,
+                                    "children": [
+                                      {
+                                        "tag": "h2",
+                                        "classes": [
+                                          "font-semibold",
+                                          "h3"
+                                        ],
+                                        "text": true
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "animate-pulse",
+                                          "bg-grey"
+                                        ],
+                                        "many": true
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "gap-4",
+                                      "hidden",
+                                      "items-center",
+                                      "ml-auto"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "button",
+                                        "classes": [
+                                          "px-2",
+                                          "py-2",
+                                          "rounded-md"
+                                        ],
+                                        "attrs": [
+                                          "aria-label",
+                                          "disabled"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "group"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "svg",
+                                                "classes": [
+                                                  "duration-:id",
+                                                  "false",
+                                                  "rotate-:id",
+                                                  "transition-transform",
+                                                  "undefined"
+                                                ],
+                                                "attrs": [
+                                                  "fill",
+                                                  "height",
+                                                  "stroke",
+                                                  "viewbox",
+                                                  "width",
+                                                  "xmlns"
+                                                ]
+                                              },
+                                              {
+                                                "tag": "svg",
+                                                "classes": [
+                                                  "duration-:id",
+                                                  "transition-transform",
+                                                  "undefined"
+                                                ],
+                                                "attrs": [
+                                                  "fill",
+                                                  "height",
+                                                  "stroke",
+                                                  "viewbox",
+                                                  "width",
+                                                  "xmlns"
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ],
+                                        "many": true
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "many": true
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "section",
+                            "classes": [
+                              "section-container"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "gap-x-8",
+                                  "gap-y-6",
+                                  "grid",
+                                  "grid-cols-1",
+                                  "mb-:id"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "flex"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "flex",
+                                          "flex-col",
+                                          "gap-y-4"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "h3",
+                                            "classes": [
+                                              "mb-4",
+                                              "p0"
+                                            ],
+                                            "text": true
+                                          },
+                                          {
+                                            "tag": "h2",
+                                            "classes": [
+                                              "display-lg",
+                                              "font-bold",
+                                              "leading-none"
+                                            ],
+                                            "text": true
+                                          },
+                                          {
+                                            "tag": "a",
+                                            "classes": [
+                                              "flex",
+                                              "gap-4",
+                                              "group",
+                                              "items-center",
+                                              "p0",
+                                              "rounded-md",
+                                              "text-ellipsis"
+                                            ],
+                                            "attrs": [
+                                              "aria-label",
+                                              "href",
+                                              "target"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "text": true
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "group"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "svg",
+                                                    "classes": [
+                                                      "duration-:id",
+                                                      "transition-transform",
+                                                      "undefined"
+                                                    ],
+                                                    "attrs": [
+                                                      "fill",
+                                                      "height",
+                                                      "stroke",
+                                                      "viewbox",
+                                                      "width",
+                                                      "xmlns"
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "a",
+                                        "classes": [
+                                          "group",
+                                          "rounded-md"
+                                        ],
+                                        "attrs": [
+                                          "aria-label",
+                                          "href",
+                                          "target"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "-order-1",
+                                              "aspect-square",
+                                              "block",
+                                              "max-w-auto",
+                                              "overflow-hidden"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "img",
+                                                "attrs": [
+                                                  "alt",
+                                                  "aria-hidden",
+                                                  "src"
+                                                ],
+                                                "many": true
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "many": true
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "section",
+                            "classes": [
+                              "flex",
+                              "flex-col",
+                              "mb-:id",
+                              "section-container"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "gap-6"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "many": true,
+                                    "children": [
+                                      {
+                                        "tag": "h2",
+                                        "classes": [
+                                          "font-semibold",
+                                          "h3"
+                                        ],
+                                        "text": true
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "animate-pulse",
+                                          "bg-grey"
+                                        ],
+                                        "many": true
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "gap-4",
+                                      "hidden",
+                                      "items-center",
+                                      "ml-auto"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "button",
+                                        "classes": [
+                                          "px-2",
+                                          "py-2",
+                                          "rounded-md"
+                                        ],
+                                        "attrs": [
+                                          "aria-label",
+                                          "disabled"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "group"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "svg",
+                                                "classes": [
+                                                  "duration-:id",
+                                                  "false",
+                                                  "rotate-:id",
+                                                  "transition-transform",
+                                                  "undefined"
+                                                ],
+                                                "attrs": [
+                                                  "fill",
+                                                  "height",
+                                                  "stroke",
+                                                  "viewbox",
+                                                  "width",
+                                                  "xmlns"
+                                                ]
+                                              },
+                                              {
+                                                "tag": "svg",
+                                                "classes": [
+                                                  "duration-:id",
+                                                  "transition-transform",
+                                                  "undefined"
+                                                ],
+                                                "attrs": [
+                                                  "fill",
+                                                  "height",
+                                                  "stroke",
+                                                  "viewbox",
+                                                  "width",
+                                                  "xmlns"
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ],
+                                        "many": true
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "many": true
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "section",
+                            "classes": [
+                              "bg-black",
+                              "py-:id"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "gap-8",
+                                  "grid",
+                                  "grid-cols-1",
+                                  "items-center",
+                                  "max-w-xl",
+                                  "mx-auto",
+                                  "section-container"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "max-w-sm"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "p",
+                                        "classes": [
+                                          "opacity-:id",
+                                          "p1",
+                                          "text-off-white"
+                                        ],
+                                        "text": true
+                                      },
+                                      {
+                                        "tag": "h3",
+                                        "classes": [
+                                          "font-semibold",
+                                          "h3",
+                                          "text-off-white"
+                                        ],
+                                        "text": true
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "children": [
+                                      {
+                                        "tag": "form",
+                                        "classes": [
+                                          "flex",
+                                          "flex-col",
+                                          "gap-4"
+                                        ],
+                                        "attrs": [
+                                          "action",
+                                          "method",
+                                          "name",
+                                          "novalidate",
+                                          "target"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "px-1"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "label",
+                                                "classes": [
+                                                  "block",
+                                                  "mb-1",
+                                                  "opacity-:id",
+                                                  "text-off-white",
+                                                  "text-xs"
+                                                ],
+                                                "attrs": [
+                                                  "for"
+                                                ],
+                                                "text": true
+                                              },
+                                              {
+                                                "tag": "input",
+                                                "id": "newsletter_email",
+                                                "classes": [
+                                                  "bg-black",
+                                                  "border",
+                                                  "border-grey2",
+                                                  "px-3",
+                                                  "py-2",
+                                                  "rounded-md",
+                                                  "text-off-white",
+                                                  "w-full"
+                                                ],
+                                                "attrs": [
+                                                  "name",
+                                                  "placeholder",
+                                                  "required",
+                                                  "type"
+                                                ],
+                                                "type": "email"
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "children": [
+                                                  {
+                                                    "tag": "label",
+                                                    "classes": [
+                                                      "block",
+                                                      "mb-1",
+                                                      "opacity-:id",
+                                                      "text-off-white",
+                                                      "text-xs"
+                                                    ],
+                                                    "attrs": [
+                                                      "for"
+                                                    ],
+                                                    "text": true
+                                                  },
+                                                  {
+                                                    "tag": "input",
+                                                    "id": "newsletter_firstname",
+                                                    "classes": [
+                                                      "bg-black",
+                                                      "border",
+                                                      "border-grey2",
+                                                      "px-3",
+                                                      "py-2",
+                                                      "rounded-md",
+                                                      "text-off-white",
+                                                      "w-full"
+                                                    ],
+                                                    "attrs": [
+                                                      "name",
+                                                      "placeholder",
+                                                      "required"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "input",
+                                                    "id": "newsletter_lastname",
+                                                    "classes": [
+                                                      "bg-black",
+                                                      "border",
+                                                      "border-grey2",
+                                                      "px-3",
+                                                      "py-2",
+                                                      "rounded-md",
+                                                      "text-off-white",
+                                                      "w-full"
+                                                    ],
+                                                    "attrs": [
+                                                      "name",
+                                                      "placeholder"
+                                                    ]
+                                                  }
+                                                ],
+                                                "many": true
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "flex",
+                                                  "items-center",
+                                                  "mb-4",
+                                                  "my-2"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "input",
+                                                    "id": "subscribe",
+                                                    "classes": [
+                                                      "hidden"
+                                                    ],
+                                                    "attrs": [
+                                                      "name",
+                                                      "type",
+                                                      "value"
+                                                    ],
+                                                    "type": "checkbox"
+                                                  },
+                                                  {
+                                                    "tag": "label",
+                                                    "classes": [
+                                                      "flex",
+                                                      "items-center",
+                                                      "justify-center",
+                                                      "p-1",
+                                                      "relative",
+                                                      "rounded",
+                                                      "select-none",
+                                                      "text-xs"
+                                                    ],
+                                                    "attrs": [
+                                                      "for",
+                                                      "tabindex"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "bg-black",
+                                                          "border",
+                                                          "border-grey2",
+                                                          "mr-2",
+                                                          "p-1",
+                                                          "rounded",
+                                                          "transition-all"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "svg",
+                                                            "attrs": [
+                                                              "fill",
+                                                              "height",
+                                                              "viewbox",
+                                                              "width",
+                                                              "xmlns"
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "opacity-:id",
+                                                          "text-white"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "p",
+                                                            "text": true,
+                                                            "children": [
+                                                              {
+                                                                "tag": "a",
+                                                                "attrs": [
+                                                                  "href"
+                                                                ],
+                                                                "text": true
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "button",
+                                                "classes": [
+                                                  "-ml-4",
+                                                  "bg-black",
+                                                  "cursor-not-allowed",
+                                                  "flex",
+                                                  "gap-3",
+                                                  "items-center",
+                                                  "justify-normal",
+                                                  "mt-8",
+                                                  "opacity-:id",
+                                                  "px-4",
+                                                  "py-2",
+                                                  "rounded-md",
+                                                  "text-lg",
+                                                  "text-white"
+                                                ],
+                                                "attrs": [
+                                                  "disabled",
+                                                  "type"
+                                                ],
+                                                "text": true,
+                                                "children": [
+                                                  {
+                                                    "tag": "svg",
+                                                    "attrs": [
+                                                      "color",
+                                                      "fill",
+                                                      "height",
+                                                      "viewbox",
+                                                      "width",
+                                                      "xmlns"
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ],
+                                            "many": true
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "many": true
+              },
+              {
+                "tag": "nav",
+                "classes": [
+                  "backdrop-blur-md",
+                  "bg-opacity-0",
+                  "bg-white",
+                  "duration-:id",
+                  "ease-in-out",
+                  "fixed",
+                  "flex",
+                  "h-:id",
+                  "items-center",
+                  "justify-between",
+                  "px-4",
+                  "text-black",
+                  "transition-all",
+                  "w-full",
+                  "z-:id"
+                ],
+                "attrs": [
+                  "data-datocms-noindex"
+                ],
+                "children": [
+                  {
+                    "tag": "a",
+                    "classes": [
+                      "-ml-2",
+                      "flex",
+                      "gap-2",
+                      "items-center",
+                      "p-2",
+                      "rounded-md"
+                    ],
+                    "attrs": [
+                      "aria-label",
+                      "href"
+                    ],
+                    "children": [
+                      {
+                        "tag": "svg",
+                        "classes": [
+                          "duration-:id",
+                          "ease-in-out",
+                          "fill-black",
+                          "transition-all"
+                        ],
+                        "attrs": [
+                          "fill",
+                          "height",
+                          "viewbox",
+                          "width",
+                          "xmlns"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "ul",
+                    "classes": [
+                      "gap-4",
+                      "hidden",
+                      "items-center",
+                      "justify-center"
+                    ],
+                    "children": [
+                      {
+                        "tag": "li",
+                        "children": [
+                          {
+                            "tag": "a",
+                            "classes": [
+                              "font-medium",
+                              "group",
+                              "p-2",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label",
+                              "href",
+                              "target"
+                            ],
+                            "children": [
+                              {
+                                "tag": "span",
+                                "text": true
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "bg-black"
+                            ]
+                          }
+                        ],
+                        "many": true
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "ul",
+                    "classes": [
+                      "flex",
+                      "gap-1",
+                      "justify-end"
+                    ],
+                    "children": [
+                      {
+                        "tag": "li",
+                        "attrs": [
+                          "data-search-sheet-trigger"
+                        ],
+                        "children": [
+                          {
+                            "tag": "button",
+                            "classes": [
+                              "flex",
+                              "gap-2",
+                              "items-center",
+                              "p-2",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "attrs": [
+                                  "fill",
+                                  "height",
+                                  "viewbox",
+                                  "width",
+                                  "xmlns"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "button",
+                            "classes": [
+                              "basm",
+                              "basm_basket_btn",
+                              "flex",
+                              "font-medium",
+                              "gap-2",
+                              "items-center",
+                              "p-2",
+                              "relative",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "attrs": [
+                                  "fill",
+                                  "height",
+                                  "viewbox",
+                                  "width",
+                                  "xmlns"
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "many": true
+                      },
+                      {
+                        "tag": "li",
+                        "classes": [
+                          "hidden"
+                        ],
+                        "children": [
+                          {
+                            "tag": "a",
+                            "classes": [
+                              "flex",
+                              "gap-2",
+                              "items-center",
+                              "p-2",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label",
+                              "href"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "attrs": [
+                                  "fill",
+                                  "height",
+                                  "viewbox",
+                                  "width",
+                                  "xmlns"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "li",
+                        "classes": [
+                          "gap-2",
+                          "hidden",
+                          "items-center"
+                        ],
+                        "children": [
+                          {
+                            "tag": "button",
+                            "classes": [
+                              "basm",
+                              "basm_profile_btn",
+                              "flex",
+                              "font-medium",
+                              "gap-2",
+                              "items-center",
+                              "p-2",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "w-6"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "svg",
+                                    "attrs": [
+                                      "fill",
+                                      "height",
+                                      "viewbox",
+                                      "width",
+                                      "xmlns"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "li",
+                        "classes": [
+                          "block"
+                        ],
+                        "children": [
+                          {
+                            "tag": "button",
+                            "classes": [
+                              "-mr-2",
+                              "flex",
+                              "font-bold",
+                              "gap-2",
+                              "items-center",
+                              "p-2",
+                              "rounded-md"
+                            ],
+                            "attrs": [
+                              "aria-label"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "attrs": [
+                                  "fill",
+                                  "height",
+                                  "viewbox",
+                                  "width",
+                                  "xmlns"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "flex",
+                  "flex-col",
+                  "items-stretch",
+                  "min-h-svh"
+                ],
+                "children": [
+                  {
+                    "tag": "main",
+                    "classes": [
+                      "pt-:id",
+                      "section-container"
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "footer",
+                "classes": [
+                  "bg-black",
+                  "mt-auto"
+                ],
+                "attrs": [
+                  "data-datocms-noindex"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "gap-x-6",
+                      "grid",
+                      "grid-cols-1",
+                      "mx-auto",
+                      "section-container",
+                      "text-white"
+                    ],
+                    "children": [
+                      {
+                        "tag": "nav",
+                        "children": [
+                          {
+                            "tag": "ul",
+                            "classes": [
+                              "flex",
+                              "flex-col",
+                              "gap-y-4"
+                            ],
+                            "children": [
+                              {
+                                "tag": "li",
+                                "classes": [
+                                  "overflow-hidden"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "classes": [
+                                      "group",
+                                      "relative",
+                                      "rounded-md",
+                                      "text-base"
+                                    ],
+                                    "attrs": [
+                                      "aria-label",
+                                      "href",
+                                      "target"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "span",
+                                        "text": true
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "many": true
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "nav",
+                        "classes": [
+                          "col-span-1"
+                        ],
+                        "children": [
+                          {
+                            "tag": "ul",
+                            "classes": [
+                              "gap-y-6",
+                              "grid",
+                              "grid-cols-1"
+                            ],
+                            "children": [
+                              {
+                                "tag": "li",
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "classes": [
+                                      "duration-:id",
+                                      "ease-in-out",
+                                      "group",
+                                      "p0",
+                                      "relative",
+                                      "rounded-md",
+                                      "transition-opacity"
+                                    ],
+                                    "attrs": [
+                                      "aria-label",
+                                      "href",
+                                      "target"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "span",
+                                        "text": true
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "many": true
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "children": [
+                              {
+                                "tag": "h3",
+                                "classes": [
+                                  "font-bold",
+                                  "mb-2",
+                                  "text-sm"
+                                ],
+                                "text": true
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "prose",
+                                  "text-off-white",
+                                  "text-sm"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "p",
+                                    "text": true,
+                                    "children": [
+                                      {
+                                        "tag": "em",
+                                        "text": true,
+                                        "many": true
+                                      },
+                                      {
+                                        "tag": "br",
+                                        "many": true
+                                      },
+                                      {
+                                        "tag": "span",
+                                        "text": true,
+                                        "children": [
+                                          {
+                                            "tag": "br"
+                                          },
+                                          {
+                                            "tag": "a",
+                                            "attrs": [
+                                              "href"
+                                            ],
+                                            "text": true
+                                          }
+                                        ],
+                                        "many": true
+                                      },
+                                      {
+                                        "tag": "a",
+                                        "attrs": [
+                                          "href"
+                                        ],
+                                        "text": true,
+                                        "many": true
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "p",
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "attrs": [
+                                      "href",
+                                      "rel",
+                                      "target"
+                                    ],
+                                    "text": true,
+                                    "many": true
+                                  },
+                                  {
+                                    "tag": "br"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "a",
+                            "attrs": [
+                              "aria-label",
+                              "href"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "classes": [
+                                  "mb-4"
+                                ],
+                                "attrs": [
+                                  "fill",
+                                  "height",
+                                  "viewbox",
+                                  "width",
+                                  "xmlns"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "section",
+                        "classes": [
+                          "flex",
+                          "flex-col",
+                          "gap-y-8"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "children": [
+                              {
+                                "tag": "h3",
+                                "classes": [
+                                  "font-bold",
+                                  "mb-2",
+                                  "text-sm"
+                                ],
+                                "text": true
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "prose",
+                                  "text-off-white",
+                                  "text-sm"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "p",
+                                    "classes": [
+                                      "p1"
+                                    ],
+                                    "text": true,
+                                    "children": [
+                                      {
+                                        "tag": "br",
+                                        "many": true
+                                      },
+                                      {
+                                        "tag": "a",
+                                        "attrs": [
+                                          "href"
+                                        ],
+                                        "text": true,
+                                        "many": true
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "nav",
+                        "classes": [
+                          "text-right"
+                        ],
+                        "children": [
+                          {
+                            "tag": "ul",
+                            "children": [
+                              {
+                                "tag": "li",
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "classes": [
+                                      "pb-1",
+                                      "pt-2"
+                                    ],
+                                    "attrs": [
+                                      "href",
+                                      "target"
+                                    ],
+                                    "text": true
+                                  }
+                                ],
+                                "many": true
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "many": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "seen": 12,
+  "aborted": 0,
+  "html": true,
+  "rsc": true
+}
