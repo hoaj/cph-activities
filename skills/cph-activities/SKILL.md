@@ -2,7 +2,7 @@
 name: cph-activities
 description: Use when the user asks what to do in Copenhagen in general terms (a date, an evening out, the weekend, something with friends or kids, "what's on Wednesday"), so the answer needs events and activities from several sources at once. Says which of this plugin's CLI skills to ask (kulturkbh, billetto, kultunaut, brugbyen, wannasport), and how to merge events several sources list into one, keeping the most complete and most current details and every link.
 ---
-<!-- version: 0.9.0 -->
+<!-- version: 0.10.0 -->
 
 # cph-activities: what to do in Copenhagen
 
