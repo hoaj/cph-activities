@@ -2,7 +2,7 @@
 name: kultunaut
 description: Use when the user asks what is on in Copenhagen (Københavns and Frederiksberg Kommune) on a day or in a period. KultuNaut is the broadest calendar (concerts, theatre, exhibitions, talks, sport, church, children), and every event links to its KultuNaut page. Gives no prices.
 ---
-<!-- version: 0.7.0 -->
+<!-- version: 0.8.0 -->
 
 # kultunaut
 
@@ -16,7 +16,7 @@ description: Use when the user asks what is on in Copenhagen (Københavns and Fr
 <!-- commands:start -->
 | Command | Flags | Does |
 |---|---|---|
-| `kultunaut event list` | `[--from <from>]` first date, YYYY-MM-DD (default: today)<br>`[--to <to>]` last date, YYYY-MM-DD (default: --from)<br>`[--genre <genre>]` one genre from `genre list` (any case), e.g. musik, jazz, teater<br>`[--from-time <from-time>]` earliest start time, HH:MM; events with no start time are left out<br>`[--to-time <to-time>]` latest start time, HH:MM; events with no start time are left out<br>`[--include-ongoing]` also exhibitions and courses that started before --from<br>`[--limit <n>]` most events to return (default 40) | Everything on in Copenhagen (Københavns and Frederiksberg Kommune) on a day or period from KultuNaut, the broadest calendar, with a link to each event's page; no prices |
+| `kultunaut event list` | `[--from <from>]` first date, YYYY-MM-DD (default: today)<br>`[--to <to>]` last date, YYYY-MM-DD (default: --from)<br>`[--genre <genre>]` one genre from `genre list` (any case), e.g. musik, jazz, teater<br>`[--from-time <from-time>]` earliest start time, HH:MM; events with no start time are left out<br>`[--to-time <to-time>]` latest start time, HH:MM; events with no start time are left out<br>`[--exclude-kids]` leave out events KultuNaut tags for children (For børn, Børneteater, Baby/Barsel, Familiefilm, … Børn)<br>`[--include-ongoing]` also exhibitions and courses that started before --from<br>`[--limit <n>]` most events to return (default 40) | Everything on in Copenhagen (Københavns and Frederiksberg Kommune) on a day or period from KultuNaut, the broadest calendar, with a link to each event's page; no prices |
 | `kultunaut genre list` |  | The genres KultuNaut sorts events into, for `event list --genre` |
 <!-- commands:end -->
 

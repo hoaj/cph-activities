@@ -35,3 +35,34 @@ export const isFree = (price: string | null | undefined): boolean | null => {
 
 /** The event's own page, where the user reads more or books; relative links resolve on the origin. */
 export const absoluteUrl = (url: string, origin: string): string => new URL(url, origin).toString();
+
+/** slug in a source link (`/kilder/<slug>.html`) → postcode of the source's address; sources with none are left out. */
+export const postcodeBySlug = (sources: Array<{ href: string; addr: string | null; name?: string }>): Map<string, string> => {
+  const map = new Map<string, string>();
+  for (const s of sources) {
+    const slug = s.href.match(/\/kilder\/([^/]+?)\.html/)?.[1];
+    const postcode = postcodeOf(s.addr);
+    if (slug && postcode) map.set(slug, postcode);
+  }
+  return map;
+};
+
+const normTitle = (title: string): string =>
+  title.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, "").replace(/\s+/g, " ").trim();
+
+/**
+ * kulturKBH lists one event once per source that announces it. Rows with the same date, time (both none
+ * counts as the same) and normalised title become one: the first stays, the others go in `alsoAt`.
+ */
+export const mergeSameEvents = <T extends { date: string; time: string | null; title: string; venue: string | null; url: string }>(
+  events: T[],
+): Array<T & { alsoAt: Array<{ venue: string | null; url: string }> }> => {
+  const byKey = new Map<string, T & { alsoAt: Array<{ venue: string | null; url: string }> }>();
+  for (const e of events) {
+    const key = `${e.date}|${e.time ?? ""}|${normTitle(e.title)}`;
+    const first = byKey.get(key);
+    if (first) first.alsoAt.push({ venue: e.venue, url: e.url });
+    else byKey.set(key, { ...e, alsoAt: [] });
+  }
+  return [...byKey.values()];
+};

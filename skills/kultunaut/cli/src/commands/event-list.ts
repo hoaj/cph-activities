@@ -4,6 +4,7 @@ import listEvents from "../operations/listEvents";
 import site from "../site";
 import { parseWhen } from "../lib/when";
 import { firstPageAtOrAfter } from "../lib/paging";
+import { isForKids } from "../lib/kids";
 
 const AREA = "Kbh. og Frederiksberg"; // Copenhagen here means Københavns + Frederiksberg Kommune
 const PAGE_SIZE = 12;
@@ -22,6 +23,7 @@ export default defineCommand({
     genre: z.string().optional().describe("one genre from `genre list` (any case), e.g. musik, jazz, teater"),
     fromTime: clock.optional().describe("earliest start time, HH:MM; events with no start time are left out"),
     toTime: clock.optional().describe("latest start time, HH:MM; events with no start time are left out"),
+    excludeKids: z.boolean().default(false).describe("leave out events KultuNaut tags for children (For børn, Børneteater, Baby/Barsel, Familiefilm, … Børn)"),
     includeOngoing: z.boolean().default(false).describe("also exhibitions and courses that started before --from"),
     limit: z.coerce.number().int().min(1).max(200).default(40).describe("most events to return (default 40)"),
   }),
@@ -70,6 +72,7 @@ export default defineCommand({
         const w = parseWhen(e.when, e.venue);
         const ongoing = w.multiDay && w.startDate !== null && w.startDate < from;
         if (ongoing && !args.includeOngoing) continue;
+        if (args.excludeKids && isForKids(e.genre)) continue;
         if (timed) {
           if (!w.startTime) continue;
           if (args.fromTime && w.startTime < args.fromTime) continue;
