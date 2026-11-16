@@ -1,0 +1,41 @@
+{
+  "operation": "GET /",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "www.teaterbilletter.dk",
+  "method": "GET",
+  "path": "/",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 308,
+      "contentType": "text/html",
+      "headers": {
+        "cache-control": null,
+        "content-type": "text/html",
+        "date": null,
+        "location": null,
+        "refresh": null,
+        "server": null,
+        "strict-transport-security": null,
+        "x-vercel-id": null
+      },
+      "body": {
+        "kind": "empty"
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0
+}

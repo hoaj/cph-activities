@@ -1,0 +1,186 @@
+{
+  "operation": "GET /api/venues",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "teaterbilletter.dk",
+  "method": "GET",
+  "path": "/api/venues",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "cookie": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "age": null,
+        "cache-control": null,
+        "content-encoding": null,
+        "content-type": "application/json",
+        "date": null,
+        "server": null,
+        "strict-transport-security": null,
+        "x-matched-path": null,
+        "x-vercel-cache": null,
+        "x-vercel-id": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "object",
+          "fields": {
+            "venues": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "fields": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "street": {
+                    "type": "string"
+                  },
+                  "number": {
+                    "type": "string"
+                  },
+                  "letter": {
+                    "type": "string"
+                  },
+                  "postCode": {
+                    "type": "string",
+                    "format": "numeric"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "region": {
+                    "type": "string"
+                  },
+                  "municipality": {
+                    "type": "string"
+                  },
+                  "geoLat": {
+                    "type": "number"
+                  },
+                  "geoLon": {
+                    "type": "number"
+                  },
+                  "organizer": {
+                    "type": "object",
+                    "fields": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "links": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "fields": {
+                            "type": {
+                              "type": "string"
+                            },
+                            "address": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "images": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "fields": {
+                            "url": {
+                              "type": "string"
+                            },
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            },
+                            "orientation": {
+                              "type": "string"
+                            },
+                            "accreditation": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "street": {
+                        "type": "string"
+                      },
+                      "number": {
+                        "type": "string"
+                      },
+                      "letter": {
+                        "type": "string"
+                      },
+                      "floor": {
+                        "type": "string"
+                      },
+                      "side": {
+                        "type": "string"
+                      },
+                      "postCode": {
+                        "type": "string",
+                        "format": "numeric"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "region": {
+                        "type": "string"
+                      },
+                      "municipality": {
+                        "type": "string"
+                      },
+                      "vatNumber": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "object",
+                        "fields": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "seen": 2,
+  "aborted": 0
+}

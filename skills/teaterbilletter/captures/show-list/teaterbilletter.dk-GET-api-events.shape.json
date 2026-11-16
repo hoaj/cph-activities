@@ -1,0 +1,609 @@
+{
+  "operation": "GET /api/events",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "teaterbilletter.dk",
+  "method": "GET",
+  "path": "/api/events",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "cookie": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "page": {
+          "type": "string"
+        },
+        "pageSize": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "age": null,
+        "cache-control": null,
+        "content-encoding": null,
+        "content-type": "application/json",
+        "date": null,
+        "server": null,
+        "strict-transport-security": null,
+        "x-matched-path": null,
+        "x-vercel-cache": null,
+        "x-vercel-id": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "object",
+          "fields": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "fields": {
+                  "eventNo": {
+                    "type": "number"
+                  },
+                  "eventCode": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "subtitle": {
+                    "type": "string"
+                  },
+                  "teaser": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "categoryName": {
+                    "type": "string"
+                  },
+                  "subCategoryName": {
+                    "type": "string"
+                  },
+                  "sortName": {
+                    "type": "string"
+                  },
+                  "mappedCategoryNames": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "playsFrom": {
+                    "type": "string",
+                    "format": "datetime"
+                  },
+                  "playsTo": {
+                    "type": "string",
+                    "format": "datetime"
+                  },
+                  "exitLinkUrl": {
+                    "type": "string"
+                  },
+                  "videoUrl": {
+                    "type": "string"
+                  },
+                  "ageFrom": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "ageTo": {
+                    "type": "null"
+                  },
+                  "accreditations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "fields": {
+                        "positionTypeName": {
+                          "type": "string"
+                        },
+                        "firstName": {
+                          "type": "string"
+                        },
+                        "lastName": {
+                          "type": "string"
+                        },
+                        "positionName": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "fields": {
+                        "url": {
+                          "type": "string"
+                        },
+                        "width": {
+                          "type": "number"
+                        },
+                        "height": {
+                          "type": "number"
+                        },
+                        "orientation": {
+                          "type": "string"
+                        },
+                        "accreditation": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "isUserFavourite": {
+                    "type": "boolean"
+                  },
+                  "venue": {
+                    "type": "object",
+                    "fields": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "street": {
+                        "type": "string"
+                      },
+                      "number": {
+                        "type": "string"
+                      },
+                      "letter": {
+                        "type": "string"
+                      },
+                      "postCode": {
+                        "type": "string",
+                        "format": "numeric"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "region": {
+                        "type": "string"
+                      },
+                      "municipality": {
+                        "type": "string"
+                      },
+                      "geoLat": {
+                        "type": "number"
+                      },
+                      "geoLon": {
+                        "type": "number"
+                      },
+                      "organizer": {
+                        "type": "object",
+                        "fields": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "links": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "fields": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "address": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "images": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "fields": {
+                                "url": {
+                                  "type": "string"
+                                },
+                                "width": {
+                                  "type": "number"
+                                },
+                                "height": {
+                                  "type": "number"
+                                },
+                                "orientation": {
+                                  "type": "string"
+                                },
+                                "accreditation": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "street": {
+                            "type": "string"
+                          },
+                          "number": {
+                            "type": "string"
+                          },
+                          "letter": {
+                            "type": "string"
+                          },
+                          "floor": {
+                            "type": "string"
+                          },
+                          "side": {
+                            "type": "string"
+                          },
+                          "postCode": {
+                            "type": "string",
+                            "format": "numeric"
+                          },
+                          "city": {
+                            "type": "string"
+                          },
+                          "region": {
+                            "type": "string"
+                          },
+                          "municipality": {
+                            "type": "string"
+                          },
+                          "vatNumber": {
+                            "type": "string",
+                            "format": "numeric"
+                          },
+                          "country": {
+                            "type": "object",
+                            "fields": {
+                              "code": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "sharelink": {
+                    "type": "string"
+                  },
+                  "ticketPriceMin": {
+                    "type": "number"
+                  },
+                  "ticketPriceMax": {
+                    "type": "number"
+                  },
+                  "showDates": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "datetime"
+                    }
+                  },
+                  "shows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "fields": {
+                        "showTime": {
+                          "type": "string",
+                          "format": "datetime"
+                        },
+                        "ticketsLeft": {
+                          "type": "null"
+                        }
+                      }
+                    }
+                  },
+                  "organizer": {
+                    "type": "object",
+                    "fields": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "links": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "fields": {
+                            "type": {
+                              "type": "string"
+                            },
+                            "address": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "images": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "fields": {
+                            "url": {
+                              "type": "string"
+                            },
+                            "width": {
+                              "type": "number"
+                            },
+                            "height": {
+                              "type": "number"
+                            },
+                            "orientation": {
+                              "type": "string"
+                            },
+                            "accreditation": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "street": {
+                        "type": "string"
+                      },
+                      "number": {
+                        "type": "string"
+                      },
+                      "letter": {
+                        "type": "string"
+                      },
+                      "floor": {
+                        "type": "string"
+                      },
+                      "side": {
+                        "type": "string"
+                      },
+                      "postCode": {
+                        "type": "string",
+                        "format": "numeric"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "region": {
+                        "type": "string"
+                      },
+                      "municipality": {
+                        "type": "string"
+                      },
+                      "vatNumber": {
+                        "type": "string",
+                        "format": "numeric"
+                      },
+                      "country": {
+                        "type": "object",
+                        "fields": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "durationInMinutes": {
+                    "type": "number"
+                  },
+                  "intermissionIndicator": {
+                    "type": "boolean"
+                  },
+                  "producer": {
+                    "type": "object",
+                    "fields": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "playWriter": {
+                    "type": "string"
+                  },
+                  "composer": {
+                    "type": "string"
+                  },
+                  "choreographer": {
+                    "type": "string"
+                  },
+                  "stageName": {
+                    "type": "union",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "reviews": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "fields": {
+                        "reference": {
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "rating": {
+                          "type": "union",
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "fields": {
+                                "score": {
+                                  "type": "number"
+                                },
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "education": {
+                    "type": "object",
+                    "fields": {
+                      "indicator": {
+                        "type": "boolean"
+                      },
+                      "ageGroups": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "url": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "ticketOperator": {
+                    "type": "object",
+                    "fields": {
+                      "operator": {
+                        "type": "string"
+                      },
+                      "identifier": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "scheduledShows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "fields": {
+                        "code": {
+                          "type": "string"
+                        },
+                        "dateTime": {
+                          "type": "string",
+                          "format": "datetime"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "stageName": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "nonVerbal": {
+                    "type": "boolean"
+                  },
+                  "primaryLanguage": {
+                    "type": "string"
+                  },
+                  "keywords": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "fields": {
+                "currentPage": {
+                  "type": "number"
+                },
+                "pageCount": {
+                  "type": "number"
+                },
+                "pageSize": {
+                  "type": "number"
+                },
+                "rowCount": {
+                  "type": "number"
+                },
+                "firstRowOnPage": {
+                  "type": "number"
+                },
+                "lastRowOnPage": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0
+}

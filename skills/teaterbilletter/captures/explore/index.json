@@ -1,0 +1,288 @@
+{
+  "task": "explore",
+  "explore": true,
+  "startPath": "/",
+  "write": false,
+  "pages": [
+    {
+      "path": "teaterbilletter.dk/",
+      "operations": [
+        "GET /api/venues"
+      ]
+    },
+    {
+      "path": "teaterbilletter.dk/forestillinger",
+      "operations": [
+        "GET /api/venues",
+        "GET /api/categories",
+        "GET /api/events"
+      ]
+    },
+    {
+      "path": "teaterbilletter.dk/kalender",
+      "document": "GET /kalender",
+      "operations": []
+    }
+  ],
+  "operations": [
+    {
+      "operation": "GET /",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "method": "GET",
+      "host": "www.teaterbilletter.dk",
+      "path": "/",
+      "file": "GET-root.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "rsc": true,
+      "html": true,
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/",
+      "file": "teaterbilletter.dk-GET-root.shape.json",
+      "pages": [
+        "teaterbilletter.dk/",
+        "teaterbilletter.dk/forestillinger",
+        "teaterbilletter.dk/kalender"
+      ],
+      "seen": 12,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /api/venues",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/api/venues",
+      "file": "teaterbilletter.dk-GET-api-venues.shape.json",
+      "pages": [
+        "teaterbilletter.dk/",
+        "teaterbilletter.dk/forestillinger"
+      ],
+      "seen": 2,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /forestillinger",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "rsc": true,
+      "html": true,
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/forestillinger",
+      "file": "teaterbilletter.dk-GET-forestillinger.shape.json",
+      "pages": [
+        "teaterbilletter.dk/",
+        "teaterbilletter.dk/forestillinger",
+        "teaterbilletter.dk/kalender"
+      ],
+      "seen": 17,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /forestillinger/:id",
+      "kind": "rest",
+      "effect": "read",
+      "rsc": true,
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/forestillinger/:id",
+      "file": "teaterbilletter.dk-GET-forestillinger-id.shape.json",
+      "pages": [
+        "teaterbilletter.dk/",
+        "teaterbilletter.dk/forestillinger"
+      ],
+      "seen": 38,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /favoritter",
+      "kind": "rest",
+      "effect": "read",
+      "rsc": true,
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/favoritter",
+      "file": "teaterbilletter.dk-GET-favoritter.shape.json",
+      "pages": [
+        "teaterbilletter.dk/",
+        "teaterbilletter.dk/forestillinger",
+        "teaterbilletter.dk/kalender"
+      ],
+      "seen": 6,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /mit-teater",
+      "kind": "rest",
+      "effect": "read",
+      "rsc": true,
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/mit-teater",
+      "file": "teaterbilletter.dk-GET-mit-teater.shape.json",
+      "pages": [
+        "teaterbilletter.dk/",
+        "teaterbilletter.dk/forestillinger",
+        "teaterbilletter.dk/kalender"
+      ],
+      "seen": 16,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /nyhedsbrev",
+      "kind": "rest",
+      "effect": "read",
+      "rsc": true,
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/nyhedsbrev",
+      "file": "teaterbilletter.dk-GET-nyhedsbrev.shape.json",
+      "pages": [
+        "teaterbilletter.dk/",
+        "teaterbilletter.dk/forestillinger",
+        "teaterbilletter.dk/kalender"
+      ],
+      "seen": 12,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /gavekort",
+      "kind": "rest",
+      "effect": "read",
+      "rsc": true,
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/gavekort",
+      "file": "teaterbilletter.dk-GET-gavekort.shape.json",
+      "pages": [
+        "teaterbilletter.dk/",
+        "teaterbilletter.dk/forestillinger",
+        "teaterbilletter.dk/kalender"
+      ],
+      "seen": 12,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /inspiration",
+      "kind": "rest",
+      "effect": "read",
+      "rsc": true,
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/inspiration",
+      "file": "teaterbilletter.dk-GET-inspiration.shape.json",
+      "pages": [
+        "teaterbilletter.dk/",
+        "teaterbilletter.dk/forestillinger",
+        "teaterbilletter.dk/kalender"
+      ],
+      "seen": 12,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /forestillinger",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "method": "GET",
+      "host": "www.teaterbilletter.dk",
+      "path": "/forestillinger",
+      "file": "GET-forestillinger.shape.json",
+      "pages": [
+        "/forestillinger"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /api/categories",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/api/categories",
+      "file": "teaterbilletter.dk-GET-api-categories.shape.json",
+      "pages": [
+        "teaterbilletter.dk/forestillinger"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /api/events",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/api/events",
+      "file": "teaterbilletter.dk-GET-api-events.shape.json",
+      "pages": [
+        "teaterbilletter.dk/forestillinger"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /kalender",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "method": "GET",
+      "host": "www.teaterbilletter.dk",
+      "path": "/kalender",
+      "file": "GET-kalender.shape.json",
+      "pages": [
+        "/kalender"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /kalender",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "teaterbilletter.dk",
+      "path": "/kalender",
+      "file": "teaterbilletter.dk-GET-kalender.shape.json",
+      "pages": [
+        "teaterbilletter.dk/kalender"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /kalender",
+      "kind": "rest",
+      "effect": "write",
+      "effectUnknown": true,
+      "serverAction": true,
+      "method": "POST",
+      "host": "teaterbilletter.dk",
+      "path": "/kalender",
+      "file": "teaterbilletter.dk-POST-kalender.shape.json",
+      "pages": [
+        "teaterbilletter.dk/kalender"
+      ],
+      "seen": 1,
+      "aborted": 1
+    }
+  ]
+}
