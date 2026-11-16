@@ -1,0 +1,23 @@
+{
+  "task": "source-list",
+  "startPath": "/kilder.html",
+  "write": false,
+  "operations": [
+    {
+      "operation": "GET /kilder.html",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "kulturkbh.dk",
+      "path": "/kilder.html",
+      "file": "GET-kilder.html.shape.json",
+      "pages": [
+        "/kilder.html"
+      ],
+      "seen": 1,
+      "aborted": 0
+    }
+  ]
+}

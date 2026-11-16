@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { defineCommand, inputFailure } from "../runtime/command";
 import listEvents from "../operations/listEvents";
+import listSources from "../operations/listSources";
 import site from "../site";
-import { absoluteUrl, areaOf, isFree, postcodeOf } from "../lib/events";
+import { absoluteUrl, areaOf, isFree, mergeSameEvents, postcodeBySlug, postcodeOf } from "../lib/events";
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "use YYYY-MM-DD");
 const today = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Copenhagen" });
@@ -19,16 +20,19 @@ export default defineCommand({
     includeOutside: z.boolean().default(false).describe("also events outside Copenhagen (Københavns and Frederiksberg Kommune), e.g. Gentofte, Hvidovre, Tårnby …"),
     limit: z.coerce.number().int().min(1).max(500).default(50).describe("most events to return (default 50)"),
   }),
-  uses: [listEvents],
+  uses: [listEvents, listSources],
   run: async (args, { call }) => {
     const from = args.from ?? today();
     if (args.to && args.to < from) inputFailure("--to is before --from.");
     const words = args.query?.toLowerCase().split(/\s+/).filter(Boolean) ?? [];
 
     const rows = await call(listEvents, { v: String(Date.now()) });
-    const events = rows
+    // Many rows carry no postcode: place them by their source's address (kilder.html), read once and only when needed.
+    const needsSources = rows.some((e) => e.date >= from && !postcodeOf(e.addr, e.location));
+    const bySlug = needsSources ? postcodeBySlug((await call(listSources, {})).sources) : new Map<string, string>();
+    const events = mergeSameEvents(rows
       .map((e) => {
-        const postcode = postcodeOf(e.addr, e.location);
+        const postcode = postcodeOf(e.addr, e.location) ?? bySlug.get(e.src) ?? null;
         return {
           date: e.date,
           time: e.t || null,
@@ -53,7 +57,7 @@ export default defineCommand({
         const text = `${e.title} ${e.description ?? ""}`.toLowerCase();
         return words.every((w) => text.includes(w));
       })
-      .sort((a, b) => (a.date + (a.time ?? "")).localeCompare(b.date + (b.time ?? "")));
+      .sort((a, b) => (a.date + (a.time ?? "")).localeCompare(b.date + (b.time ?? ""))));
 
     return { total: events.length, events: events.slice(0, args.limit) };
   },
