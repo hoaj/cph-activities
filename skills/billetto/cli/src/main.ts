@@ -11,14 +11,17 @@ import { doctor, type Exec } from "./runtime/doctor";
 import { ContractError, DryRun, EXIT, Failure, emit, errorEnvelope, note, type Surface } from "./runtime/envelope";
 import { bugFrame, bugKey, errorName, redactStack } from "./runtime/fingerprint";
 import { BUILTIN_FLAGS, commandHelp, flagDescription, flagSpecs, GLOBAL_FLAGS, help, isWriteCommand, type FlagSpec } from "./runtime/help";
+import { findChrome } from "./runtime/chrome";
 import { chromeLogin } from "./runtime/login";
 import { createMcpServer, serveStdio, toolName, type McpTool, type ServerInfo } from "./runtime/mcp";
+import { neverList, neverNext, NeverSent } from "./runtime/never";
 import { hashPassword, MIN_PASSWORD_LENGTH, remoteConfig, type RemoteConfig } from "./runtime/remote-config";
 import { selftest } from "./runtime/selftest";
 import { ensureStateDir, legacyStateDir, migrateStateDir, stateDir, type Session } from "./runtime/session";
 import type { SessionCheck } from "./runtime/setup";
 import type { Operation } from "./runtime/operation";
 import { siteProblems, type Site } from "./runtime/site";
+import { browserTransport } from "./runtime/transport";
 import { z } from "zod";
 
 export type App = {
@@ -116,10 +119,16 @@ function parseArgs(command: Command, tokens: string[]) {
 }
 
 function defaultDeps(app: App): Deps {
+  const env = app.deps?.env ?? process.env;
+  // transport "browser": requests leave from a Chrome tab on the site; release() closes that Chrome.
+  const tab = app.site.transport === "browser" && !app.deps?.fetch ? browserTransport(app.site, { env, note: app.deps?.note ?? note }) : undefined;
   return {
-    fetch: (input, init) => fetch(input, init),
-    env: process.env,
-    login: (headless, options) => chromeLogin(app.site, { headless, note, fromProfile: options?.fromProfile }),
+    fetch: tab?.fetch ?? ((input, init) => fetch(input, init)),
+    // login.refresh.renew: never through transport "browser"'s Chrome; a test's fake fetch when it gave one.
+    plainFetch: app.deps?.fetch ?? ((input, init) => fetch(input, init)),
+    env,
+    login: (headless, options) => chromeLogin(app.site, { headless, note, env, fromProfile: options?.fromProfile }),
+    release: async () => tab?.close(),
     sleep: (ms) => Bun.sleep(ms),
     retryDelays: [500, 1500],
     note,
@@ -146,12 +155,13 @@ const compiled = () => import.meta.path.includes("$bunfs") || import.meta.path.i
 export async function run(argv: string[], app: App): Promise<RunResult> {
   const { site } = app;
   let commandName = "main";
+  let deps: Deps | undefined;
   try {
     const problems = siteProblems(site);
     if (problems.length) throw new ContractError(`site.ts: ${problems.join("; ")}`);
     const { words, flags, account, confirm } = splitGlobals(argv);
     const commandWords = words.slice(0, 2).join(" ");
-    const deps = defaultDeps(app);
+    deps = defaultDeps(app);
     moveLegacyStateDir(site, deps);
     const client = new Client(site, deps, { confirm });
     let builtin = words[0] ?? "help";
@@ -190,6 +200,9 @@ export async function run(argv: string[], app: App): Promise<RunResult> {
         }
         if (f.port !== undefined && !f.http) throw input("--port is for remote mode; pass it with --http");
         if (!f.http) return { output: null, code: EXIT.ok, serve: "mcp" };
+        if (site.transport === "browser" && !findChrome(deps.env).path) {
+          throw input(`this CLI skill sends its requests from Chrome (transport "browser"), and there is no Chrome here; remote mode needs Chrome in its image`);
+        }
         // Remote mode: the host's settings are checked here, so a missing password is one input envelope.
         return { output: null, code: EXIT.ok, serve: "mcp-http", remote: remoteConfig(deps.env, { port: f.port as number | undefined }) };
       }
@@ -218,6 +231,8 @@ export async function run(argv: string[], app: App): Promise<RunResult> {
     return ok(await runTask(app, client, deps, command, parseArgs(command, flags), account));
   } catch (e) {
     return failed(e, site, commandName);
+  } finally {
+    await deps?.release?.();
   }
 }
 
@@ -228,12 +243,13 @@ async function runTask(app: App, client: Client, deps: Deps, command: Command, a
   if (app.site.auth === "login") await client.ensureSession();
   const chosen = await client.resolveAccount(account);
   deps.note(`${command.name}: ${command.uses.map((o) => o.name).join(" → ") || "no Operations"}`);
-  const result = await command.run(args as never, {
+  // A refusal the command caught (a fallback) still ends it: the user does that step on the site.
+  const result = await client.withRefusals(() => command.run(args as never, {
     call: client.call,
     session: { get ids() { return client.peek()?.ids ?? {}; } },
     account: chosen,
     note: deps.note,
-  });
+  }));
   return result ?? null;
 }
 
@@ -243,7 +259,12 @@ function failed(e: unknown, site: Site, commandName: string, surface: Surface = 
   if (e instanceof Failure) return { output: errorEnvelope(e, site, surface), code: EXIT[e.kind] };
   const stack = e instanceof Error ? e.stack : undefined;
   const what = e instanceof ContractError ? e.message : `${errorName(e)} in ${bugFrame(stack)}`;
-  const bug = new Failure("bug", what, { fingerprint: bugKey(site, commandName, e), stack: redactStack(e) });
+  const bug = new Failure("bug", what, {
+    fingerprint: bugKey(site, commandName, e),
+    stack: redactStack(e),
+    // A Task that tried it: the user does it on the site. check's own refusal is a plain bug in the plugin.
+    ...(e instanceof NeverSent && commandName !== "check" && { next: neverNext(e.rule, site, surface) }),
+  });
   return { output: errorEnvelope(bug, site, surface), code: EXIT.bug };
 }
 
@@ -266,11 +287,13 @@ function sessionReason(e: unknown, skill: string): string {
 
 /**
  * The Setup page's live check: the read Operations, called as `check` does but with the uploaded
- * Session and no sign-in or refresh, so a bad upload is refused before it replaces a working
- * Session. The candidate is never saved.
+ * Session and no sign-in, so a bad upload is refused before it replaces a working Session. Only
+ * login.refresh may renew it, in memory: then the renewed Session comes back to be stored, since the
+ * upload's refresh token is spent. Nothing is saved here.
  */
 export async function checkSession(app: App, candidate: Session): Promise<SessionCheck> {
-  const client = new Client(app.site, defaultDeps(app), { session: candidate, reauth: false, surface: "mcp" });
+  const deps = defaultDeps(app);
+  const client = new Client(app.site, deps, { session: candidate, reauth: "renew", surface: "mcp" });
   try {
     let result: Awaited<ReturnType<typeof check>>;
     try {
@@ -287,9 +310,12 @@ export async function checkSession(app: App, candidate: Session): Promise<Sessio
     // missing ("no value for <key>"; a "needs <operation>" skip only follows from another row's).
     const lacking = result.operations.some((r) => r.effect === "read" && r.status === "skipped" && r.reason?.startsWith("no value for"));
     if (tried === 0 && lacking) return { ok: false, reason: `this session.json lacks what the site's reads need; upload the file \`${app.site.skill} login\` wrote` };
-    return { ok: true, tried };
+    const now = client.peek();
+    return client.renewed && now ? { ok: true, tried, session: now } : { ok: true, tried };
   } catch (e) {
     return { ok: false, reason: sessionReason(e, app.site.skill) };
+  } finally {
+    await deps.release?.();
   }
 }
 
@@ -336,6 +362,8 @@ export function mcpTools(app: App, options: McpOptions = {}): { info: ServerInfo
         return ok(await body(r.data));
       } catch (e) {
         return failed(e, site, commandName, "mcp");
+      } finally {
+        await deps.release?.(); // no Chrome stays open between tool calls
       }
     },
   });
@@ -408,11 +436,13 @@ export function mcpTools(app: App, options: McpOptions = {}): { info: ServerInfo
       () => doctor(site, { env: deps.env, exec: app.exec, compiled: compiled() }))]),
   ];
 
+  const never = neverList(site);
   const instructions = [
     `These tools run Tasks on ${site.origin}${site.auth === "login" ? " as the signed-in user" : ""}; every result is JSON.`,
     `A tool with a confirm argument writes: call it without confirm first, show the user the dry run it returns, and call it again with confirm: true only after the user's explicit yes.`,
     `A failed call returns {"error": {kind, message, next}}: do what next says. On kind drift, stop and do not work around it.`,
     ...(options.remote ? [`When a tool fails with kind session, the Owner must give this server a new Session on its Setup page; do what next says.`] : []),
+    ...(never.length ? [`These tools never do the following; the user does it on the site themselves: ${never.map((n) => n.why.trim().replace(/[.!?]+$/, "")).join("; ")}.`] : []),
   ].join(" ");
   return { info: { name: site.skill === site.plugin ? site.plugin : `${site.plugin}-${site.skill}`, version: site.version, instructions }, tools };
 }

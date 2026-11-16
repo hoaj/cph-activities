@@ -43,6 +43,15 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 
 ## When NOT to use
 
+<!-- never:start -->
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `PUT /1/*`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `PATCH /1/*`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `DELETE /1/*`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `POST /1/indexes/*/batch`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `POST /1/indexes/*/deleteByQuery`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `POST /1/indexes/*/clear`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `POST /1/indexes/*/operation`; the user does it on the site.
+<!-- never:end -->
 - Buying tickets or signing up: the CLI never does it. Give the user the event's `url` so they buy themselves.
 - Big concerts and arenas sold through Ticketmaster: Billetto does not sell them.
 - Free and cheap museum and culture events picked by hand: that is the `kulturkbh` skill; ask both when the user wants everything.
