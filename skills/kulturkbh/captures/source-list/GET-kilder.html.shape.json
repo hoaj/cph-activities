@@ -1,0 +1,675 @@
+{
+  "operation": "GET /kilder.html",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "kulturkbh.dk",
+  "method": "GET",
+  "path": "/kilder.html",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/html",
+      "headers": {
+        "accept-ranges": null,
+        "age": null,
+        "content-encoding": null,
+        "content-length": null,
+        "content-type": "text/html",
+        "date": null,
+        "etag": null,
+        "last-modified": null,
+        "server": null,
+        "vary": null,
+        "via": null,
+        "x-varnish": null
+      },
+      "body": {
+        "kind": "html",
+        "outline": [
+          {
+            "tag": "nav",
+            "children": [
+              {
+                "tag": "a",
+                "id": "nav-logo",
+                "classes": [
+                  "nav-logo"
+                ],
+                "attrs": [
+                  "href"
+                ],
+                "children": [
+                  {
+                    "tag": "svg",
+                    "attrs": [
+                      "aria-hidden",
+                      "fill",
+                      "height",
+                      "viewbox",
+                      "width",
+                      "xmlns"
+                    ]
+                  },
+                  {
+                    "tag": "span",
+                    "classes": [
+                      "nav-logo-text"
+                    ],
+                    "text": true,
+                    "children": [
+                      {
+                        "tag": "em",
+                        "text": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "nav-right"
+                ],
+                "children": [
+                  {
+                    "tag": "button",
+                    "id": "burger-btn",
+                    "classes": [
+                      "nav-burger"
+                    ],
+                    "attrs": [
+                      "aria-expanded",
+                      "aria-label"
+                    ],
+                    "children": [
+                      {
+                        "tag": "span",
+                        "many": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "div",
+            "id": "burger-menu",
+            "classes": [
+              "burger-menu"
+            ],
+            "attrs": [
+              "aria-hidden"
+            ],
+            "children": [
+              {
+                "tag": "div",
+                "classes": [
+                  "burger-inner"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "burger-view-toggle"
+                    ],
+                    "children": [
+                      {
+                        "tag": "a",
+                        "id": "burger-btn-week",
+                        "classes": [
+                          "active",
+                          "burger-view-btn"
+                        ],
+                        "attrs": [
+                          "href"
+                        ],
+                        "text": true
+                      },
+                      {
+                        "tag": "a",
+                        "id": "burger-btn-month",
+                        "classes": [
+                          "burger-view-btn"
+                        ],
+                        "attrs": [
+                          "href"
+                        ],
+                        "text": true
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "a",
+                    "classes": [
+                      "burger-nav-link"
+                    ],
+                    "attrs": [
+                      "href"
+                    ],
+                    "text": true,
+                    "many": true
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "burger-partners"
+                ],
+                "children": [
+                  {
+                    "tag": "a",
+                    "classes": [
+                      "burger-partner-label"
+                    ],
+                    "attrs": [
+                      "href"
+                    ],
+                    "text": true
+                  },
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "burger-partner-divider"
+                    ]
+                  },
+                  {
+                    "tag": "a",
+                    "classes": [
+                      "burger-partner-link"
+                    ],
+                    "attrs": [
+                      "aria-label",
+                      "href",
+                      "rel",
+                      "target"
+                    ],
+                    "children": [
+                      {
+                        "tag": "img",
+                        "attrs": [
+                          "alt",
+                          "loading",
+                          "src"
+                        ]
+                      }
+                    ],
+                    "many": true
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "burger-footer"
+                ],
+                "children": [
+                  {
+                    "tag": "span",
+                    "classes": [
+                      "burger-tagline"
+                    ],
+                    "text": true
+                  },
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "burger-lang"
+                    ],
+                    "children": [
+                      {
+                        "tag": "a",
+                        "classes": [
+                          "burger-lang-btn"
+                        ],
+                        "attrs": [
+                          "href"
+                        ],
+                        "text": true,
+                        "many": true
+                      },
+                      {
+                        "tag": "span",
+                        "classes": [
+                          "burger-lang-sep"
+                        ],
+                        "text": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "div",
+            "classes": [
+              "page-hero"
+            ],
+            "children": [
+              {
+                "tag": "p",
+                "classes": [
+                  "hero-stamp"
+                ],
+                "text": true
+              },
+              {
+                "tag": "h1",
+                "text": true,
+                "children": [
+                  {
+                    "tag": "span",
+                    "id": "source-count",
+                    "text": true
+                  },
+                  {
+                    "tag": "br"
+                  },
+                  {
+                    "tag": "em",
+                    "text": true
+                  }
+                ]
+              },
+              {
+                "tag": "p",
+                "classes": [
+                  "hero-sub"
+                ],
+                "text": true
+              }
+            ]
+          },
+          {
+            "tag": "div",
+            "classes": [
+              "grid-wrap"
+            ],
+            "children": [
+              {
+                "tag": "div",
+                "id": "sources-grid",
+                "classes": [
+                  "sources-grid"
+                ],
+                "children": [
+                  {
+                    "tag": "a",
+                    "classes": [
+                      "source-card"
+                    ],
+                    "attrs": [
+                      "href"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "source-card-color"
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "source-card-body"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "source-card-name"
+                            ],
+                            "text": true
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "source-card-desc"
+                            ],
+                            "text": true
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "source-card-addr"
+                            ],
+                            "text": true
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "source-card-arrow"
+                        ],
+                        "text": true
+                      }
+                    ],
+                    "many": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "footer",
+            "children": [
+              {
+                "tag": "div",
+                "classes": [
+                  "ft-top"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "ft-brand"
+                    ],
+                    "children": [
+                      {
+                        "tag": "a",
+                        "classes": [
+                          "ft-logo-link"
+                        ],
+                        "attrs": [
+                          "href"
+                        ],
+                        "children": [
+                          {
+                            "tag": "svg",
+                            "attrs": [
+                              "aria-hidden",
+                              "fill",
+                              "height",
+                              "viewbox",
+                              "width",
+                              "xmlns"
+                            ]
+                          },
+                          {
+                            "tag": "span",
+                            "classes": [
+                              "ft-logo-text"
+                            ],
+                            "text": true,
+                            "children": [
+                              {
+                                "tag": "em",
+                                "text": true
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "p",
+                        "classes": [
+                          "ft-tagline"
+                        ],
+                        "text": true,
+                        "children": [
+                          {
+                            "tag": "br"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "ft-newsletter"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "ft-nl-label"
+                        ],
+                        "text": true
+                      },
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "ft-nl-title"
+                        ],
+                        "text": true
+                      },
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "ft-nl-sub"
+                        ],
+                        "text": true
+                      },
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "ft-nl-form"
+                        ],
+                        "children": [
+                          {
+                            "tag": "input",
+                            "id": "ft-nl-email",
+                            "classes": [
+                              "ft-nl-input"
+                            ],
+                            "attrs": [
+                              "autocomplete",
+                              "placeholder",
+                              "type"
+                            ],
+                            "type": "email"
+                          },
+                          {
+                            "tag": "button",
+                            "id": "ft-nl-submit",
+                            "classes": [
+                              "ft-nl-btn"
+                            ],
+                            "attrs": [
+                              "type"
+                            ],
+                            "text": true
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "id": "ft-nl-msg",
+                        "classes": [
+                          "ft-nl-msg"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "ft-mid"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "ft-col-label"
+                        ],
+                        "text": true
+                      },
+                      {
+                        "tag": "p",
+                        "classes": [
+                          "ft-about-text"
+                        ],
+                        "text": true,
+                        "children": [
+                          {
+                            "tag": "span",
+                            "attrs": [
+                              "data-src-count"
+                            ],
+                            "text": true
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "a",
+                        "classes": [
+                          "ft-readmore"
+                        ],
+                        "attrs": [
+                          "href"
+                        ],
+                        "text": true
+                      },
+                      {
+                        "tag": "ul",
+                        "classes": [
+                          "ft-links"
+                        ],
+                        "children": [
+                          {
+                            "tag": "li",
+                            "many": true,
+                            "children": [
+                              {
+                                "tag": "a",
+                                "attrs": [
+                                  "href"
+                                ],
+                                "text": true
+                              },
+                              {
+                                "tag": "a",
+                                "classes": [
+                                  "ft-accent"
+                                ],
+                                "attrs": [
+                                  "href"
+                                ],
+                                "text": true
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "many": true
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "ft-partner"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "ft-partner-inner"
+                    ],
+                    "children": [
+                      {
+                        "tag": "a",
+                        "classes": [
+                          "ft-partner-label"
+                        ],
+                        "attrs": [
+                          "href"
+                        ],
+                        "text": true
+                      },
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "ft-partner-divider"
+                        ]
+                      },
+                      {
+                        "tag": "a",
+                        "classes": [
+                          "ft-partner-link"
+                        ],
+                        "attrs": [
+                          "aria-label",
+                          "href",
+                          "rel",
+                          "target"
+                        ],
+                        "children": [
+                          {
+                            "tag": "img",
+                            "attrs": [
+                              "alt",
+                              "loading",
+                              "src"
+                            ]
+                          }
+                        ],
+                        "many": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "ft-bottom"
+                ],
+                "children": [
+                  {
+                    "tag": "span",
+                    "classes": [
+                      "ft-copy"
+                    ],
+                    "text": true
+                  },
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "ft-bottom-links"
+                    ],
+                    "children": [
+                      {
+                        "tag": "a",
+                        "attrs": [
+                          "href"
+                        ],
+                        "text": true,
+                        "many": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0,
+  "html": true
+}

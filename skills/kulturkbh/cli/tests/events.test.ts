@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { absoluteUrl, areaOf, isFree, postcodeOf } from "../src/lib/events";
+import { absoluteUrl, areaOf, isFree, mergeSameEvents, postcodeBySlug, postcodeOf } from "../src/lib/events";
 
 describe("postcodeOf", () => {
   test("takes the last four-digit number of the first text that has one", () => {
@@ -43,5 +43,39 @@ describe("absoluteUrl", () => {
   test("keeps an absolute link and resolves a relative one on the origin", () => {
     expect(absoluteUrl("https://example.org/e/1", "https://kulturkbh.dk")).toBe("https://example.org/e/1");
     expect(absoluteUrl("/side.html", "https://kulturkbh.dk")).toBe("https://kulturkbh.dk/side.html");
+  });
+});
+
+describe("postcodeBySlug", () => {
+  test("maps the slug in /kilder/<slug>.html to the postcode of the source's address", () => {
+    const map = postcodeBySlug([
+      { href: "/kilder/arken.html", name: "ARKEN", addr: "Skovvej 100, 2635 Ishøj" },
+      { href: "/kilder/nomad.html", name: "Nomad", addr: null },
+      { href: "https://kulturkbh.dk/kilder/dr.html", name: "DR", addr: "Emil Holms Kanal 20, 1432 København K" },
+      { href: "/andet", name: "x", addr: "Vej 1, 2100 København Ø" },
+    ]);
+    expect(map.get("arken")).toBe("2635");
+    expect(map.get("dr")).toBe("1432");
+    expect(map.has("nomad")).toBe(false);
+    expect(map.size).toBe(2);
+  });
+});
+
+describe("mergeSameEvents", () => {
+  const ev = (o: Partial<{ date: string; time: string | null; title: string; venue: string | null; url: string }>) => ({
+    date: "2026-11-20", time: "19:00" as string | null, title: "Poetry Slam", venue: "A" as string | null, url: "https://x/a", ...o,
+  });
+  test("same date, time and normalised title become one with alsoAt for the others", () => {
+    const out = mergeSameEvents([ev({}), ev({ title: "poetry  slam!", venue: "B", url: "https://x/b" }), ev({ title: "Other" })]);
+    expect(out).toHaveLength(2);
+    expect(out[0].alsoAt).toEqual([{ venue: "B", url: "https://x/b" }]);
+    expect(out[0].url).toBe("https://x/a");
+    expect(out[1].alsoAt).toEqual([]);
+  });
+  test("a different time or date keeps them apart; two null times are the same", () => {
+    expect(mergeSameEvents([ev({}), ev({ time: "20:00" })])).toHaveLength(2);
+    expect(mergeSameEvents([ev({}), ev({ date: "2026-11-21" })])).toHaveLength(2);
+    expect(mergeSameEvents([ev({ time: null }), ev({ time: null, url: "https://x/b" })])).toHaveLength(1);
+    expect(mergeSameEvents([ev({ time: null }), ev({})])).toHaveLength(2);
   });
 });
