@@ -16,7 +16,7 @@ const site: Site = defineSite({
   plugin: "cph-activities",
   skill: "billetto",
   repo: "hoaj/cph-activities",
-  version: "0.8.0",
+  version: "0.9.0",
   generatedWith: "0.12.1",
   origin: "https://yneuy03z8q-dsn.algolia.net",
   graphqlPath: "/graphql",

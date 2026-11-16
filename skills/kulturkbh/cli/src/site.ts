@@ -7,7 +7,7 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "kulturkbh",
   repo: "hoaj/cph-activities",
-  version: "0.8.0",
+  version: "0.9.0",
   generatedWith: "0.15.0",
   origin: "https://kulturkbh.dk",
   graphqlPath: "/graphql",
