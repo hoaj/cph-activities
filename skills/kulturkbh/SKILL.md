@@ -2,7 +2,7 @@
 name: kulturkbh
 description: Use when the user asks what is on in Copenhagen (talks, exhibitions, concerts, film, theatre, literature, food, active events), especially free or cheap ones, on a date, in a category or matching words. Lists events from kulturKBH (https://kulturkbh.dk) with a link to each event's own page, where the user reads more and books or buys tickets themselves.
 ---
-<!-- version: 0.9.0 -->
+<!-- version: 0.10.0 -->
 
 # kulturkbh
 
@@ -43,6 +43,12 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 
 ## When NOT to use
 
+<!-- never:start -->
+- kulturKBH is read-only here: the CLI never sends a form or changes anything. The CLI never sends `POST /*`; the user does it on the site.
+- kulturKBH is read-only here: the CLI never sends a form or changes anything. The CLI never sends `PUT /*`; the user does it on the site.
+- kulturKBH is read-only here: the CLI never sends a form or changes anything. The CLI never sends `PATCH /*`; the user does it on the site.
+- kulturKBH is read-only here: the CLI never sends a form or changes anything. The CLI never sends `DELETE /*`; the user does it on the site.
+<!-- never:end -->
 - Booking, buying tickets or signing up: the CLI never does it. Give the user the event's `url` so they book themselves.
 - Big commercial concerts and arenas, and events kulturKBH does not list: it is one editor's hand-picked calendar of mostly free or cheap culture.
 - Activities that are places rather than dated events (a disc golf course, a harbour bath).

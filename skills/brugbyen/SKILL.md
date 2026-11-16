@@ -2,7 +2,7 @@
 name: brugbyen
 description: Use when the user asks what is on at Københavns Kommune's own culture houses, libraries and halls (HUSET, Krudttønden, BRØK, Kulturhuset Islands Brygge ...), on a day or period, optionally only free, for an audience (børn, unge, voksne, seniorer), a category or a district. Every event links to its page on brugbyen.kk.dk. Gives no prices.
 ---
-<!-- version: 0.9.0 -->
+<!-- version: 0.10.0 -->
 
 # brugbyen
 
@@ -48,6 +48,12 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 
 ## When NOT to use
 
+<!-- never:start -->
+- Signing up, booking or writing to a culture house's calendar is the user's own, on the site. The CLI never sends `POST /*`; the user does it on the site.
+- Signing up, booking or writing to a culture house's calendar is the user's own, on the site. The CLI never sends `PUT /*`; the user does it on the site.
+- Signing up, booking or writing to a culture house's calendar is the user's own, on the site. The CLI never sends `PATCH /*`; the user does it on the site.
+- Signing up, booking or writing to a culture house's calendar is the user's own, on the site. The CLI never sends `DELETE /*`; the user does it on the site.
+<!-- never:end -->
 - Booking or buying: never. Give the user the event's `url` (its brugbyen page, which links on to the organiser).
 - Prices: the list shows none. `--free` only filters to free events. Use `billetto` or `kulturkbh` for prices.
 - Events outside the municipality's own venues: use `kultunaut` for the broadest calendar.

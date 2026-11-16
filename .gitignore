@@ -1,3 +1,6 @@
 node_modules/
 dist/
 .DS_Store
+
+# Throwaway probe scripts
+*.tmp.ts
