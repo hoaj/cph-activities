@@ -43,6 +43,12 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 
 ## When NOT to use
 
+<!-- never:start -->
+- kulturKBH is read-only here: the CLI never sends a form or changes anything. The CLI never sends `POST /*`; the user does it on the site.
+- kulturKBH is read-only here: the CLI never sends a form or changes anything. The CLI never sends `PUT /*`; the user does it on the site.
+- kulturKBH is read-only here: the CLI never sends a form or changes anything. The CLI never sends `PATCH /*`; the user does it on the site.
+- kulturKBH is read-only here: the CLI never sends a form or changes anything. The CLI never sends `DELETE /*`; the user does it on the site.
+<!-- never:end -->
 - Booking, buying tickets or signing up: the CLI never does it. Give the user the event's `url` so they book themselves.
 - Big commercial concerts and arenas, and events kulturKBH does not list: it is one editor's hand-picked calendar of mostly free or cheap culture.
 - Activities that are places rather than dated events (a disc golf course, a harbour bath).
