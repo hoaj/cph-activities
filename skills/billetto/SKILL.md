@@ -2,7 +2,7 @@
 name: billetto
 description: Use when the user asks what is on in Copenhagen at small venues, culture houses, clubs, talks, workshops, courses or parties, or searches for an event by words, date, category or free entry. Searches Billetto (https://billetto.dk) around the city centre, soonest first, with a link to each event's page where the user buys tickets themselves. Needs Google Chrome, which it opens unseen to read the search settings billetto.dk's own page uses.
 ---
-<!-- version: 0.9.0 -->
+<!-- version: 0.10.0 -->
 
 # billetto
 
@@ -43,6 +43,15 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 
 ## When NOT to use
 
+<!-- never:start -->
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `PUT /1/*`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `PATCH /1/*`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `DELETE /1/*`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `POST /1/indexes/*/batch`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `POST /1/indexes/*/deleteByQuery`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `POST /1/indexes/*/clear`; the user does it on the site.
+- Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `POST /1/indexes/*/operation`; the user does it on the site.
+<!-- never:end -->
 - Buying tickets or signing up: the CLI never does it. Give the user the event's `url` so they buy themselves.
 - Big concerts and arenas sold through Ticketmaster: Billetto does not sell them.
 - Free and cheap museum and culture events picked by hand: that is the `kulturkbh` skill; ask both when the user wants everything.

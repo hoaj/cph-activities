@@ -13,7 +13,7 @@ describe("siteProblems", () => {
   // add-skill replaces the placeholders in this file too; then the unfilled case can't be built here.
   const starterCopy = ("none" as string).startsWith("__");
   test.skipIf(!starterCopy)("unfilled placeholders are reported", () => {
-    expect(siteProblems(makeSite({ auth: "none" as any, origin: "https://www.wannasport.com" }))).toEqual([
+    expect(siteProblems(makeSite({ auth: "none" as any, origin: "https://wsapi.wannasport.com" }))).toEqual([
       'auth must be "login" or "none"',
       "origin must be an http(s) URL",
     ]);
@@ -24,6 +24,23 @@ describe("siteProblems", () => {
     expect(siteProblems(makeSite({ readOnlyRequests: ["/api/token", /\/post-login$/] }))).toEqual([]);
     expect(siteProblems(makeSite({ readOnlyRequests: [""] }))).toEqual(["readOnlyRequests must be a list of non-empty URL path substrings or RegExps"]);
     expect(siteProblems(makeSite({ readOnlyRequests: "/api/token" as any }))).toHaveLength(1);
+  });
+
+  test("transport is fetch or browser; browserWindow only with transport browser (#93)", () => {
+    expect(siteProblems(makeSite({ transport: "fetch" }))).toEqual([]);
+    expect(siteProblems(makeSite({ transport: "browser", browserWindow: true }))).toEqual([]);
+    expect(siteProblems(makeSite({ transport: "curl" as any }))).toEqual(['transport must be "fetch" or "browser"']);
+    expect(siteProblems(makeSite({ browserWindow: true }))).toEqual(['browserWindow needs transport "browser"']);
+  });
+
+  test("login.refresh needs renew, and keep when it names a request to keep from (#94)", () => {
+    const renew = async () => null;
+    const withRefresh = (refresh: any) => siteProblems(loginSite({ login: { ...loginSite().login!, refresh } }));
+    expect(withRefresh({ renew })).toEqual([]);
+    expect(withRefresh({ from: "/oauth/token", keep: () => ({}), renew })).toEqual([]);
+    expect(withRefresh({ from: "/oauth/token" })).toEqual(["login.refresh needs a renew function", "login.refresh.from needs a keep function"]);
+    expect(withRefresh({ from: "", keep: () => ({}), renew })).toEqual(["login.refresh.from must be a non-empty URL path substring or a RegExp"]);
+    expect(withRefresh({ from: /\/oauth\/token/g, keep: () => ({}), renew })).toEqual(["login.refresh.from must be a RegExp without the g or y flag (its test() would skip matches)"]);
   });
 
   test("login.sessionProbe must be a path on the origin, so the session never goes to another host", () => {

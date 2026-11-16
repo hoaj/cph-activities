@@ -2,7 +2,7 @@
 name: kultunaut
 description: Use when the user asks what is on in Copenhagen (Københavns and Frederiksberg Kommune) on a day or in a period. KultuNaut is the broadest calendar (concerts, theatre, exhibitions, talks, sport, church, children), and every event links to its KultuNaut page. Gives no prices.
 ---
-<!-- version: 0.9.0 -->
+<!-- version: 0.10.0 -->
 
 # kultunaut
 
@@ -47,6 +47,12 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 
 ## When NOT to use
 
+<!-- never:start -->
+- Liking, rating (POST /nautlog) or submitting events is the user's own, on the site. The CLI never sends `POST /*`; the user does it on the site.
+- Liking, rating (POST /nautlog) or submitting events is the user's own, on the site. The CLI never sends `PUT /*`; the user does it on the site.
+- Liking, rating (POST /nautlog) or submitting events is the user's own, on the site. The CLI never sends `PATCH /*`; the user does it on the site.
+- Liking, rating (POST /nautlog) or submitting events is the user's own, on the site. The CLI never sends `DELETE /*`; the user does it on the site.
+<!-- never:end -->
 - Booking or buying: never. Give the user the event's `url` (its KultuNaut page, which links on to the organiser).
 - Prices: KultuNaut's list shows none. Use `billetto` or `kulturkbh` for prices.
 - Anything the Commands table does not list: offer a feature request instead of improvising.

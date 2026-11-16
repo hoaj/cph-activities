@@ -2,7 +2,7 @@
 name: wannasport
 description: Use when the user wants to play a sport in Copenhagen and asks where a court, lane or slot is free on a day (padel, tennis, badminton, squash, football, volleyball, swimming, table tennis and 30-odd more). Searches wannasport (https://www.wannasport.com) for free times at venues in Københavns and Frederiksberg Kommune, nearest first, with price and a link to each venue's page where the user books themselves.
 ---
-<!-- version: 0.9.0 -->
+<!-- version: 0.10.0 -->
 
 # wannasport
 
@@ -44,6 +44,14 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 
 ## When NOT to use
 
+<!-- never:start -->
+- Buying or booking a court is the user's own, on wannasport.com. The CLI never sends `/api/public/Purchases/*`; the user does it on the site.
+- The user's profile and sign-in are not this CLI's. The CLI never sends `/api/public/Profile/*`; the user does it on the site.
+- The CLI only reads free times; it never sends a write. The CLI never sends `POST /*`; the user does it on the site.
+- The CLI only reads free times; it never sends a write. The CLI never sends `PUT /*`; the user does it on the site.
+- The CLI only reads free times; it never sends a write. The CLI never sends `PATCH /*`; the user does it on the site.
+- The CLI only reads free times; it never sends a write. The CLI never sends `DELETE /*`; the user does it on the site.
+<!-- never:end -->
 - Booking or paying: the CLI never does it. Give the user the court's `url` so they book themselves.
 - Venues that do not sell through wannasport (some clubs book only through MATCHi or their own site): say so rather than guessing.
 - Events, concerts and talks: that is `kulturkbh` and `billetto`.

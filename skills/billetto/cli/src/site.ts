@@ -16,8 +16,8 @@ const site: Site = defineSite({
   plugin: "cph-activities",
   skill: "billetto",
   repo: "hoaj/cph-activities",
-  version: "0.9.0",
-  generatedWith: "0.12.1",
+  version: "0.10.0",
+  generatedWith: "0.16.0",
   origin: "https://yneuy03z8q-dsn.algolia.net",
   graphqlPath: "/graphql",
   auth: "none" as Auth,
@@ -59,6 +59,16 @@ const site: Site = defineSite({
     }
   },
   readOnlyRequests: [],
+  // Requests this CLI never sends, whatever a command or --confirm says (the plugin never books, buys, signs up or changes anything).
+  never: [
+    { method: "PUT", path: "/1/*", why: "Billetto's search index is Billetto's: the CLI only searches it" },
+    { method: "PATCH", path: "/1/*", why: "Billetto's search index is Billetto's: the CLI only searches it" },
+    { method: "DELETE", path: "/1/*", why: "Billetto's search index is Billetto's: the CLI only searches it" },
+    { method: "POST", path: "/1/indexes/*/batch", why: "Billetto's search index is Billetto's: the CLI only searches it" },
+    { method: "POST", path: "/1/indexes/*/deleteByQuery", why: "Billetto's search index is Billetto's: the CLI only searches it" },
+    { method: "POST", path: "/1/indexes/*/clear", why: "Billetto's search index is Billetto's: the CLI only searches it" },
+    { method: "POST", path: "/1/indexes/*/operation", why: "Billetto's search index is Billetto's: the CLI only searches it" },
+  ],
 });
 
 export default site;
