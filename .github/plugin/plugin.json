@@ -11,6 +11,7 @@
   ],
   "skills": [
     "./skills/billetto",
+    "./skills/brugbyen",
     "./skills/cph-activities",
     "./skills/cph-activities-deploy",
     "./skills/cph-activities-feedback",
