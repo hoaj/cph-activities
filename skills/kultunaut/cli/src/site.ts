@@ -5,7 +5,7 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "kultunaut",
   repo: "hoaj/cph-activities",
-  version: "0.8.0",
+  version: "0.9.0",
   generatedWith: "0.15.0",
   origin: "https://www.kultunaut.dk",
   graphqlPath: "/graphql",

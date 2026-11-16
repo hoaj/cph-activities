@@ -1,0 +1,23 @@
+{
+  "task": "event-list",
+  "startPath": "/det-sker",
+  "write": false,
+  "operations": [
+    {
+      "operation": "GET /det-sker",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "brugbyen.kk.dk",
+      "path": "/det-sker",
+      "file": "GET-det-sker.shape.json",
+      "pages": [
+        "/det-sker"
+      ],
+      "seen": 3,
+      "aborted": 0
+    }
+  ]
+}
