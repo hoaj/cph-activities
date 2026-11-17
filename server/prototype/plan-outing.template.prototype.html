@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>plan_outing: prototype</title>
+<style>
+  :root { --bg:#fafaf8; --card:#fff; --ink:#1d2327; --mute:#5f6b73; --line:#e2e4e0; --accent:#0b6b5c; --accent-bg:#e3f2ee; --warn:#8a4b00; --warn-bg:#fff3e0; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 28px 20px 80px; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--mute); margin: 28px 0 10px; }
+  p { margin: 0 0 8px; }
+  .lead { color: var(--mute); max-width: 720px; }
+  .badge { display:inline-block; font-size:11px; padding:1px 8px; border-radius:99px; background:var(--accent-bg); color:var(--accent); font-weight:600; vertical-align: middle; }
+  .proto { background: var(--warn-bg); color: var(--warn); padding: 8px 12px; border-radius: 6px; font-size: 13px; margin: 14px 0; }
+  .grid { display:grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+  .card.best { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  label.f { display:block; font-size:12px; color:var(--mute); margin: 12px 0 4px; }
+  input[type=text], input[type=number], input[type=time], select { font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background:#fff; color: var(--ink); }
+  input[type=number] { width: 90px; }
+  .row { display:flex; gap: 8px; align-items:center; margin-bottom: 6px; flex-wrap: wrap; }
+  .moods label { margin-right: 12px; white-space: nowrap; }
+  button { font: inherit; cursor: pointer; border: 1px solid var(--line); background:#fff; color: var(--ink); padding: 6px 12px; border-radius: 6px; }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); color:#fff; border-color: var(--accent); font-weight: 600; padding: 8px 18px; }
+  button.chip { border-radius: 99px; padding: 4px 12px; background: var(--accent-bg); border-color: transparent; color: var(--accent); margin: 0 6px 6px 0; }
+  button.small { padding: 2px 8px; font-size: 12px; }
+  button:disabled { opacity: .45; cursor: default; }
+  .tabs { display:flex; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+  .tab { border: none; border-bottom: 2px solid transparent; border-radius: 0; background: none; padding: 8px 10px; color: var(--mute); }
+  .tab.on { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+  .steps { display:flex; flex-direction: column; gap: 6px; align-items: flex-start; margin-top: 10px; }
+  .steps .done { background: var(--accent-bg); }
+  .tag { display:inline-block; background:#f0f1ee; border-radius: 4px; padding: 1px 7px; margin: 0 4px 4px 0; font-size: 12px; }
+  .kind { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); font-weight: 700; }
+  .sug h3 { margin: 2px 0 6px; font-size: 17px; }
+  .item { border-top: 1px solid var(--line); padding: 8px 0; display: grid; grid-template-columns: 120px 1fr; gap: 4px 12px; }
+  .item:first-of-type { border-top: none; }
+  .item .t { color: var(--mute); font-variant-numeric: tabular-nums; }
+  .item .m { color: var(--mute); font-size: 13px; }
+  .weather { font-size: 17px; font-weight: 600; margin-bottom: 12px; }
+  .ask { background: var(--warn-bg); border-radius: 8px; padding: 14px; }
+  .ask .q { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+  ul.plain { margin: 4px 0 0; padding-left: 18px; }
+  ul.plain li { margin-bottom: 3px; }
+  .more span { display:inline-block; margin-right: 14px; }
+  .more b { font-variant-numeric: tabular-nums; }
+  details { margin-top: 14px; }
+  summary { cursor: pointer; color: var(--mute); }
+  pre { background:#f3f4f1; padding: 12px; border-radius: 6px; overflow:auto; max-height: 420px; font-size: 12px; }
+  .mute { color: var(--mute); }
+  a { color: var(--accent); }
+  .exp { font-size: 13px; color: var(--mute); margin-top: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>plan_outing <span class="badge">prototype</span></h1>
+  <p class="lead">Spørgsmålet: hvad skal <code>plan_outing</code> tage ind (et <b>brief</b>), hvornår skal den spørge før den svarer (<b>needs_input</b>), og hvad skal den give tilbage (en <b>shortlist</b> med vejr, bedste bud, alternativer, plan, antagelser, "mere" og "næste")? Ret briefet, tryk Planlæg, og se om svaret føles rigtigt. Data er et øjebliksbillede af de rigtige kilder for 18., 21. og 22. november 2026.</p>
+  <div class="proto">Kasseret kode: logikken er ét rent modul (<code>plan-outing.js</code>), siden omkring den er bare et skal. Ingen live-kald, ingen booking.</div>
+
+  <h2>Gennemgange</h2>
+  <div class="card">
+    <div class="tabs" id="tabs"></div>
+    <div id="walk"></div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <h2>Briefet</h2>
+      <div class="card" id="form">
+        <label class="f">Hvem skal med</label>
+        <div id="people"></div>
+        <button id="addPerson" class="small">+ tilføj person</button>
+        <label class="f">Dag</label>
+        <select id="date"></select>
+        <div class="row" style="margin-top:12px"><div><label class="f" style="margin-top:0">Fra</label><input type="time" id="from"></div><div><label class="f" style="margin-top:0">Til</label><input type="time" id="to"></div></div>
+        <label class="f">Humør</label>
+        <div class="moods" id="moods"></div>
+        <label class="f">Ønsker (fri tekst)</label>
+        <input type="text" id="wishes" style="width:100%" placeholder="fx padel, koncert, gaming">
+        <div class="row" style="margin-top:12px">
+          <div><label class="f" style="margin-top:0">Budget pr. person (kr., 0 = gratis, tom = ingen grænse)</label><input type="number" id="budget" min="0"></div>
+        </div>
+        <label class="f"><input type="checkbox" id="indoor"> Kun indendørs</label>
+        <div id="excl" class="mute" style="font-size:13px"></div>
+        <div style="margin-top:14px"><button class="primary" id="go">Planlæg</button></div>
+      </div>
+    </div>
+    <div>
+      <h2>Svaret</h2>
+      <div id="result" class="mute">Tryk Planlæg.</div>
+    </div>
+  </div>
+
+  <h2>Rå JSON</h2>
+  <details><summary>Det modulet returnerede</summary><pre id="raw">–</pre></details>
+  <details><summary>Briefet modulet fik</summary><pre id="rawBrief">–</pre></details>
+</main>
+
+<script type="application/json" id="snapshot">/*SNAPSHOT*/</script>
+<script>
+/*MODULE*/
+</script>
+<script>
+(function () {
+  var SNAP = JSON.parse(document.getElementById("snapshot").textContent);
+  var P = window.PlanOuting;
+  var MOODS = [["active","aktivt"],["culture","kultur"],["social","socialt"],["calm","roligt"],["food","mad"],["gaming","gaming"],["nightlife","natteliv"]];
+  var FACET = { free:"gratis", evening:"aftenen (efter 17)", concerts:"koncerter", theatre:"teater og shows", active:"aktivt", culture:"kultur", social:"socialt", gaming:"gaming", food:"mad", cheap:"under 100 kr.", indoor:"indendørs", morning:"formiddag" };
+  var AGE = { "under 6": 5, "6-12": 9, "13-17": 16, "18+": 25 };
+  var $ = function (id) { return document.getElementById(id); };
+  var excludeIds = [];
+  var lastRes = null;
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]; }); }
+
+  // ---------- form <-> brief ----------
+  MOODS.forEach(function (m) { $("moods").insertAdjacentHTML("beforeend", '<label><input type="checkbox" data-mood="' + m[0] + '"> ' + m[1] + '</label>'); });
+  SNAP.days.forEach(function (d) { $("date").insertAdjacentHTML("beforeend", '<option value="' + d + '">' + P.dayName(d) + " " + d.slice(8) + "/" + d.slice(5, 7) + "</option>"); });
+
+  function renderPeople(people) {
+    $("people").innerHTML = people.map(function (p, i) {
+      return '<div class="row" data-i="' + i + '"><input type="text" class="pl" placeholder="navn (valgfri)" value="' + esc(p.label || "") + '" style="width:150px"> <input type="number" class="pa" placeholder="alder" min="0" max="110" value="' + (p.age == null ? "" : p.age) + '"> <button class="small rm">fjern</button></div>';
+    }).join("");
+    Array.prototype.forEach.call(document.querySelectorAll("#people .rm"), function (b) {
+      b.onclick = function () { var pp = readBrief().people; pp.splice(+b.parentNode.dataset.i, 1); renderPeople(pp); };
+    });
+  }
+  function setBrief(b) {
+    renderPeople(b.people || []);
+    $("date").value = b.date || SNAP.days[1];
+    $("from").value = b.from || ""; $("to").value = b.to || "";
+    Array.prototype.forEach.call(document.querySelectorAll("[data-mood]"), function (c) { c.checked = (b.mood || []).indexOf(c.dataset.mood) >= 0; });
+    $("wishes").value = b.wishes || "";
+    $("budget").value = b.budgetPerPerson == null ? "" : b.budgetPerPerson;
+    $("indoor").checked = !!b.indoorOnly;
+    excludeIds = (b.excludeIds || []).slice();
+    showExcl();
+  }
+  function showExcl() { $("excl").innerHTML = excludeIds.length ? "Skjuler " + excludeIds.length + " allerede viste forslag. <a href='#' id='clrx'>ryd</a>" : ""; var c = $("clrx"); if (c) c.onclick = function (e) { e.preventDefault(); excludeIds = []; showExcl(); }; }
+  function readBrief() {
+    var people = Array.prototype.map.call(document.querySelectorAll("#people .row"), function (r) {
+      var l = r.querySelector(".pl").value.trim(), a = r.querySelector(".pa").value;
+      var p = {}; if (l) p.label = l; if (a !== "") p.age = +a; return p;
+    });
+    var b = { people: people, date: $("date").value };
+    if ($("from").value) b.from = $("from").value;
+    if ($("to").value) b.to = $("to").value;
+    var mood = Array.prototype.filter.call(document.querySelectorAll("[data-mood]"), function (c) { return c.checked; }).map(function (c) { return c.dataset.mood; });
+    if (mood.length) b.mood = mood;
+    if ($("wishes").value.trim()) b.wishes = $("wishes").value.trim();
+    if ($("budget").value !== "") b.budgetPerPerson = +$("budget").value;
+    if ($("indoor").checked) b.indoorOnly = true;
+    if (excludeIds.length) b.excludeIds = excludeIds.slice();
+    return b;
+  }
+  $("addPerson").onclick = function () { var pp = readBrief().people; pp.push({}); renderPeople(pp); };
+  $("go").onclick = function () { run(readBrief()); };
+
+  // ---------- rendering ----------
+  function sugHtml(s, best) {
+    return '<div class="card sug' + (best ? " best" : "") + '" style="margin-bottom:12px"><div class="kind">' + (best ? "Bedste bud · " : "") + esc(s.kind) + '</div><h3>' + esc(s.title) + '</h3><div>' +
+      s.why.map(function (w) { return '<span class="tag">' + esc(w) + "</span>"; }).join("") + "</div>" +
+      s.items.map(function (i) {
+        return '<div class="item"><div class="t">' + esc(i.time) + '</div><div><div>' + (i.url ? '<a href="' + esc(i.url) + '" target="_blank" rel="noopener">' + esc(i.title) + "</a>" : esc(i.title)) + '</div><div class="m">' + esc(i.place) + " · " + esc(i.price) + " · " + esc(i.sources.join(", ")) + "</div></div></div>";
+      }).join("") + "</div>";
+  }
+  function render(res, brief) {
+    var h = "";
+    if (res.status === "needs_input") {
+      h += '<div class="ask"><div class="badge" style="background:#fff">needs_input</div><div class="q">' + esc(res.ask) + '</div><div class="mute" style="font-size:13px;margin-bottom:8px">Mangler: ' + esc(res.missing.join(", ")) + "</div>";
+      if (res.options.age) h += "<div>Alder: " + res.options.age.map(function (o) { return '<button class="chip" data-age="' + esc(o) + '">' + esc(o) + "</button>"; }).join("") + "</div>";
+      if (res.options.mood) h += "<div>Humør: " + res.options.mood.map(function (o) { return '<button class="chip" data-mood-opt="' + o + '">' + esc(P.MOOD_DA[o] || o) + "</button>"; }).join("") + "</div>";
+      h += "</div>";
+    } else {
+      h += '<div class="weather">' + esc(res.weather) + "</div>";
+      if (!res.best) h += '<div class="ask">Intet passede jeres brief.</div>';
+      else {
+        h += sugHtml(res.best, true);
+        if (res.alternatives.length) h += "<h2>Alternativer</h2>" + res.alternatives.map(function (a) { return sugHtml(a, false); }).join("");
+      }
+      if (res.plan) h += '<h2>Plan</h2><div class="card"><ul class="plain">' + res.plan.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul></div>";
+      h += '<h2>Antagelser</h2><div class="card"><ul class="plain">' + res.assumptions.map(function (a) { return "<li>" + esc(a) + "</li>"; }).join("") + "</ul></div>";
+      var mk = Object.keys(res.more);
+      if (mk.length) h += '<h2>Mere der passer</h2><div class="card more">' + mk.map(function (k) { return "<span><b>" + res.more[k] + "</b> " + esc(FACET[k] || k) + "</span>"; }).join("") + "</div>";
+      if (res.next.length) h += '<h2>Næste</h2><div>' + res.next.map(function (n, i) { return '<button class="chip" data-next="' + i + '">' + esc(n) + "</button>"; }).join("") + "</div>";
+      if (res._stats) {
+        var d = res._stats.dropped, dk = Object.keys(d).sort(function (a, b) { return d[b] - d[a]; });
+        h += "<details><summary>Hvad blev sorteret fra (" + dk.reduce(function (s, k) { return s + d[k]; }, 0) + ")</summary><ul class='plain'>" + dk.map(function (k) { return "<li>" + d[k] + ": " + esc(k) + "</li>"; }).join("") + "<li>" + res._stats.candidates + " kandidater tilbage efter filtrene</li></ul></details>";
+      }
+    }
+    $("result").className = ""; $("result").innerHTML = h;
+    Array.prototype.forEach.call($("result").querySelectorAll("[data-next]"), function (b) {
+      b.onclick = function () { clickNext(+b.dataset.next); };
+    });
+    Array.prototype.forEach.call($("result").querySelectorAll("[data-age]"), function (b) {
+      b.onclick = function () {
+        var br = readBrief(); var i = br.people.findIndex(function (p) { return p.age == null; });
+        if (i >= 0) br.people[i].age = AGE[b.dataset.age]; setBrief(br); run(readBrief());
+      };
+    });
+    Array.prototype.forEach.call($("result").querySelectorAll("[data-mood-opt]"), function (b) {
+      b.onclick = function () { var br = readBrief(); br.mood = (br.mood || []).concat([b.dataset.moodOpt]); setBrief(br); run(readBrief()); };
+    });
+    $("raw").textContent = JSON.stringify(res, null, 2);
+    $("rawBrief").textContent = JSON.stringify(brief, null, 2);
+  }
+  function run(brief) {
+    lastRes = P.planOuting(brief, SNAP);
+    render(lastRes, brief);
+  }
+  function clickNext(i) {
+    var br = readBrief();
+    var nb = P.refineBrief(br, lastRes.nextFacets[i], P.shownIds(lastRes));
+    setBrief(nb); run(readBrief());
+  }
+
+  // ---------- guided walkthroughs ----------
+  var W = [
+    { name: "Fri leg", text: "Ret briefet selv og tryk Planlæg.", brief: { people: [{ label: "mig", age: 31 }], date: "2026-11-21" }, steps: [] },
+    { name: "1 Lillebror, uden alder",
+      text: "Du vil ud med din lillebror lørdag, men du ved ikke om vi kender hans alder, og du har ikke sagt hvad I er til. Forvent at planlæggeren spørger i stedet for at gætte: højst to spørgsmål, med valgmuligheder.",
+      brief: { people: [{ label: "mig", age: 31 }, { label: "lillebror" }], date: "2026-11-21" },
+      steps: [
+        { label: "Planlæg (forvent needs_input)", run: function () { run(readBrief()); } },
+        { label: "Svar: 17 år, aktivt + gaming, 300 kr.", run: function () { var b = readBrief(); b.people[1].age = 17; b.mood = ["active", "gaming"]; b.budgetPerPerson = 300; setBrief(b); run(readBrief()); } }
+      ], expect: "Først needs_input med to spørgsmål. Bagefter: ingen klubaftener eller børneting, en gaming-tråd som bedste bud, indendørs padel som aktivt alternativ (koldt vejr sorterer udendørs fra)." },
+    { name: "2 Regnfuld date-aften",
+      text: "To voksne, onsdag aften 18-23, kultur. Der er regn: udendørs skal være væk, og alt skal være indendørs.",
+      brief: { people: [{ label: "mig", age: 31 }, { label: "date", age: 31 }], date: "2026-11-18", from: "18:00", to: "23:00", mood: ["culture"] },
+      steps: [
+        { label: "Planlæg", run: function () { run(readBrief()); } },
+        { label: "Klik det første \"Næste\"-forslag", run: function () { if (lastRes && lastRes.next && lastRes.next.length) clickNext(0); } }
+      ], expect: "Vejrlinjen siger regn; ingen udendørsting. Et par forslag af forskellig slags og en aftenplan." },
+    { name: "3 Gratis familiesøndag",
+      text: "To voksne og børn på 4 og 7, søndag 10-16, budget 0. Kun børne- og familieting, kun gratis, og intet for sent.",
+      brief: { people: [{ label: "mor", age: 35 }, { label: "far", age: 34 }, { label: "barn", age: 4 }, { label: "barn", age: 7 }], date: "2026-11-22", from: "10:00", to: "16:00", budgetPerPerson: 0 },
+      steps: [
+        { label: "Planlæg", run: function () { run(readBrief()); } },
+        { label: "Vis andre forslag", run: function () { if (lastRes && lastRes.best) { excludeIds = P.shownIds(lastRes); showExcl(); run(readBrief()); } } }
+      ], expect: "Kun børne/familiebegivenheder. Hvor en kilde ikke oplyser pris (brugbyen), står det tydeligt. Tyndt datagrundlag er en pointe i sig selv." },
+    { name: "4 17-årig vil i byen",
+      text: "Dig og en 17-årig, lørdag 20-02, natteliv. Klubaftener og 18+ skal filtreres væk, og svaret skal sige hvorfor.",
+      brief: { people: [{ label: "mig", age: 31 }, { label: "lillebror", age: 17 }], date: "2026-11-21", from: "20:00", to: "02:00", mood: ["nightlife"] },
+      steps: [
+        { label: "Planlæg", run: function () { run(readBrief()); } },
+        { label: "Prøv igen med to voksne (31 og 31)", run: function () { var b = readBrief(); b.people[1].age = 31; setBrief(b); run(readBrief()); } }
+      ], expect: "Først: sene koncerter og shows, og en antagelse om hvorfor klubber er væk. Så med to voksne: festerne er tilbage." },
+    { name: "5 Kun inde, lav pris",
+      text: "En voksen, lørdag, aktivt, kun indendørs, max 100 kr. Banepris deles, så se hvad prisreglen gør ved padel og bordtennis.",
+      brief: { people: [{ label: "mig", age: 31 }], date: "2026-11-21", mood: ["active"], indoorOnly: true, budgetPerPerson: 100 },
+      steps: [
+        { label: "Planlæg", run: function () { run(readBrief()); } },
+        { label: "Fjern budget og indoor-kravet", run: function () { var b = readBrief(); delete b.budgetPerPerson; delete b.indoorOnly; setBrief(b); run(readBrief()); } }
+      ], expect: "Kun indendørs baner under 100 kr. pr. person ved 2 spillere. Uden kravene kommer flere (og udendørs er stadig væk i kulden)." }
+  ];
+  var cur = 1;
+  function renderTabs() {
+    $("tabs").innerHTML = W.map(function (w, i) { return '<button class="tab' + (i === cur ? " on" : "") + '" data-t="' + i + '">' + esc(w.name) + "</button>"; }).join("");
+    Array.prototype.forEach.call($("tabs").querySelectorAll(".tab"), function (b) { b.onclick = function () { cur = +b.dataset.t; start(); }; });
+  }
+  function start() {
+    var w = W[cur];
+    renderTabs();
+    excludeIds = []; lastRes = null;
+    setBrief(JSON.parse(JSON.stringify(w.brief)));
+    $("result").className = "mute"; $("result").textContent = "Tryk på første trin eller Planlæg."; $("raw").textContent = "–"; $("rawBrief").textContent = "–";
+    var h = "<p>" + esc(w.text) + "</p>";
+    if (w.steps.length) h += '<div class="steps">' + w.steps.map(function (s, i) { return '<button data-s="' + i + '"' + (i ? " disabled" : "") + ">" + (i + 1) + ". " + esc(s.label) + "</button>"; }).join("") + "</div>";
+    if (w.expect) h += '<div class="exp">Hvad man skal kigge efter: ' + esc(w.expect) + "</div>";
+    $("walk").innerHTML = h;
+    Array.prototype.forEach.call($("walk").querySelectorAll("[data-s]"), function (b) {
+      b.onclick = function () {
+        var i = +b.dataset.s; w.steps[i].run(); b.classList.add("done");
+        var nx = $("walk").querySelector('[data-s="' + (i + 1) + '"]'); if (nx) nx.disabled = false;
+      };
+    });
+  }
+  start();
+})();
+</script>
+</body>
+</html>
