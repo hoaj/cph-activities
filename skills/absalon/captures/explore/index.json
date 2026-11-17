@@ -1,0 +1,86 @@
+{
+  "task": "explore",
+  "explore": true,
+  "startPath": "/",
+  "write": false,
+  "pages": [
+    {
+      "path": "/",
+      "document": "GET /",
+      "operations": [
+        "POST /cdn-cgi/challenge-platform/h/b/jsd/oneshot/:id/:id/:id"
+      ]
+    },
+    {
+      "path": "/kalender/",
+      "document": "GET /kalender/",
+      "operations": [
+        "POST /cdn-cgi/challenge-platform/h/b/jsd/oneshot/:id/:id/:id",
+        "POST /wp-admin/admin-ajax.php"
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "operation": "GET /",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "absaloncph.dk",
+      "path": "/",
+      "file": "GET-root.shape.json",
+      "pages": [
+        "/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /cdn-cgi/challenge-platform/h/b/jsd/oneshot/:id/:id/:id",
+      "kind": "rest",
+      "effect": "write",
+      "method": "POST",
+      "host": "absaloncph.dk",
+      "path": "/cdn-cgi/challenge-platform/h/b/jsd/oneshot/:id/:id/:id",
+      "file": "POST-cdn-cgi-challenge-platform-h-b-jsd-oneshot-id-id-id.shape.json",
+      "pages": [
+        "/",
+        "/kalender/"
+      ],
+      "seen": 2,
+      "aborted": 2
+    },
+    {
+      "operation": "GET /kalender/",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "absaloncph.dk",
+      "path": "/kalender/",
+      "file": "GET-kalender.shape.json",
+      "pages": [
+        "/kalender/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /wp-admin/admin-ajax.php",
+      "kind": "rest",
+      "effect": "write",
+      "method": "POST",
+      "host": "absaloncph.dk",
+      "path": "/wp-admin/admin-ajax.php",
+      "file": "POST-wp-admin-admin-ajax.php.shape.json",
+      "pages": [
+        "/kalender/"
+      ],
+      "seen": 2,
+      "aborted": 2
+    }
+  ]
+}
