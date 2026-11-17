@@ -1,0 +1,63 @@
+{
+  "operation": "GET /dmidk_byvejrWS/rest/json/:id/DK/WarningOverview",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "www.dmi.dk",
+  "method": "GET",
+  "path": "/dmidk_byvejrWS/rest/json/:id/DK/WarningOverview",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "accept-ranges": null,
+        "age": null,
+        "cache-control": null,
+        "content-length": null,
+        "content-security-policy": null,
+        "content-type": "application/json",
+        "date": null,
+        "strict-transport-security": null,
+        "x-frame-options": null,
+        "x-proxy": null,
+        "x-varnish": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "object",
+          "fields": {
+            "maxCategory": {
+              "type": "null"
+            },
+            "widget": {
+              "type": "null"
+            },
+            "text": {
+              "type": "null"
+            },
+            "icons": {
+              "type": "null"
+            },
+            "warnings": {
+              "type": "null"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0
+}

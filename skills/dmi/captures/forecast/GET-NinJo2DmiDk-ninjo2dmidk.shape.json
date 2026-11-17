@@ -1,0 +1,419 @@
+{
+  "operation": "GET /NinJo2DmiDk/ninjo2dmidk",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "www.dmi.dk",
+  "method": "GET",
+  "path": "/NinJo2DmiDk/ninjo2dmidk",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "cmd": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "stations": {
+          "type": "string"
+        },
+        "datatype": {
+          "type": "string"
+        }
+      },
+      "optional": [
+        "datatype",
+        "id",
+        "stations"
+      ]
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "accept-ranges": null,
+        "age": null,
+        "cache-control": null,
+        "content-length": null,
+        "content-security-policy": null,
+        "content-type": "application/json",
+        "date": null,
+        "strict-transport-security": null,
+        "x-frame-options": null,
+        "x-proxy": null,
+        "x-varnish": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "union",
+          "anyOf": [
+            {
+              "type": "object",
+              "fields": {
+                "id": {
+                  "type": "string",
+                  "format": "numeric"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "longitude": {
+                  "type": "number"
+                },
+                "latitude": {
+                  "type": "number"
+                },
+                "timezone": {
+                  "type": "string"
+                },
+                "lastupdate": {
+                  "type": "string",
+                  "format": "numeric"
+                },
+                "sunrise": {
+                  "type": "string",
+                  "format": "numeric"
+                },
+                "sunset": {
+                  "type": "string",
+                  "format": "numeric"
+                },
+                "timeserie": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "fields": {
+                      "time": {
+                        "type": "string",
+                        "format": "numeric"
+                      },
+                      "localTimeIso": {
+                        "type": "string",
+                        "format": "datetime"
+                      },
+                      "temp": {
+                        "type": "number"
+                      },
+                      "symbol": {
+                        "type": "number"
+                      },
+                      "precip1": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "precipType": {
+                        "type": "string"
+                      },
+                      "windDir": {
+                        "type": "string"
+                      },
+                      "windDegree": {
+                        "type": "number"
+                      },
+                      "windSpeed": {
+                        "type": "number"
+                      },
+                      "windGust": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "humidity": {
+                        "type": "number"
+                      },
+                      "pressure": {
+                        "type": "number"
+                      },
+                      "visibility": {
+                        "type": "number"
+                      },
+                      "precip3": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "precip6": {
+                        "type": "number"
+                      },
+                      "temp10": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "temp50": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "temp90": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "prec10": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "prec50": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "prec75": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "prec90": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "windspeed10": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "windspeed50": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "windspeed90": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "aggData": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "fields": {
+                      "time": {
+                        "type": "string",
+                        "format": "numeric"
+                      },
+                      "localTimeIso": {
+                        "type": "string",
+                        "format": "datetime"
+                      },
+                      "minTemp": {
+                        "type": "number"
+                      },
+                      "meanTemp": {
+                        "type": "number"
+                      },
+                      "maxTemp": {
+                        "type": "number"
+                      },
+                      "precipSum": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "sixHourSymbols": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "fields": {
+                      "time": {
+                        "type": "string",
+                        "format": "numeric"
+                      },
+                      "localTimeIso": {
+                        "type": "string",
+                        "format": "datetime"
+                      },
+                      "symbol6": {
+                        "type": "number"
+                      },
+                      "prec6": {
+                        "type": "number"
+                      },
+                      "minTemp6": {
+                        "type": "number"
+                      },
+                      "meanTemp6": {
+                        "type": "number"
+                      },
+                      "maxTemp6": {
+                        "type": "number"
+                      },
+                      "windDir6": {
+                        "type": "string"
+                      },
+                      "windDegree6": {
+                        "type": "number"
+                      },
+                      "windSpeed6": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "twelveHourSymbols": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "fields": {
+                      "time": {
+                        "type": "string",
+                        "format": "numeric"
+                      },
+                      "localTimeIso": {
+                        "type": "string",
+                        "format": "datetime"
+                      },
+                      "symbol12": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "fields": {
+                  "stationId": {
+                    "type": "string",
+                    "format": "numeric"
+                  },
+                  "dataType": {
+                    "type": "string"
+                  },
+                  "generatedTime": {
+                    "type": "string",
+                    "format": "datetime"
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "fields": {
+                        "time": {
+                          "type": "string",
+                          "format": "datetime"
+                        },
+                        "value": {
+                          "type": "number"
+                        },
+                        "tide": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "seen": 7,
+  "aborted": 0
+}

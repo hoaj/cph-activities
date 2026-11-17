@@ -1,8 +1,8 @@
 ---
 name: cph-activities
-description: Use when the user asks what to do in Copenhagen in general terms (a date, an evening out, the weekend, something with friends or kids, "what's on Wednesday"), so the answer needs events and activities from several sources at once. Says which of this plugin's CLI skills to ask (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, wannasport, absalon), and how to merge events several sources list into one, keeping the most complete and most current details and every link.
+description: Use when the user asks what to do in Copenhagen in general terms (a date, an evening out, the weekend, something with friends or kids, "what's on Wednesday"), so the answer needs events and activities from several sources at once. Says which of this plugin's CLI skills to ask (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, wannasport, absalon) and the weather (dmi), and how to merge events several sources list into one, keeping the most complete and most current details and every link.
 ---
-<!-- version: 0.12.0 -->
+<!-- version: 0.13.0 -->
 
 # cph-activities: what to do in Copenhagen
 
@@ -17,11 +17,13 @@ This skill has no CLI of its own. It runs the plugin's CLI skills and combines w
 | teaterbilletter | `teaterbilletter show list` (`category list` for the categories) | Theatre, revue, stand-up, musicals, opera, ballet, children's theatre and new circus at 100+ theatres, with price range and age limit (`ageFrom`) | Link to the seller's ticket page (`bookingUrl`) |
 | absalon | `absalon event list` (`category list` for the categories) | One venue, Folkehuset Absalon (Vesterbro): daily communal dinners, dance, yoga, workshops, ceramics, bingo and quiz, parties, concerts, markets, children's activities; free or priced as the description says | Link to the event's page on absaloncph.dk |
 | wannasport | `wannasport slot search --sport <slug>` (`sport list` for the slugs) | Free times to play a sport: padel, tennis, squash, table tennis, badminton … | Link to the venue's booking page |
+| dmi | `dmi forecast --date <day> [--from-time --to-time]` | The weather, not events: DMI's forecast hour by hour for up to about 10 days, with a dry/showers/wet `verdict.outdoor`, temperature, wind, DMI's own text and warnings | None |
 
 Every source is limited to Københavns and Frederiksberg Kommune by default (`area`), and none of them books anything: the user always books or buys through the `url`.
 
 ## Which to ask
 
+- **The weather first, for a question about a day or an evening:** run `dmi forecast --date <day>` (add `--from-time`/`--to-time` for the hours the plan covers) before the other sources, and let `verdict.outdoor` steer what you suggest. `wet`: lead with indoor plans (theatre, cinema and KultuNaut film, indoor courts, Absalon, indoor events) and say outdoor courts and markets are a poor idea. `showers`: mix indoor and outdoor, prefer indoor courts. `dry`: outdoor plans are fine (outdoor padel, markets, runs, the harbour). Mention `cold` (under 5 degrees), `windy` (gusts of 12 m/s or more) and `snow` when they are true. The sources tell indoor from outdoor like this: wannasport court names with "inde"/"ude" or "indendørs"/"udendørs"; Absalon's `ude-af-huset` category; kulturKBH's `active` events are often outdoors. DMI covers about 10 days: beyond that, say there is no forecast yet. Always give the weather in one line in the answer (for example "Thursday evening: 6 degrees, dry, light wind").
 - **Events on a day or a weekend:** `kulturkbh event list`, `billetto event search` and `kultunaut event list` with the same `--from`/`--to`. Pass `--free` to the first two when the user wants free things (KultuNaut has no prices). KultuNaut can return hundreds a day: narrow it with `--genre`, `--from-time`/`--to-time` and `--limit`. Pass `--exclude-kids` to `kultunaut event list` when the question is for adults or teenagers: KultuNaut lists many children's club trainings. kulturKBH merges its own duplicates: an event several sources announce comes once, with the others in `alsoAt`. Also ask `absalon event list` with the same dates (Folkehuset Absalon has something almost every evening, e.g. a communal dinner): pass `--exclude-kids` for adults or teenagers and `--free` for free things. Also ask `brugbyen event list` with the same dates: pass `--group` for the audience (e.g. `--group unge,voksne` for an adult with a teenager) and `--free` when the user asks for free things (brugbyen filters on the site, and has no prices).
 - **Theatre, a teenager or an age limit:** ask `teaterbilletter show list` with `--from`/`--to`, `--age <the youngest guest's age>` and `--max-price <DKK>` when the user names a budget. It is the only source that knows age limits and ticket prices for theatre; `--category` narrows to stand-up, musical, børneteater and so on. A production with no age limit comes back for any `--age`.
 - **Something active or playful** (a date, a group of friends): also `wannasport slot search` for one to three sports that fit, with `--date` and an evening `--from`/`--to`. Don't ask for every sport: `sport list` has 41.
@@ -65,6 +67,7 @@ Keep a `sources` list on every merged event (`kulturkbh`, `billetto`, `kultunaut
 
 ## Answering
 
+- Start with the weather in one line, from `dmi forecast`.
 - Group by evening flow when it helps (before dinner, the main thing, afterwards) and give times, price and the link for each.
 - Billetto events with `ongoing: true` started before the day (courses, season passes): mention them only if the user asks for that kind of thing.
 - If a source fails, answer from the others and say which one is missing and why (its `error.kind`).

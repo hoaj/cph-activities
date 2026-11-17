@@ -1,0 +1,121 @@
+{
+  "task": "forecast",
+  "startPath": "/lokation/show/DK/:id/:id/",
+  "write": false,
+  "operations": [
+    {
+      "operation": "GET /lokation/show/DK/:id/:id/",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "www.dmi.dk",
+      "path": "/lokation/show/DK/:id/:id/",
+      "file": "GET-lokation-show-DK-id-id.shape.json",
+      "pages": [
+        "/lokation/show/DK/:id/:id/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /dmidk_byvejrWS/rest/texts.json/:id",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "www.dmi.dk",
+      "path": "/dmidk_byvejrWS/rest/texts.json/:id",
+      "file": "GET-dmidk_byvejrWS-rest-texts.json-id.shape.json",
+      "pages": [
+        "/lokation/show/DK/:id/:id/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /NinJo2DmiDk/ninjo2dmidk",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "www.dmi.dk",
+      "path": "/NinJo2DmiDk/ninjo2dmidk",
+      "file": "GET-NinJo2DmiDk-ninjo2dmidk.shape.json",
+      "pages": [
+        "/lokation/show/DK/:id/:id/"
+      ],
+      "seen": 7,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /dmidk_byvejrWS/rest/vandstand/active",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "www.dmi.dk",
+      "path": "/dmidk_byvejrWS/rest/vandstand/active",
+      "file": "GET-dmidk_byvejrWS-rest-vandstand-active.shape.json",
+      "pages": [
+        "/lokation/show/DK/:id/:id/"
+      ],
+      "seen": 2,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /dmidk_byvejrWS/rest/json/:id/DK/WarningOverview",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "www.dmi.dk",
+      "path": "/dmidk_byvejrWS/rest/json/:id/DK/WarningOverview",
+      "file": "GET-dmidk_byvejrWS-rest-json-id-DK-WarningOverview.shape.json",
+      "pages": [
+        "/lokation/show/DK/:id/:id/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /dmidk_byvejrWS/rest/json/id/:id",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "www.dmi.dk",
+      "path": "/dmidk_byvejrWS/rest/json/id/:id",
+      "file": "GET-dmidk_byvejrWS-rest-json-id-id.shape.json",
+      "pages": [
+        "/lokation/show/DK/:id/:id/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /dmidk_byvejrWS/rest/texts/varsler/geonameid/:id",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "www.dmi.dk",
+      "path": "/dmidk_byvejrWS/rest/texts/varsler/geonameid/:id",
+      "file": "GET-dmidk_byvejrWS-rest-texts-varsler-geonameid-id.shape.json",
+      "pages": [
+        "/lokation/show/DK/:id/:id/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /matomo/matomo.php",
+      "kind": "rest",
+      "effect": "write",
+      "method": "POST",
+      "host": "www.dmi.dk",
+      "path": "/matomo/matomo.php",
+      "file": "POST-matomo-matomo.php.shape.json",
+      "pages": [
+        "/lokation/show/DK/:id/:id/"
+      ],
+      "seen": 1,
+      "aborted": 1
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "operation": "GET /dmidk_byvejrWS/rest/texts/varsler/geonameid/:id",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "www.dmi.dk",
+  "method": "GET",
+  "path": "/dmidk_byvejrWS/rest/texts/varsler/geonameid/:id",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "accept-ranges": null,
+        "age": null,
+        "cache-control": null,
+        "content-length": null,
+        "content-security-policy": null,
+        "content-type": "application/json",
+        "date": null,
+        "strict-transport-security": null,
+        "x-frame-options": null,
+        "x-proxy": null,
+        "x-varnish": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "object",
+          "fields": {
+            "name": {
+              "type": "string"
+            },
+            "area": {
+              "type": "string"
+            },
+            "vandstand": {
+              "type": "string"
+            },
+            "day0": {
+              "type": "string"
+            },
+            "day1": {
+              "type": "string"
+            },
+            "day2": {
+              "type": "string"
+            },
+            "day3": {
+              "type": "string"
+            },
+            "day4": {
+              "type": "string"
+            },
+            "day5": {
+              "type": "string"
+            },
+            "favorite": {
+              "type": "string"
+            },
+            "warnings": {
+              "type": "array"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0
+}

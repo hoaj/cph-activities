@@ -1,0 +1,117 @@
+{
+  "operation": "POST /matomo/matomo.php",
+  "kind": "rest",
+  "effect": "write",
+  "resourceType": "ping",
+  "host": "www.dmi.dk",
+  "method": "POST",
+  "path": "/matomo/matomo.php",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "content-type": "application/x-www-form-urlencoded",
+      "cookie": null,
+      "origin": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "action_name": {
+          "type": "string"
+        },
+        "idsite": {
+          "type": "string"
+        },
+        "rec": {
+          "type": "string"
+        },
+        "r": {
+          "type": "string"
+        },
+        "h": {
+          "type": "string"
+        },
+        "m": {
+          "type": "string"
+        },
+        "s": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "_idn": {
+          "type": "string"
+        },
+        "send_image": {
+          "type": "string"
+        },
+        "_refts": {
+          "type": "string"
+        },
+        "pv_id": {
+          "type": "string"
+        },
+        "pf_net": {
+          "type": "string"
+        },
+        "pf_srv": {
+          "type": "string"
+        },
+        "pf_tfr": {
+          "type": "string"
+        },
+        "pf_dm1": {
+          "type": "string"
+        },
+        "pf_dm2": {
+          "type": "string"
+        },
+        "pf_onl": {
+          "type": "string"
+        },
+        "uadata": {
+          "type": "string"
+        },
+        "pdf": {
+          "type": "string"
+        },
+        "qt": {
+          "type": "string"
+        },
+        "realp": {
+          "type": "string"
+        },
+        "wma": {
+          "type": "string"
+        },
+        "fla": {
+          "type": "string"
+        },
+        "java": {
+          "type": "string"
+        },
+        "ag": {
+          "type": "string"
+        },
+        "cookie": {
+          "type": "string"
+        },
+        "res": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": [],
+  "seen": 1,
+  "aborted": 1
+}
