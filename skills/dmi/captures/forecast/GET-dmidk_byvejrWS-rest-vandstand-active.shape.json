@@ -1,0 +1,177 @@
+{
+  "operation": "GET /dmidk_byvejrWS/rest/vandstand/active",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "www.dmi.dk",
+  "method": "GET",
+  "path": "/dmidk_byvejrWS/rest/vandstand/active",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "accept-ranges": null,
+        "age": null,
+        "cache-control": null,
+        "content-length": null,
+        "content-security-policy": null,
+        "content-type": "application/json",
+        "date": null,
+        "strict-transport-security": null,
+        "x-frame-options": null,
+        "x-proxy": null,
+        "x-varnish": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "fields": {
+              "_id": {
+                "type": "object",
+                "fields": {
+                  "counter": {
+                    "type": "number"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "datetime"
+                  },
+                  "machineIdentifier": {
+                    "type": "number"
+                  },
+                  "processIdentifier": {
+                    "type": "number"
+                  },
+                  "time": {
+                    "type": "number"
+                  },
+                  "timeSecond": {
+                    "type": "number"
+                  },
+                  "timestamp": {
+                    "type": "number"
+                  }
+                }
+              },
+              "id": {
+                "type": "string",
+                "format": "numeric"
+              },
+              "name": {
+                "type": "string"
+              },
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              },
+              "country": {
+                "type": "string"
+              },
+              "hassealevel": {
+                "type": "boolean"
+              },
+              "hasseatemp": {
+                "type": "boolean"
+              },
+              "hassalinity": {
+                "type": "boolean"
+              },
+              "hascurrent": {
+                "type": "boolean"
+              },
+              "haswave": {
+                "type": "boolean"
+              },
+              "hastide": {
+                "type": "boolean"
+              },
+              "location": {
+                "type": "string"
+              },
+              "year20event": {
+                "type": "union",
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "mlws": {
+                "type": "union",
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lowastrotide": {
+                "type": "union",
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "year100event": {
+                "type": "union",
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "year50event": {
+                "type": "union",
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "optional": [
+              "lowastrotide",
+              "mlws",
+              "year100event",
+              "year20event",
+              "year50event"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "seen": 2,
+  "aborted": 0
+}
