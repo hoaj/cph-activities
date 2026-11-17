@@ -31,3 +31,17 @@ export function resolve(values: string[], options: Option[], aliases = false): {
   }
   return { ids, unknown };
 }
+
+/** The audience groups are fixed on the site. */
+export const GROUPS: Option[] = [
+  { id: "10", name: "Børn" },
+  { id: "11", name: "Unge" },
+  { id: "12", name: "Voksne" },
+  { id: "13", name: "Seniorer" },
+];
+
+/** Group values (names, English aliases or ids) to ids from the fixed map; null when any value is not in it, so the lookup must decide. */
+export function staticGroups(values: string[]): string[] | null {
+  const r = resolve(values, GROUPS, true);
+  return r.unknown.length > 0 ? null : r.ids;
+}

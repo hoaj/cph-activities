@@ -2,7 +2,7 @@
 name: cph-activities
 description: Use when the user asks what to do in Copenhagen in general terms (a date, an evening out, the weekend, something with friends or kids, "what's on Wednesday"), so the answer needs events and activities from several sources at once. Says which of this plugin's CLI skills to ask (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, wannasport, absalon), and how to merge events several sources list into one, keeping the most complete and most current details and every link.
 ---
-<!-- version: 0.11.0 -->
+<!-- version: 0.11.1 -->
 
 # cph-activities: what to do in Copenhagen
 
@@ -43,9 +43,9 @@ kulturKBH also lists some Absalon events: the same rules apply, and `absalon` su
 
 Theatre shows KultuNaut or kulturKBH list are often in `teaterbilletter` too: the same rules apply (date, start time within 30 minutes, title), and `teaterbilletter` supplies the price range, the age limit and the ticket link.
 
-Don't require the same venue: the sources name venues differently, and a venue that differs is exactly what the user must hear about.
+Don't require the same venue, but compare venues before you merge. Venue names count as the same place when, after normalising (lower case, punctuation removed, only the part before the first `,`, `|` or ` - `, and a leading "kulturhuset", "spillestedet" or "teatret" dropped), one contains the other. Same-place examples: "Koncertkirken, Blågårds Plads" and "Koncertkirken"; "SALIG" and "Salig"; "Kulturhuset Krudttønden" and "Krudttønden"; "KLEIN - Sydhavnens spillested || Karens Minde Kulturhus" and "KLEIN". Only venues that are still different after that are a conflict the user must hear about.
 
-**Probably the same event** when the titles differ but the date, the exact start time and the venue match (one venue name contains the other once normalised, e.g. "Københavns Museum" and "Københavns Museum, Stormgade 18"), and the price agrees if both give one. Merge these too, but say so: "kulturKBH calls it 'Juletræstænding', Billetto 'Syng julen ind' — same time and place, probably one event."
+**Probably the same event** when the titles differ but the date, the exact start time and the venue match (one venue name contains the other once normalised as above, e.g. "Københavns Museum" and "Københavns Museum, Stormgade 18"), and the price agrees if both give one. Merge these too, but say so: "kulturKBH calls it 'Juletræstænding', Billetto 'Syng julen ind' — same time and place, probably one event."
 
 **Field by field**, keep the most specific value:
 
