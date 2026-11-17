@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { otherDates, parseDateText, totalOf } from "../src/lib/when";
+import { occurrence, otherDates, parseDateText, totalOf } from "../src/lib/when";
 
 const r = (startDate: string | null, endDate: string | null, startTime: string | null, endTime: string | null) => ({ startDate, endDate, startTime, endTime });
 
@@ -42,4 +42,16 @@ test("totalOf", () => {
   expect(totalOf("Viser 1-3 af 3 resultater")).toBe(3);
   expect(totalOf(null)).toBeNull();
   expect(totalOf("ingen")).toBeNull();
+});
+
+test("occurrence: a one-day search puts every event on the searched day", () => {
+  expect(occurrence({ from: "2026-11-21", to: "2026-11-21", shownDate: "2026-11-21", otherDates: 0 })).toEqual({ date: "2026-11-21", recurring: false, timeMayDiffer: false });
+  expect(occurrence({ from: "2026-11-21", to: "2026-11-21", shownDate: "2026-11-19", otherDates: 3 })).toEqual({ date: "2026-11-21", recurring: true, timeMayDiffer: true });
+  expect(occurrence({ from: "2026-11-21", to: "2026-11-21", shownDate: "2026-11-21", otherDates: 3 })).toEqual({ date: "2026-11-21", recurring: true, timeMayDiffer: false });
+});
+
+test("occurrence: in a period the shown date is the day only when it lies in the period", () => {
+  expect(occurrence({ from: "2026-11-20", to: "2026-11-22", shownDate: "2026-11-21", otherDates: 1 })).toEqual({ date: "2026-11-21", recurring: true, timeMayDiffer: false });
+  expect(occurrence({ from: "2026-11-20", to: "2026-11-22", shownDate: "2026-10-01", otherDates: 0 })).toEqual({ date: null, recurring: false, timeMayDiffer: false });
+  expect(occurrence({ from: "2026-11-20", to: "2026-11-22", shownDate: null, otherDates: 2 })).toEqual({ date: null, recurring: true, timeMayDiffer: false });
 });

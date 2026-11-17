@@ -3,7 +3,7 @@ import { defineCommand, inputFailure } from "../runtime/command";
 import listEvents from "../operations/listEvents";
 import site from "../site";
 import { filtersOf, resolve, staticGroups, type Option } from "../lib/filters";
-import { otherDates, parseDateText, totalOf } from "../lib/when";
+import { occurrence, otherDates, parseDateText, totalOf } from "../lib/when";
 
 const PAGE_SIZE = 21;
 const MAX_PAGES = 10;
@@ -15,7 +15,7 @@ const list = (o: Option[]) => o.map((x) => x.name).join(", ");
 export default defineCommand({
   name: "event list",
   summary:
-    "What is on at Københavns Kommune's own culture houses, libraries and halls (brugbyen.kk.dk) on a day or period, optionally only free, for an audience, category or district, with a link to each event's page; no prices. A recurring event shows its first upcoming date (`shownDate`, with `otherDates` > 0), which can be another day than the one searched: it occurs in the searched period by brugbyen's own filter",
+    "What is on at Københavns Kommune's own culture houses, libraries and halls (brugbyen.kk.dk) on a day or period, optionally only free, for an audience, category or district, with a link to each event's page; no prices. `date` is the day the event occurs within the search (on a one-day search always the searched day, by brugbyen's own filter; in a period `shownDate` when it lies in it, else null). A recurring event (`recurring`, `otherDates` > 0) shows its first upcoming date as `shownDate` and that date's time: `timeMayDiffer` says the time may be another day's",
   args: z.object({
     from: isoDate.optional().describe("first date, YYYY-MM-DD (default: today)"),
     to: isoDate.optional().describe("last date, YYYY-MM-DD (default: --from)"),
@@ -98,17 +98,21 @@ export default defineCommand({
             if (args.fromTime && d.startTime < args.fromTime) continue;
             if (args.toTime && d.startTime > args.toTime) continue;
           }
+          const others = otherDates(e.dates);
           events.push({
             id: e.id,
             title: e.title,
             venue: e.venue,
             ribbon: e.ribbon || null,
             dateText: e.dateText,
+            date: occurrence({ from, to, shownDate: d.startDate, otherDates: others }).date,
             shownDate: d.startDate,
             endDate: d.endDate,
             time: d.startTime,
             endTime: d.endTime,
-            otherDates: otherDates(e.dates),
+            otherDates: others,
+            recurring: others > 0,
+            timeMayDiffer: occurrence({ from, to, shownDate: d.startDate, otherDates: others }).timeMayDiffer,
             ongoing,
             area: "cph",
             url: new URL(e.href, site.origin).toString(),
@@ -122,7 +126,7 @@ export default defineCommand({
       if (events.length >= args.limit) break;
     }
     note(`${requests} requests`);
-    const key = (e: Record<string, unknown>) => `${e.shownDate ?? "9999-99-99"} ${e.time ?? "99:99"}`;
+    const key = (e: Record<string, unknown>) => `${e.date ?? e.shownDate ?? "9999-99-99"} ${e.time ?? "99:99"}`;
     events.sort((a, b) => key(a).localeCompare(key(b)));
     return { total: total ?? events.length, complete, events: events.slice(0, args.limit) };
   },
