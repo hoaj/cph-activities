@@ -2,7 +2,7 @@ import { z } from "zod";
 import { defineCommand, inputFailure } from "../runtime/command";
 import listEvents from "../operations/listEvents";
 import site from "../site";
-import { filtersOf, resolve, type Option } from "../lib/filters";
+import { filtersOf, resolve, staticGroups, type Option } from "../lib/filters";
 import { otherDates, parseDateText, totalOf } from "../lib/when";
 
 const PAGE_SIZE = 21;
@@ -43,19 +43,21 @@ export default defineCommand({
       return call(listEvents, { ...base, ...ids, page: String(page) });
     };
 
-    // The filter lists are on every page: read them from the first page when a name must be resolved,
-    // which is then a search on the dates only.
-    const asked = [args.category, args.group, args.district].some((v) => v !== undefined && v.length > 0);
+    // Audience groups resolve from the fixed map. Category and district names (and a group the map does not know)
+    // need the filter lists, which are on every page: read them from an unfiltered first page.
     const ids: { categories?: string[]; groups?: string[]; districts?: string[] } = {};
-    if (asked) {
+    const fixedGroups = args.group && args.group.length > 0 ? staticGroups(args.group) : null;
+    if (fixedGroups) ids.groups = fixedGroups;
+    const lookup: Array<[string, string[] | undefined, (f: ReturnType<typeof filtersOf>) => Option[], boolean, "categories" | "groups" | "districts"]> = [
+      ["--category", args.category, (f) => f.categories, false, "categories"],
+      ["--group", fixedGroups ? undefined : args.group, (f) => f.groups, true, "groups"],
+      ["--district", args.district, (f) => f.districts, false, "districts"],
+    ];
+    if (lookup.some(([, v]) => v !== undefined && v.length > 0)) {
       const filters = filtersOf(await fetchPage(0, {}));
-      const kinds: Array<[string, string[] | undefined, Option[], boolean, "categories" | "groups" | "districts"]> = [
-        ["--category", args.category, filters.categories, false, "categories"],
-        ["--group", args.group, filters.groups, true, "groups"],
-        ["--district", args.district, filters.districts, false, "districts"],
-      ];
-      for (const [flag, values, options, aliases, key] of kinds) {
+      for (const [flag, values, optionsOf, aliases, key] of lookup) {
         if (!values || values.length === 0) continue;
+        const options = optionsOf(filters);
         const r = resolve(values, options, aliases);
         if (r.unknown.length > 0) inputFailure(`Unknown ${flag} "${r.unknown.join('", "')}". Options: ${list(options)}.`);
         ids[key] = r.ids;
@@ -66,38 +68,56 @@ export default defineCommand({
     let complete = false;
     let total: number | null = null;
     let seen = 0;
-    for (let page = 0; page < MAX_PAGES; page++) {
-      const r = await fetchPage(page, ids);
-      if (page === 0) total = totalOf(r.resume);
-      seen += r.events.length;
-      for (const e of r.events) {
-        const d = parseDateText(e.dateText);
-        const ongoing = d.endDate !== null && d.startDate !== null && d.endDate !== d.startDate && d.startDate < from;
-        if (ongoing && !args.includeOngoing) continue;
-        if (timed) {
-          if (!d.startTime) continue;
-          if (args.fromTime && d.startTime < args.fromTime) continue;
-          if (args.toTime && d.startTime > args.toTime) continue;
-        }
-        events.push({
-          id: e.id,
-          title: e.title,
-          venue: e.venue,
-          ribbon: e.ribbon || null,
-          dateText: e.dateText,
-          shownDate: d.startDate,
-          endDate: d.endDate,
-          time: d.startTime,
-          endTime: d.endTime,
-          otherDates: otherDates(e.dates),
-          ongoing,
-          area: "cph",
-          url: new URL(e.href, site.origin).toString(),
-        });
+    // Page 0 gives the total; the other pages needed are then fetched together, in waves sized from
+    // how many events of a page survive the filters on this side (time window, ongoing).
+    let first: Awaited<ReturnType<typeof fetchPage>> | null = await fetchPage(0, ids);
+    total = totalOf(first.resume);
+    const lastPage = Math.min(MAX_PAGES, total !== null ? Math.max(1, Math.ceil(total / PAGE_SIZE)) : MAX_PAGES) - 1;
+    let next = 0;
+    while (!complete && next < MAX_PAGES) {
+      let wave: Array<Awaited<ReturnType<typeof fetchPage>>>;
+      if (first) {
+        wave = [first];
+        first = null;
+      } else {
+        const kept = events.length;
+        const rate = kept > 0 ? kept / seen : 0;
+        const need = rate > 0 ? Math.ceil((args.limit - kept) / rate / PAGE_SIZE) : MAX_PAGES;
+        const count = Math.max(1, Math.min(need, lastPage - next + 1));
+        wave = await Promise.all(Array.from({ length: count }, (_, i) => fetchPage(next + i, ids)));
       }
-      if (r.events.length < PAGE_SIZE || (total !== null && seen >= total)) {
-        complete = true;
-        break;
+      next += wave.length;
+      for (const r of wave) {
+        seen += r.events.length;
+        for (const e of r.events) {
+          const d = parseDateText(e.dateText);
+          const ongoing = d.endDate !== null && d.startDate !== null && d.endDate !== d.startDate && d.startDate < from;
+          if (ongoing && !args.includeOngoing) continue;
+          if (timed) {
+            if (!d.startTime) continue;
+            if (args.fromTime && d.startTime < args.fromTime) continue;
+            if (args.toTime && d.startTime > args.toTime) continue;
+          }
+          events.push({
+            id: e.id,
+            title: e.title,
+            venue: e.venue,
+            ribbon: e.ribbon || null,
+            dateText: e.dateText,
+            shownDate: d.startDate,
+            endDate: d.endDate,
+            time: d.startTime,
+            endTime: d.endTime,
+            otherDates: otherDates(e.dates),
+            ongoing,
+            area: "cph",
+            url: new URL(e.href, site.origin).toString(),
+          });
+        }
+        if (r.events.length < PAGE_SIZE || (total !== null && seen >= total)) {
+          complete = true;
+          break;
+        }
       }
       if (events.length >= args.limit) break;
     }

@@ -21,7 +21,7 @@ export default defineCommand({
     to: isoDate.optional().describe("last date, YYYY-MM-DD (default: the same as --from)"),
     category: z.string().min(1).optional().describe("category from `category list`, e.g. stand-up, musical, børneteater (part of a name is enough)"),
     age: z.coerce.number().int().min(0).max(120).optional().describe("only productions suitable for someone this old (no age limit, or a limit at most this)"),
-    maxPrice: z.coerce.number().min(0).optional().describe("only productions whose cheapest ticket costs at most this many DKK"),
+    maxPrice: z.coerce.number().min(0).optional().describe("keep shows whose cheapest ticket (`priceMinDKK`, often a child or youth price) is at most this many kroner"),
     fromTime: hhmm.optional().describe("earliest start time, HH:MM"),
     toTime: hhmm.optional().describe("latest start time, HH:MM"),
     query: z.string().optional().describe("words that must all be in the title"),
