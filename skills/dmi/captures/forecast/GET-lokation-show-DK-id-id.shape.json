@@ -1,0 +1,1334 @@
+{
+  "operation": "GET /lokation/show/DK/:id/:id/",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "www.dmi.dk",
+  "method": "GET",
+  "path": "/lokation/show/DK/:id/:id/",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/html",
+      "headers": {
+        "accept-ranges": null,
+        "age": null,
+        "cache-control": null,
+        "content-encoding": null,
+        "content-language": null,
+        "content-length": null,
+        "content-security-policy": null,
+        "content-type": "text/html",
+        "date": null,
+        "strict-transport-security": null,
+        "vary": null,
+        "x-content-type-options": null,
+        "x-frame-options": null,
+        "x-proxy": null,
+        "x-ua-compatible": null,
+        "x-varnish": null
+      },
+      "body": {
+        "kind": "html",
+        "outline": [
+          {
+            "tag": "body",
+            "id": "uid-6",
+            "classes": [
+              "default"
+            ],
+            "children": [
+              {
+                "tag": "div",
+                "id": "root",
+                "attrs": [
+                  "hidden"
+                ]
+              },
+              {
+                "tag": "div",
+                "id": "cookie-modal"
+              },
+              {
+                "tag": "div",
+                "id": "backdrop"
+              },
+              {
+                "tag": "div",
+                "id": "map-location",
+                "classes": [
+                  "map"
+                ],
+                "attrs": [
+                  "data-country",
+                  "data-module"
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "hidden-print"
+                ],
+                "children": [
+                  {
+                    "tag": "header",
+                    "classes": [
+                      "main-top-navigation"
+                    ],
+                    "children": [
+                      {
+                        "tag": "nav",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "id": "firstMenuLine",
+                            "children": [
+                              {
+                                "tag": "a",
+                                "classes": [
+                                  "logo"
+                                ],
+                                "attrs": [
+                                  "href"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "img",
+                                    "attrs": [
+                                      "alt",
+                                      "src"
+                                    ]
+                                  },
+                                  {
+                                    "tag": "span",
+                                    "classes": [
+                                      "logo--text"
+                                    ],
+                                    "text": true
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "search-and-menu"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "top-search-links-edit"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "id": "top-search",
+                                        "attrs": [
+                                          "data-cards"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "large-1",
+                                      "medium-2",
+                                      "menu-col",
+                                      "small-1"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "id": "btn-menu",
+                                        "attrs": [
+                                          "href"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "classes": [
+                                              "menu-text"
+                                            ],
+                                            "text": true
+                                          },
+                                          {
+                                            "tag": "span",
+                                            "classes": [
+                                              "icon-menu_wider"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "menu"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "menu-inner"
+                    ],
+                    "children": [
+                      {
+                        "tag": "header",
+                        "children": [
+                          {
+                            "tag": "section",
+                            "children": [
+                              {
+                                "tag": "nav",
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "row"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "align-right",
+                                          "columns",
+                                          "small-:id"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "a",
+                                            "id": "btn-close-menu",
+                                            "attrs": [
+                                              "href"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "text": true
+                                              },
+                                              {
+                                                "tag": "span",
+                                                "classes": [
+                                                  "icon-close"
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "links"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "ul",
+                                        "id": ":id",
+                                        "children": [
+                                          {
+                                            "tag": "li",
+                                            "classes": [
+                                              "normal"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "level1",
+                                                  "nolink"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "a",
+                                                    "attrs": [
+                                                      "href",
+                                                      "target"
+                                                    ],
+                                                    "text": true,
+                                                    "children": [
+                                                      {
+                                                        "tag": "span",
+                                                        "classes": [
+                                                          "chevron2"
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "ul",
+                                                "children": [
+                                                  {
+                                                    "tag": "li",
+                                                    "classes": [
+                                                      "normal"
+                                                    ],
+                                                    "many": true,
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "level2",
+                                                          "link"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "a",
+                                                            "attrs": [
+                                                              "href",
+                                                              "target"
+                                                            ],
+                                                            "text": true
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "spacer"
+                                                    ],
+                                                    "many": true
+                                                  }
+                                                ]
+                                              }
+                                            ],
+                                            "many": true
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "id": "spacer",
+                "children": [
+                  {
+                    "tag": "section",
+                    "classes": [
+                      "full-width"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "warning-banner"
+                        ],
+                        "attrs": [
+                          "data-module"
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "id": ":id",
+                        "classes": [
+                          "frame",
+                          "frame-default",
+                          "frame-layout-0"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "news",
+                              "news-kommentar",
+                              "remark-banner"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "kommentar-width"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "id": ":id",
+                                    "classes": [
+                                      "news-kommentar-view"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "articletype-0",
+                                          "news-item-kommentar"
+                                        ],
+                                        "attrs": [
+                                          "itemscope",
+                                          "itemtype"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "news-header"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "h5",
+                                                "children": [
+                                                  {
+                                                    "tag": "a",
+                                                    "classes": [
+                                                      "remarkText"
+                                                    ],
+                                                    "attrs": [
+                                                      "href",
+                                                      "itemprop",
+                                                      "title"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "span",
+                                                        "attrs": [
+                                                          "itemprop"
+                                                        ],
+                                                        "text": true
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "many": true
+                  }
+                ]
+              },
+              {
+                "tag": "main",
+                "classes": [
+                  "location-page"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "row"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "columns",
+                          "large-:id",
+                          "medium-:id",
+                          "small-:id"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "id": ":id",
+                            "classes": [
+                              "frame",
+                              "frame-default",
+                              "frame-layout-0",
+                              "frame-type-html"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "box-space-top",
+                                  "header-block-weather"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "attrs": [
+                                      "data-module"
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "days-navigation"
+                                    ],
+                                    "attrs": [
+                                      "data-module"
+                                    ]
+                                  },
+                                  {
+                                    "tag": "span",
+                                    "attrs": [
+                                      "data-module"
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "id": "weather-summary-mobile"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "section",
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "row"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "box-space-no-margin",
+                              "columns",
+                              "large-:id",
+                              "medium-:id",
+                              "small-:id"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "id": ":id",
+                                "classes": [
+                                  "frame",
+                                  "frame-default",
+                                  "frame-layout-0"
+                                ],
+                                "many": true,
+                                "children": [
+                                  {
+                                    "tag": "section",
+                                    "classes": [
+                                      "row"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "columns",
+                                          "large-:id",
+                                          "medium-:id",
+                                          "small-:id"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "id": "graph2",
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "attrs": [
+                                                  "data-day",
+                                                  "data-eps",
+                                                  "data-module"
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "graph9",
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "attrs": [
+                                                  "data-day",
+                                                  "data-module"
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "id": ":id",
+                                    "classes": [
+                                      "row"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "columns",
+                                          "small-:id"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "id": "weather-by-hours"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "columns",
+                                          "large-:id",
+                                          "medium-:id",
+                                          "small-:id"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "attrs": [
+                                              "data-module",
+                                              "data-station"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "p",
+                                    "children": [
+                                      {
+                                        "tag": "strong",
+                                        "text": true
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "columns",
+                              "large-:id",
+                              "locationpage-bottom",
+                              "medium-:id",
+                              "small-:id"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "row"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "column",
+                                      "medium-4",
+                                      "small-:id"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "id": ":id",
+                                        "classes": [
+                                          "frame",
+                                          "frame-default",
+                                          "frame-type-html"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "id": "specialudsigter",
+                                            "classes": [
+                                              "special-block"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "box-space",
+                                                  "special-block-header"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "h3",
+                                                    "classes": [
+                                                      "box-space-title"
+                                                    ],
+                                                    "text": true
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "box-space-sub-title"
+                                                    ],
+                                                    "text": true
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "ul",
+                                                "classes": [
+                                                  "special-block-links"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "li",
+                                                    "classes": [
+                                                      "special-block-list"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "a",
+                                                        "classes": [
+                                                          "special-block-link"
+                                                        ],
+                                                        "attrs": [
+                                                          "href"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "img",
+                                                            "classes": [
+                                                              "special-block-image"
+                                                            ],
+                                                            "attrs": [
+                                                              "alt",
+                                                              "height",
+                                                              "src",
+                                                              "title",
+                                                              "width"
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "span",
+                                                            "classes": [
+                                                              "special-block-text"
+                                                            ],
+                                                            "text": true
+                                                          },
+                                                          {
+                                                            "tag": "img",
+                                                            "classes": [
+                                                              "special-block-arrow"
+                                                            ],
+                                                            "attrs": [
+                                                              "alt",
+                                                              "src",
+                                                              "title"
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "a",
+                                            "classes": [
+                                              "iamap"
+                                            ],
+                                            "attrs": [
+                                              "href"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "box-space"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "h3",
+                                                    "classes": [
+                                                      "box-space-title"
+                                                    ],
+                                                    "text": true
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "box-space-sub-title"
+                                                    ],
+                                                    "text": true
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "box-space-content"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "children": [
+                                                      {
+                                                        "tag": "img",
+                                                        "attrs": [
+                                                          "alt",
+                                                          "src",
+                                                          "width"
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "span",
+                                                        "children": [
+                                                          {
+                                                            "tag": "img",
+                                                            "attrs": [
+                                                              "alt",
+                                                              "src"
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "id": ":id",
+                                        "classes": [
+                                          "frame",
+                                          "frame-default",
+                                          "frame-layout-0",
+                                          "frame-type-html"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "id": "textForecast",
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "children": [
+                                                  {
+                                                    "tag": "h3",
+                                                    "classes": [
+                                                      "tekstudsigt-header"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "tekstudsigt-subtitle"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "tekstudsigt-body",
+                                                      "weather-container"
+                                                    ]
+                                                  }
+                                                ],
+                                                "many": true
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "many": true
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "id": ":id",
+                                "classes": [
+                                  "frame",
+                                  "frame-default",
+                                  "frame-layout-0",
+                                  "frame-type-html"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "section",
+                                    "classes": [
+                                      "row"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "columns",
+                                          "large-:id",
+                                          "medium-:id",
+                                          "small-:id"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "attrs": [
+                                              "data-module"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "many": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "section",
+                "classes": [
+                  "article-preview-section"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "article-preview-wrapper"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "row"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "article-block-header",
+                              "small-:id"
+                            ],
+                            "children": [
+                              {
+                                "tag": "h3",
+                                "text": true
+                              },
+                              {
+                                "tag": "a",
+                                "classes": [
+                                  "blue-link"
+                                ],
+                                "attrs": [
+                                  "href"
+                                ],
+                                "text": true
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "id": ":id",
+                            "classes": [
+                              "frame",
+                              "frame-default",
+                              "frame-layout-0"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "news"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "id": ":id",
+                                    "classes": [
+                                      "news-list-view"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "article-block",
+                                          "articletype-0",
+                                          "columns",
+                                          "large-4",
+                                          "medium-6",
+                                          "news-list",
+                                          "small-:id"
+                                        ],
+                                        "attrs": [
+                                          "itemscope",
+                                          "itemtype"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "a",
+                                            "classes": [
+                                              "article-card-link"
+                                            ],
+                                            "attrs": [
+                                              "href",
+                                              "itemprop",
+                                              "title"
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "article-block-preview"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "classes": [
+                                                  "article-card-link"
+                                                ],
+                                                "attrs": [
+                                                  "href",
+                                                  "itemprop",
+                                                  "title"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "article-block-img"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "img",
+                                                        "attrs": [
+                                                          "alt",
+                                                          "height",
+                                                          "loading",
+                                                          "src",
+                                                          "width"
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "article-block-wrapper"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "a",
+                                                    "classes": [
+                                                      "article-card-link"
+                                                    ],
+                                                    "attrs": [
+                                                      "href",
+                                                      "itemprop",
+                                                      "title"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "h3",
+                                                        "classes": [
+                                                          "article-block-title"
+                                                        ],
+                                                        "attrs": [
+                                                          "itemprop"
+                                                        ],
+                                                        "text": true
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "article-block-text"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "a",
+                                                        "classes": [
+                                                          "article-card-link"
+                                                        ],
+                                                        "attrs": [
+                                                          "href",
+                                                          "itemprop",
+                                                          "title"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "p",
+                                                            "classes": [
+                                                              "news-card-description"
+                                                            ],
+                                                            "attrs": [
+                                                              "itemprop"
+                                                            ],
+                                                            "text": true,
+                                                            "children": [
+                                                              {
+                                                                "tag": "em",
+                                                                "classes": [
+                                                                  "news-card-date"
+                                                                ],
+                                                                "attrs": [
+                                                                  "datetime",
+                                                                  "itemprop"
+                                                                ],
+                                                                "text": true
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "a",
+                                                        "classes": [
+                                                          "read-more-news-link"
+                                                        ],
+                                                        "attrs": [
+                                                          "href",
+                                                          "title"
+                                                        ],
+                                                        "text": true
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ],
+                                        "many": true
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "many": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "footer",
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "footer-app"
+                    ],
+                    "children": [
+                      {
+                        "tag": "span",
+                        "classes": [
+                          "show-for-large"
+                        ],
+                        "text": true
+                      },
+                      {
+                        "tag": "a",
+                        "classes": [
+                          "footer-app-link"
+                        ],
+                        "attrs": [
+                          "href"
+                        ],
+                        "children": [
+                          {
+                            "tag": "img",
+                            "attrs": [
+                              "alt",
+                              "src"
+                            ]
+                          }
+                        ],
+                        "many": true
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "footer-sitemap",
+                      "row"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "align-center",
+                          "columns",
+                          "footerlogo",
+                          "large-:id",
+                          "medium-:id",
+                          "small-:id"
+                        ],
+                        "children": [
+                          {
+                            "tag": "a",
+                            "classes": [
+                              "logo"
+                            ],
+                            "attrs": [
+                              "href"
+                            ],
+                            "children": [
+                              {
+                                "tag": "img",
+                                "attrs": [
+                                  "alt",
+                                  "src"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "ul",
+                        "classes": [
+                          "num-6"
+                        ],
+                        "children": [
+                          {
+                            "tag": "li",
+                            "children": [
+                              {
+                                "tag": "a",
+                                "attrs": [
+                                  "href",
+                                  "target"
+                                ],
+                                "text": true
+                              }
+                            ],
+                            "many": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "footer-misc",
+                      "row"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "id": "footer-copyright",
+                        "classes": [
+                          "columns",
+                          "large-3",
+                          "show-for-large"
+                        ],
+                        "text": true
+                      },
+                      {
+                        "tag": "div",
+                        "id": "footer-misc-menu",
+                        "classes": [
+                          "columns",
+                          "large-6",
+                          "medium-9",
+                          "small-9"
+                        ],
+                        "children": [
+                          {
+                            "tag": "ul",
+                            "children": [
+                              {
+                                "tag": "li",
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "attrs": [
+                                      "href",
+                                      "rel",
+                                      "target"
+                                    ],
+                                    "text": true
+                                  }
+                                ],
+                                "many": true
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "id": "footer-social",
+                        "classes": [
+                          "columns",
+                          "hide-for-small-only",
+                          "large-3",
+                          "medium-3"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0,
+  "html": true
+}
