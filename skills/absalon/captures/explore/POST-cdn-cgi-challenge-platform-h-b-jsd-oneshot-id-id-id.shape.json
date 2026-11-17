@@ -1,0 +1,26 @@
+{
+  "operation": "POST /cdn-cgi/challenge-platform/h/b/jsd/oneshot/:id/:id/:id",
+  "kind": "rest",
+  "effect": "write",
+  "resourceType": "xhr",
+  "host": "absaloncph.dk",
+  "method": "POST",
+  "path": "/cdn-cgi/challenge-platform/h/b/jsd/oneshot/:id/:id/:id",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "content-type": "text/plain",
+      "origin": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    },
+    "body": {
+      "kind": "text"
+    }
+  },
+  "responses": [],
+  "seen": 2,
+  "aborted": 2
+}

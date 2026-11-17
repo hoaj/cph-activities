@@ -10,6 +10,7 @@
     "cph-activities"
   ],
   "skills": [
+    "./skills/absalon",
     "./skills/billetto",
     "./skills/brugbyen",
     "./skills/cph-activities",

@@ -1,0 +1,761 @@
+{
+  "operation": "GET /",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "absaloncph.dk",
+  "method": "GET",
+  "path": "/",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/html",
+      "headers": {
+        "alt-svc": null,
+        "cf-cache-status": null,
+        "cf-ray": null,
+        "content-encoding": null,
+        "content-type": "text/html",
+        "date": null,
+        "fastcgi-cache": null,
+        "link": null,
+        "nel": null,
+        "referrer-policy": null,
+        "report-to": null,
+        "server": null,
+        "strict-transport-security": null,
+        "vary": null,
+        "x-content-type-options": null,
+        "x-frame-options": null,
+        "x-xss-protection": null
+      },
+      "body": {
+        "kind": "html",
+        "outline": [
+          {
+            "tag": "body",
+            "classes": [
+              "home",
+              "page",
+              "page-id-2",
+              "page-template-default",
+              "wp-custom-logo",
+              "wp-embed-responsive",
+              "wp-singular",
+              "wp-theme-folkehuset"
+            ],
+            "children": [
+              {
+                "tag": "a",
+                "attrs": [
+                  "aria-hidden",
+                  "href",
+                  "rel"
+                ]
+              },
+              {
+                "tag": "a",
+                "id": "wp-skip-link",
+                "classes": [
+                  "screen-reader-text",
+                  "skip-link"
+                ],
+                "attrs": [
+                  "href"
+                ],
+                "text": true
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "wp-site-blocks"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "alignfull",
+                      "is-layout-flow",
+                      "is-position-sticky",
+                      "wp-block-group",
+                      "wp-container-2"
+                    ],
+                    "children": [
+                      {
+                        "tag": "header",
+                        "classes": [
+                          "wp-block-template-part"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "has-background",
+                              "has-global-padding",
+                              "is-layout-constrained",
+                              "wp-block-group"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "alignwide",
+                                  "is-layout-flex",
+                                  "wp-block-group"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "is-layout-flex",
+                                      "wp-block-group"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "wp-block-site-logo"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "a",
+                                            "classes": [
+                                              "custom-logo-link"
+                                            ],
+                                            "attrs": [
+                                              "aria-current",
+                                              "href",
+                                              "rel"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "img",
+                                                "classes": [
+                                                  "custom-logo"
+                                                ],
+                                                "attrs": [
+                                                  "alt",
+                                                  "decoding",
+                                                  "height",
+                                                  "src",
+                                                  "width"
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "h1",
+                                        "classes": [
+                                          "has-large-font-size",
+                                          "wp-block-site-title"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "a",
+                                            "attrs": [
+                                              "aria-current",
+                                              "href",
+                                              "rel",
+                                              "target"
+                                            ],
+                                            "text": true
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "nav",
+                                        "classes": [
+                                          "has-medium-font-size",
+                                          "is-horizontal",
+                                          "is-layout-flex",
+                                          "is-responsive",
+                                          "items-justified-right",
+                                          "wp-block-navigation"
+                                        ],
+                                        "attrs": [
+                                          "aria-label",
+                                          "data-wp-context",
+                                          "data-wp-interactive"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "button",
+                                            "attrs": [
+                                              "aria-haspopup",
+                                              "aria-label",
+                                              "data-wp-on--click",
+                                              "data-wp-on--keydown"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "svg",
+                                                "attrs": [
+                                                  "height",
+                                                  "viewbox",
+                                                  "width",
+                                                  "xmlns"
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": "modal-1",
+                                            "classes": [
+                                              "has-background",
+                                              "has-contrast-color",
+                                              "has-text-color"
+                                            ],
+                                            "attrs": [
+                                              "data-wp-class--has-modal-open",
+                                              "data-wp-class--is-menu-open",
+                                              "data-wp-on--focusout",
+                                              "data-wp-on--keydown",
+                                              "data-wp-watch",
+                                              "tabindex"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "attrs": [
+                                                  "tabindex"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "attrs": [
+                                                      "data-wp-bind--aria-label",
+                                                      "data-wp-bind--aria-modal",
+                                                      "data-wp-bind--role"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "button",
+                                                        "attrs": [
+                                                          "aria-label",
+                                                          "data-wp-on--click"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "svg",
+                                                            "attrs": [
+                                                              "aria-hidden",
+                                                              "focusable",
+                                                              "height",
+                                                              "viewbox",
+                                                              "width",
+                                                              "xmlns"
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "div",
+                                                        "id": "modal-1-content",
+                                                        "attrs": [
+                                                          "data-wp-watch"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "ul",
+                                                            "classes": [
+                                                              "has-medium-font-size",
+                                                              "is-responsive",
+                                                              "items-justified-right",
+                                                              "wp-block-navigation"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "li",
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "a",
+                                                                    "attrs": [
+                                                                      "href"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "span",
+                                                                        "text": true
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ],
+                                                                "many": true
+                                                              },
+                                                              {
+                                                                "tag": "li",
+                                                                "classes": [
+                                                                  "kalender"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "a",
+                                                                    "attrs": [
+                                                                      "href"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "span",
+                                                                        "text": true
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ],
+                                                                "many": true
+                                                              },
+                                                              {
+                                                                "tag": "li",
+                                                                "classes": [
+                                                                  "cta"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "a",
+                                                                    "attrs": [
+                                                                      "href"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "span",
+                                                                        "text": true
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "tag": "li",
+                                                                "classes": [
+                                                                  "current-lang",
+                                                                  "lang-item",
+                                                                  "lang-item-2",
+                                                                  "lang-item-da",
+                                                                  "lang-item-first",
+                                                                  "polylang-item"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "a",
+                                                                    "attrs": [
+                                                                      "href",
+                                                                      "hreflang",
+                                                                      "lang"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "span",
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "span",
+                                                                            "classes": [
+                                                                              "pll-switcher-label"
+                                                                            ],
+                                                                            "text": true
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "tag": "li",
+                                                                "classes": [
+                                                                  "lang-item",
+                                                                  "lang-item-5",
+                                                                  "lang-item-en",
+                                                                  "polylang-item"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "a",
+                                                                    "attrs": [
+                                                                      "href",
+                                                                      "hreflang",
+                                                                      "lang"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "span",
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "span",
+                                                                            "classes": [
+                                                                              "pll-switcher-label"
+                                                                            ],
+                                                                            "text": true
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "many": true
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "main",
+                    "id": ":id",
+                    "classes": [
+                      "is-layout-flow",
+                      "wp-block-group"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "entry-content",
+                          "has-global-padding",
+                          "is-layout-constrained",
+                          "wp-block-post-content"
+                        ],
+                        "children": [
+                          {
+                            "tag": "figure",
+                            "classes": [
+                              "alignfull",
+                              "wp-block-video"
+                            ],
+                            "children": [
+                              {
+                                "tag": "video",
+                                "attrs": [
+                                  "autoplay",
+                                  "height",
+                                  "loop",
+                                  "muted",
+                                  "playsinline",
+                                  "src",
+                                  "width"
+                                ]
+                              }
+                            ],
+                            "many": true
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "footer",
+                    "classes": [
+                      "wp-block-template-part"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "has-background",
+                          "has-heading-font-family",
+                          "has-link-color",
+                          "has-text-color",
+                          "wp-block-group"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "has-heading-font-family",
+                              "is-layout-grid",
+                              "text-links",
+                              "wp-block-group"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "wp-block-group"
+                                ],
+                                "many": true,
+                                "children": [
+                                  {
+                                    "tag": "h2",
+                                    "classes": [
+                                      "has-small-font-size",
+                                      "wp-block-heading"
+                                    ],
+                                    "text": true
+                                  },
+                                  {
+                                    "tag": "p",
+                                    "classes": [
+                                      "wp-block-paragraph"
+                                    ],
+                                    "text": true,
+                                    "many": true
+                                  },
+                                  {
+                                    "tag": "nav",
+                                    "classes": [
+                                      "is-layout-flex",
+                                      "is-vertical",
+                                      "wp-block-navigation"
+                                    ],
+                                    "attrs": [
+                                      "aria-label"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "ul",
+                                        "classes": [
+                                          "is-vertical",
+                                          "wp-block-navigation"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "li",
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "href"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "span",
+                                                    "text": true
+                                                  }
+                                                ]
+                                              }
+                                            ],
+                                            "many": true
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "has-global-padding",
+                                      "is-layout-constrained",
+                                      "wp-block-group"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "p",
+                                        "classes": [
+                                          "wp-block-paragraph"
+                                        ],
+                                        "text": true,
+                                        "children": [
+                                          {
+                                            "tag": "br",
+                                            "many": true
+                                          },
+                                          {
+                                            "tag": "a",
+                                            "attrs": [
+                                              "href"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "span",
+                                                "classes": [
+                                                  "__cf_email__"
+                                                ],
+                                                "attrs": [
+                                                  "data-cfemail"
+                                                ],
+                                                "text": true
+                                              }
+                                            ]
+                                          }
+                                        ],
+                                        "many": true
+                                      },
+                                      {
+                                        "tag": "figure",
+                                        "classes": [
+                                          "alignleft",
+                                          "size-full",
+                                          "wp-block-image"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "a",
+                                            "attrs": [
+                                              "href",
+                                              "rel",
+                                              "target"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "img",
+                                                "attrs": [
+                                                  "alt",
+                                                  "decoding",
+                                                  "height",
+                                                  "src",
+                                                  "width"
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "aligncenter",
+                                      "wp-block-site-logo"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "classes": [
+                                          "custom-logo-link"
+                                        ],
+                                        "attrs": [
+                                          "aria-current",
+                                          "href",
+                                          "rel"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "img",
+                                            "classes": [
+                                              "custom-logo"
+                                            ],
+                                            "attrs": [
+                                              "alt",
+                                              "decoding",
+                                              "height",
+                                              "src",
+                                              "width"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "nav",
+                            "classes": [
+                              "is-layout-flex",
+                              "wp-block-navigation"
+                            ],
+                            "attrs": [
+                              "aria-label"
+                            ],
+                            "children": [
+                              {
+                                "tag": "ul",
+                                "classes": [
+                                  "wp-block-navigation"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "li",
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "attrs": [
+                                          "href",
+                                          "target"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": true
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "many": true
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "many": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "script",
+                "id": "wp-emoji-settings",
+                "attrs": [
+                  "type"
+                ],
+                "type": "application/json",
+                "json": {
+                  "type": "object",
+                  "fields": {
+                    "baseUrl": {
+                      "type": "string"
+                    },
+                    "ext": {
+                      "type": "string"
+                    },
+                    "svgUrl": {
+                      "type": "string"
+                    },
+                    "svgExt": {
+                      "type": "string"
+                    },
+                    "source": {
+                      "type": "object",
+                      "fields": {
+                        "concatemoji": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0,
+  "html": true
+}

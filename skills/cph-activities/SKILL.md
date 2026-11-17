@@ -1,6 +1,6 @@
 ---
 name: cph-activities
-description: Use when the user asks what to do in Copenhagen in general terms (a date, an evening out, the weekend, something with friends or kids, "what's on Wednesday"), so the answer needs events and activities from several sources at once. Says which of this plugin's CLI skills to ask (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, wannasport), and how to merge events several sources list into one, keeping the most complete and most current details and every link.
+description: Use when the user asks what to do in Copenhagen in general terms (a date, an evening out, the weekend, something with friends or kids, "what's on Wednesday"), so the answer needs events and activities from several sources at once. Says which of this plugin's CLI skills to ask (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, wannasport, absalon), and how to merge events several sources list into one, keeping the most complete and most current details and every link.
 ---
 <!-- version: 0.11.0 -->
 
@@ -15,20 +15,21 @@ This skill has no CLI of its own. It runs the plugin's CLI skills and combines w
 | KultuNaut | `kultunaut event list` | The broadest calendar: concerts, theatre, exhibitions, talks, church, sport, children; no prices | Link to the event's KultuNaut page |
 | brugbyen | `brugbyen event list` | The municipality's own culture houses, libraries and halls; filters on the site for audience, free, category and district; no prices | Link to the event's brugbyen page |
 | teaterbilletter | `teaterbilletter show list` (`category list` for the categories) | Theatre, revue, stand-up, musicals, opera, ballet, children's theatre and new circus at 100+ theatres, with price range and age limit (`ageFrom`) | Link to the seller's ticket page (`bookingUrl`) |
+| absalon | `absalon event list` (`category list` for the categories) | One venue, Folkehuset Absalon (Vesterbro): daily communal dinners, dance, yoga, workshops, ceramics, bingo and quiz, parties, concerts, markets, children's activities; free or priced as the description says | Link to the event's page on absaloncph.dk |
 | wannasport | `wannasport slot search --sport <slug>` (`sport list` for the slugs) | Free times to play a sport: padel, tennis, squash, table tennis, badminton … | Link to the venue's booking page |
 
 Every source is limited to Københavns and Frederiksberg Kommune by default (`area`), and none of them books anything: the user always books or buys through the `url`.
 
 ## Which to ask
 
-- **Events on a day or a weekend:** `kulturkbh event list`, `billetto event search` and `kultunaut event list` with the same `--from`/`--to`. Pass `--free` to the first two when the user wants free things (KultuNaut has no prices). KultuNaut can return hundreds a day: narrow it with `--genre`, `--from-time`/`--to-time` and `--limit`. Pass `--exclude-kids` to `kultunaut event list` when the question is for adults or teenagers: KultuNaut lists many children's club trainings. kulturKBH merges its own duplicates: an event several sources announce comes once, with the others in `alsoAt`. Also ask `brugbyen event list` with the same dates: pass `--group` for the audience (e.g. `--group unge,voksne` for an adult with a teenager) and `--free` when the user asks for free things (brugbyen filters on the site, and has no prices).
+- **Events on a day or a weekend:** `kulturkbh event list`, `billetto event search` and `kultunaut event list` with the same `--from`/`--to`. Pass `--free` to the first two when the user wants free things (KultuNaut has no prices). KultuNaut can return hundreds a day: narrow it with `--genre`, `--from-time`/`--to-time` and `--limit`. Pass `--exclude-kids` to `kultunaut event list` when the question is for adults or teenagers: KultuNaut lists many children's club trainings. kulturKBH merges its own duplicates: an event several sources announce comes once, with the others in `alsoAt`. Also ask `absalon event list` with the same dates (Folkehuset Absalon has something almost every evening, e.g. a communal dinner): pass `--exclude-kids` for adults or teenagers and `--free` for free things. Also ask `brugbyen event list` with the same dates: pass `--group` for the audience (e.g. `--group unge,voksne` for an adult with a teenager) and `--free` when the user asks for free things (brugbyen filters on the site, and has no prices).
 - **Theatre, a teenager or an age limit:** ask `teaterbilletter show list` with `--from`/`--to`, `--age <the youngest guest's age>` and `--max-price <DKK>` when the user names a budget. It is the only source that knows age limits and ticket prices for theatre; `--category` narrows to stand-up, musical, børneteater and so on. A production with no age limit comes back for any `--age`.
 - **Something active or playful** (a date, a group of friends): also `wannasport slot search` for one to three sports that fit, with `--date` and an evening `--from`/`--to`. Don't ask for every sport: `sport list` has 41.
 - **Bowling (DGI Byen):** no source here can see free lanes (DGI Byen's EasyBowl booking only shows them after a reservation is started). Give the user the link https://www.easybowl.com/bc/dgi/booking to pick a time and book themselves.
 - **One kind of thing** (comedy, jazz, a talk): Billetto takes `--query` and `--category`; kulturKBH takes `--type` and `--query`.
 - Run the independent commands in parallel.
 
-## Merging events from kulturKBH, Billetto, KultuNaut, brugbyen and teaterbilletter
+## Merging events from kulturKBH, Billetto, KultuNaut, brugbyen, teaterbilletter and absalon
 
 The sources often list the same event. One may be more current or say more (a price where the other says "Se billetsiden", a time where the other has none). Merge them into one event; never just drop one.
 
@@ -37,6 +38,8 @@ The sources often list the same event. One may be more current or say more (a pr
 1. Same date. A recurring brugbyen event (`otherDates` > 0) matches on title and venue even when its `shownDate` is another day: brugbyen guarantees it occurs on the day searched.
 2. Start times within 30 minutes of each other, or one of them has no time.
 3. The same title once both are normalised: lower case, accents kept, punctuation, emoji and quotes removed, whitespace collapsed. One title containing the other counts too ("Vin & Videnskab: Mikroorganismer" and "Vin & Videnskab: Mikroorganismer – nyt fra forskningsfronten").
+
+kulturKBH also lists some Absalon events: the same rules apply, and `absalon` supplies the full programme, the price from the description and the event's own page.
 
 Theatre shows KultuNaut or kulturKBH list are often in `teaterbilletter` too: the same rules apply (date, start time within 30 minutes, title), and `teaterbilletter` supplies the price range, the age limit and the ticket link.
 
@@ -56,9 +59,9 @@ Don't require the same venue: the sources name venues differently, and a venue t
 | on sale / sold out | Billetto's (it is the ticket system) |
 | links | every source's: the ticket link first, then the others as "more info" |
 
-**When they disagree** (Billetto, kulturKBH, KultuNaut, brugbyen or teaterbilletter) on time, price or venue, Billetto's value leads, because it is where tickets are sold and so usually the most current. Show the values and say which source says what, e.g. "Billetto: Chr. Hansen Auditorium; kulturKBH: Universitetets Festsal, Frue Plads 4 — check the ticket page." Never pick one silently.
+**When they disagree** (Billetto, kulturKBH, KultuNaut, brugbyen, teaterbilletter or absalon) on time, price or venue, Billetto's value leads, because it is where tickets are sold and so usually the most current. Show the values and say which source says what, e.g. "Billetto: Chr. Hansen Auditorium; kulturKBH: Universitetets Festsal, Frue Plads 4 — check the ticket page." Never pick one silently.
 
-Keep a `sources` list on every merged event (`kulturkbh`, `billetto`, `kultunaut`, `brugbyen`, `teaterbilletter`), so the user can see which sources confirm it.
+Keep a `sources` list on every merged event (`kulturkbh`, `billetto`, `kultunaut`, `brugbyen`, `teaterbilletter`, `absalon`), so the user can see which sources confirm it.
 
 ## Answering
 

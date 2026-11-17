@@ -1,0 +1,24 @@
+{
+  "task": "event-list",
+  "startPath": "/kalender/",
+  "write": false,
+  "from": "explore",
+  "operations": [
+    {
+      "operation": "GET /kalender/",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "absaloncph.dk",
+      "path": "/kalender/",
+      "file": "GET-kalender.shape.json",
+      "pages": [
+        "/kalender/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    }
+  ]
+}
