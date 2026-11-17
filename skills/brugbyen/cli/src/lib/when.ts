@@ -49,3 +49,15 @@ export function totalOf(resume: string | null): number | null {
   const m = resume?.match(/\baf\s+(\d+)/i);
   return m ? Number(m[1]) : null;
 }
+
+/**
+ * The day an event occurs within the search. brugbyen's own date filter guarantees an event occurs in the
+ * searched period, but a recurring event shows its first upcoming date: on a one-day search the day is the
+ * searched one; on a period it is the shown date when that lies in it, else unknown (null).
+ * `timeMayDiffer`: the shown time belongs to the shown date, which is another day than `date`.
+ */
+export function occurrence(o: { from: string; to: string; shownDate: string | null; otherDates: number }): { date: string | null; recurring: boolean; timeMayDiffer: boolean } {
+  const date = o.from === o.to ? o.from : o.shownDate !== null && o.shownDate >= o.from && o.shownDate <= o.to ? o.shownDate : null;
+  const recurring = o.otherDates > 0;
+  return { date, recurring, timeMayDiffer: recurring && o.shownDate !== date };
+}

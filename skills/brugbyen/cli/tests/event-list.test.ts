@@ -92,7 +92,7 @@ describe("event list", () => {
     expect(out.complete).toBe(true);
     expect(out.total).toBe(4);
     expect(out.events.map((e: any) => e.title)).toEqual(["A tidlig", "B sent", "C uden tid"]);
-    expect(out.events[1]).toMatchObject({ id: "2", venue: "Huset", shownDate: "2026-11-16", time: "21:00", endTime: null, otherDates: 1, ongoing: false, area: "cph", url: "https://brugbyen.kk.dk/det-sker/e2" });
+    expect(out.events[1]).toMatchObject({ id: "2", venue: "Huset", date: "2026-11-16", shownDate: "2026-11-16", recurring: true, timeMayDiffer: false, time: "21:00", endTime: null, otherDates: 1, ongoing: false, area: "cph", url: "https://brugbyen.kk.dk/det-sker/e2" });
   });
   test("includeOngoing keeps the period", async () => {
     const { out } = await run(one, eventList, { from: "2026-11-16", includeOngoing: true });

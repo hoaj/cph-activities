@@ -43,3 +43,6 @@ export function matchesCategory(
   const mapped = (item.mappedCategoryNames ?? []).some((m) => siteNames.includes(m.toLowerCase()));
   return own || mapped;
 }
+
+/** True when the production has no age limit or its limit is at least `min` (leaves out ones meant for younger children). */
+export const fitsMinAgeFrom = (ageFrom: number | null | undefined, min: number): boolean => ageFrom == null || ageFrom >= min;

@@ -3,6 +3,7 @@ import { defineCommand, inputFailure } from "../runtime/command";
 import searchEvents from "../operations/searchEvents";
 import { areaOf, dayBoundary } from "../lib/area";
 import { areaAt } from "../lib/cph-boundary";
+import { groupSlots } from "../lib/slots";
 
 const CPH_CENTER = "55.6761,12.5683"; // Rådhuspladsen
 // Algolia serves at most 1000 hits per query, and up to 1000 per page: one request reads them all.
@@ -20,7 +21,7 @@ const orNull = (s: string | null | undefined) => (s && s.trim() ? s.trim() : nul
 
 export default defineCommand({
   name: "event search",
-  summary: "Events on Billetto around Copenhagen (small venues, culture houses, clubs, talks, workshops), soonest first, with a link to each event's page to buy tickets",
+  summary: "Events on Billetto around Copenhagen (small venues, culture houses, clubs, talks, workshops), soonest first, with a link to each event's page to buy tickets. An event sold as many short time slots on one day is one row: `startsAt` the first slot, `endsAt` the last, `times` every slot's start (HH:MM) and `slots` their count",
   args: z.object({
     query: z.string().default("").describe("words to search for (default: everything)"),
     from: isoDate.optional().describe("first date, YYYY-MM-DD (default: today)"),
@@ -42,7 +43,7 @@ export default defineCommand({
     const wanted = args.category?.toLowerCase();
 
     // Algolia ranks by relevance, so read every hit it serves, then sort by time.
-    const matches: Array<{ start: number; ongoing: boolean; event: Record<string, unknown> }> = [];
+    const matches: Array<{ title: string; venue: string | null; startsAt: string | null; endsAt: string | null; ongoing: boolean } & Record<string, unknown>> = [];
     let complete = false;
     for (let page = 0; page < MAX_PAGES; page++) {
       const r = await call(searchEvents, {
@@ -66,29 +67,25 @@ export default defineCommand({
         if (wanted && h.category?.toLowerCase() !== wanted && h.subcategory?.toLowerCase() !== wanted) continue;
         const ongoing = h.start_time != null && h.start_time < fromStart;
         matches.push({
-          start: h.start_time ?? Number.MAX_SAFE_INTEGER,
           ongoing,
-          event: {
-            ongoing,
-            id: String(h.id),
-            title: h.name.trim(),
-            description: orNull(h.short_description),
-            startsAt: localTime(h.start_time),
-            endsAt: localTime(h.end_time),
-            venue: orNull(h.venue_name),
-            address: orNull(h.location),
-            city: orNull(h.city),
-            postcode,
-            area,
-            price: h.price ?? null,
-            priceRange: orNull(h.price_range),
-            currency: orNull(h.currency),
-            free,
-            category: orNull(h.category),
-            subcategory: orNull(h.subcategory),
-            onSale: h.on_sale ?? null,
-            url: h.url,
-          },
+          id: String(h.id),
+          title: h.name.trim(),
+          description: orNull(h.short_description),
+          startsAt: localTime(h.start_time),
+          endsAt: localTime(h.end_time),
+          venue: orNull(h.venue_name),
+          address: orNull(h.location),
+          city: orNull(h.city),
+          postcode,
+          area,
+          price: h.price ?? null,
+          priceRange: orNull(h.price_range),
+          currency: orNull(h.currency),
+          free,
+          category: orNull(h.category),
+          subcategory: orNull(h.subcategory),
+          onSale: h.on_sale ?? null,
+          url: h.url,
         });
       }
       if (page + 1 >= r.nbPages) {
@@ -98,8 +95,10 @@ export default defineCommand({
     }
     // Events that start in the range come first, soonest first; ones already running (season
     // passes, courses, exhibitions that began before --from) follow.
-    matches.sort((a, b) => Number(a.ongoing) - Number(b.ongoing) || a.start - b.start);
+    // Slots of one event (same title, venue and day) are grouped first, so `limit` and `total` count events.
+    const events = groupSlots(matches);
+    events.sort((a, b) => Number(a.ongoing) - Number(b.ongoing) || (a.startsAt ?? "9999").localeCompare(b.startsAt ?? "9999"));
     // complete is false when there were more result pages than this command reads.
-    return { total: matches.length, complete, events: matches.slice(0, args.limit).map((m) => m.event) };
+    return { total: events.length, complete, events: events.slice(0, args.limit) };
   },
 });

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { bookingUrl, fitsAge, matchesCategory, isCopenhagen, localDate, localTime, pageUrl } from "../src/lib/shows";
+import { bookingUrl, fitsAge, fitsMinAgeFrom, matchesCategory, isCopenhagen, localDate, localTime, pageUrl } from "../src/lib/shows";
 
 describe("isCopenhagen", () => {
   test("Københavns and Frederiksberg Kommune only", () => {
@@ -64,5 +64,18 @@ describe("matchesCategory", () => {
     expect(matchesCategory(item, "komedie", ["komedie"])).toBe(true);
     expect(matchesCategory({ ...item, mappedCategoryNames: null }, "komedie", ["komedie"])).toBe(false);
     expect(matchesCategory({ categoryName: null, subCategoryName: null }, "x", [])).toBe(false);
+  });
+});
+
+describe("fitsMinAgeFrom", () => {
+  test("keeps productions with no age limit or a limit at least the minimum", () => {
+    expect(fitsMinAgeFrom(null, 10)).toBe(true);
+    expect(fitsMinAgeFrom(undefined, 10)).toBe(true);
+    expect(fitsMinAgeFrom(10, 10)).toBe(true);
+    expect(fitsMinAgeFrom(15, 10)).toBe(true);
+  });
+  test("leaves out productions meant for younger children", () => {
+    expect(fitsMinAgeFrom(7, 10)).toBe(false);
+    expect(fitsMinAgeFrom(0, 1)).toBe(false);
   });
 });

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { defineCommand, inputFailure } from "../runtime/command";
 import listCategories from "../operations/listCategories";
 import listEvents from "../operations/listEvents";
-import { bookingUrl, fitsAge, matchesCategory, isCopenhagen, localDate, localTime, pageUrl } from "../lib/shows";
+import { bookingUrl, fitsAge, fitsMinAgeFrom, matchesCategory, isCopenhagen, localDate, localTime, pageUrl } from "../lib/shows";
 
 // 356 productions over 8 pages of 50 at the time of writing; the site has no date filter, so a run reads every page.
 const PAGE_SIZE = 50;
@@ -21,6 +21,7 @@ export default defineCommand({
     to: isoDate.optional().describe("last date, YYYY-MM-DD (default: the same as --from)"),
     category: z.string().min(1).optional().describe("category from `category list`, e.g. stand-up, musical, børneteater (part of a name is enough)"),
     age: z.coerce.number().int().min(0).max(120).optional().describe("only productions suitable for someone this old (no age limit, or a limit at most this)"),
+    minAgeFrom: z.coerce.number().int().min(0).max(120).optional().describe("leave out productions meant for younger children: ageFrom below N (e.g. --age 17 --min-age-from 10 for a teenager)"),
     maxPrice: z.coerce.number().min(0).optional().describe("keep shows whose cheapest ticket (`priceMinDKK`, often a child or youth price) is at most this many kroner"),
     fromTime: hhmm.optional().describe("earliest start time, HH:MM"),
     toTime: hhmm.optional().describe("latest start time, HH:MM"),
@@ -33,6 +34,7 @@ export default defineCommand({
     const from = args.from ?? today();
     const to = args.to ?? from;
     if (to < from) inputFailure("--to is before --from.");
+    if (args.minAgeFrom != null && args.age != null && args.minAgeFrom > args.age) inputFailure("--min-age-from is above --age.");
     if (args.fromTime && args.toTime && args.toTime < args.fromTime) inputFailure("--to-time is before --from-time.");
 
     // The site files a production under its own category and subcategory (Skuespil og dramatik, Comedy …)
@@ -63,6 +65,7 @@ export default defineCommand({
         const area = isCopenhagen(municipality) ? "cph" : "outside";
         if (area === "outside" && !args.includeOutside) continue;
         if (args.age != null && !fitsAge(item.ageFrom, args.age)) continue;
+        if (args.minAgeFrom != null && !fitsMinAgeFrom(item.ageFrom, args.minAgeFrom)) continue;
         if (args.maxPrice != null && !(item.ticketPriceMin != null && item.ticketPriceMin <= args.maxPrice)) continue;
         const title = item.title.trim();
         if (words.length && !words.every((w) => title.toLowerCase().includes(w))) continue;
