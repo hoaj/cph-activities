@@ -26,7 +26,12 @@ export const planOutingInput = {
   }).describe("What the user wants. Fill in only what the user said; the answer asks for the rest."),
 };
 
-const item = z.object({ time: z.string(), title: z.string(), place: z.string(), price: z.string(), url: z.string().nullable(), sources: z.array(z.string()), ids: z.array(z.string()).describe("For get_details and excludeIds.") });
+const item = z.object({
+  time: z.string(), title: z.string(), place: z.string(), price: z.string(), url: z.string().nullable(),
+  description: z.string().nullable().describe("What the event is, up to 300 characters. null: no source gives one: say you do not know what it is, never guess from the title."),
+  categories: z.array(z.string()).describe("Genre or category names; [] when none."),
+  ageFrom: z.number().nullable().describe("Minimum age; null when none is stated."),
+  sources: z.array(z.string()), ids: z.array(z.string()).describe("For get_details and excludeIds.") });
 const suggestion = z.object({ kind: z.string(), title: z.string(), why: z.array(z.string()), items: z.array(item) });
 
 export const planOutingOutput = {

@@ -33,9 +33,15 @@ export type FindEventsArgs = z.infer<typeof Args>;
 
 const row = z.object({
   id: z.string().describe("Pass to get_details."),
-  title: z.string(), date: z.string(), time: z.string().optional(), endTime: z.string().optional(), venue: z.string().optional(),
-  price: z.string().optional(), free: z.boolean().optional(), ageFrom: z.number().optional(),
-  categories: z.array(z.string()).optional(), sources: z.array(z.string()), url: z.string().optional(),
+  title: z.string(), date: z.string(), time: z.string().optional(), endTime: z.string().optional(),
+  description: z.string().nullable().describe("What the event is, up to 300 characters. null: no source gives one: say you do not know what it is, never guess from the title."),
+  categories: z.array(z.string()).describe("Genre or category names; [] when none."),
+  audience: z.array(z.string()).describe("Who it is for (børn, unge, voksne, familie); [] when not said."),
+  ageFrom: z.number().nullable().describe("Minimum age; null when none is stated."),
+  venue: z.string().nullable(),
+  price: z.string().nullable().describe("Price as text, e.g. '150 kr.', 'gratis'; null when not listed."),
+  free: z.boolean().nullable().describe("true: free; false: costs money; null: unknown."),
+  sources: z.array(z.string()), url: z.string().optional(),
 });
 const counts = z.record(z.string(), z.number());
 export const findEventsOutput = {
@@ -112,12 +118,18 @@ export function facetsOf(items: Merged[]) {
 export const priceOf = (it: Item): string | undefined => (it.free === true || it.priceMin === 0 ? "gratis" : (it.priceText ?? (it.priceMin != null ? `fra ${it.priceMin} kr.` : undefined)) || undefined);
 
 export function eventRow(it: Merged) {
-  return compact({
-    id: it.ids[0]!, title: it.title, date: it.date, time: it.time ?? undefined, endTime: it.endTime ?? undefined, venue: it.venue ?? undefined,
-    price: priceOf(it), free: it.free === true || it.priceMin === 0 ? true : undefined, ageFrom: it.ageFrom ?? undefined,
-    categories: it.categories.slice(0, 3), sources: it.sources, url: it.urls[0] ?? it.url ?? undefined,
-  });
+  const free = it.free === true || it.priceMin === 0 ? true : it.free;
+  return {
+    ...compact({
+      id: it.ids[0]!, title: it.title, date: it.date, time: it.time ?? undefined, endTime: it.endTime ?? undefined, sources: it.sources, url: it.urls[0] || it.url || undefined,
+    }),
+    description: it.extra.description || null, categories: it.categories.slice(0, 5), audience: it.audience, ageFrom: it.ageFrom ?? null,
+    venue: it.venue ?? null, price: priceOf(it) ?? null, free,
+  };
 }
+
+/** Rows at or above this many without a description get a note (one or two are not worth the words). */
+const NO_DESCRIPTION_NOTE_AT = 3;
 
 const fingerprint = (a: FindEventsArgs) => Bun.hash(JSON.stringify([a.from, a.to, a.query, a.categories, a.free, a.maxPricePerPerson, a.fromTime, a.toTime, a.audienceAge, a.excludeKids])).toString(36);
 const encodeCursor = (offset: number, fp: string) => Buffer.from(JSON.stringify({ o: offset, f: fp })).toString("base64url");
@@ -153,9 +165,12 @@ export async function findEvents(deps: ToolDeps, a: FindEventsArgs) {
   const page = kept.slice(offset, offset + a.limit);
   deps.index.remember(page, events);
   const next = offset + page.length;
+  const rows = page.map(eventRow);
+  const blank = rows.filter((r) => r.description === null).length;
+  if (blank >= NO_DESCRIPTION_NOTE_AT) notes.push(`${blank} of these have no description: use get_details or say you do not know what it is.`);
   return ok({
     total: kept.length,
-    events: page.map(eventRow),
+    events: rows,
     ...(next < kept.length ? { nextCursor: encodeCursor(next, fp) } : {}),
     facets: facetsOf(kept),
     sources: loaded.sources,

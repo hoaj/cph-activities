@@ -145,6 +145,10 @@ export interface SuggestionItem {
   place: string;
   price: string;
   url: string | null;
+  /** What the event is, up to 300 characters; null when no source gives one: never guess it from the title. */
+  description: string | null;
+  categories: string[];
+  ageFrom: number | null;
   sources: EventSource[];
   /** For `excludeIds`. */
   ids: string[];

@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { INSTRUCTIONS } from "../src/instructions";
 import { DATE, TODAY, connectTools, fakeDeps, forecast, item } from "./helpers";
 
 const events = () => [
@@ -83,8 +84,7 @@ describe("find_events", () => {
     expect(r.data.total).toBe(4); // the two jazz rows merge; slots are no events
     const jazz = r.data.events.find((e: any) => e.title.includes("Jazz"));
     expect(jazz.sources.sort()).toEqual(["billetto", "kultunaut"]);
-    expect(JSON.stringify(r.data.events)).not.toContain("Lang beskrivelse");
-    expect(Object.keys(jazz)).not.toContain("description");
+    expect(jazz.description).toContain("Lang beskrivelse");
     expect(r.data.facets.bySource.kultunaut).toBe(3);
     expect(r.data.facets.byTimeOfDay).toEqual({ morning: 1, evening: 2, unknown: 1 });
     expect(r.data.facets.byPriceBand).toMatchObject({ free: 1, "101-300": 1, "1-100": 1, unknown: 1 });
@@ -242,6 +242,81 @@ describe("get_weather", () => {
     expect(r.isError).toBe(false);
     expect(r.data.available).toBe(false);
     expect(r.data.notes.join(" ")).toContain("No forecast");
+  });
+});
+
+describe("rows carry details", () => {
+  const rich = () => [
+    item({ id: "k:1", source: "kultunaut", title: "Jazzkoncert i Huset", time: "20:00", categories: ["Musik", "Jazz"], audience: ["voksne"], ageFrom: 16, priceMin: 150, priceText: "150 kr.", venue: "Huset", extra: { description: "Kvartet spiller standards." } }),
+    item({ id: "k:2", source: "kultunaut", title: "Gratis foredrag", time: "11:00", categories: ["Foredrag"], free: true, priceMin: 0, venue: "Biblioteket", extra: { description: "Om byens historie." } }),
+    item({ id: "g:1", source: "brugbyen", title: "Åben hal", time: "09:00", venue: "Korsgadehallen", audience: ["børn"] }),
+    item({ id: "g:2", source: "brugbyen", title: "Legestue", time: "10:00", venue: "BRØK", audience: ["børn"] }),
+    item({ id: "g:3", source: "brugbyen", title: "Familieeftermiddag", time: "13:00", venue: "Kulturhuset", audience: ["børn"] }),
+  ];
+  const find = async (items = rich(), args: Record<string, unknown> = {}) => (await connectTools(fakeDeps({ items }))).call("find_events", { from: DATE, ...args });
+
+  test("find_events: every row has description, categories, audience, ageFrom, venue, price and free, null or empty when unknown", async () => {
+    const r = await find();
+    const by = (t: string) => r.data.events.find((e: any) => e.title === t);
+    expect(by("Jazzkoncert i Huset")).toMatchObject({ description: "Kvartet spiller standards.", categories: ["Musik", "Jazz"], audience: ["voksne"], ageFrom: 16, venue: "Huset", price: "150 kr.", free: null });
+    expect(by("Gratis foredrag")).toMatchObject({ description: "Om byens historie.", free: true, price: "gratis", ageFrom: null });
+    expect(by("Åben hal")).toEqual(expect.objectContaining({ description: null, categories: [], audience: ["børn"], ageFrom: null, venue: "Korsgadehallen", price: null, free: null }));
+    for (const e of r.data.events) for (const k of ["description", "categories", "audience", "ageFrom", "venue", "price", "free"]) expect(Object.keys(e)).toContain(k);
+    expect(JSON.parse(r.text)).toEqual(r.data);
+  });
+
+  test("find_events: a note says how many rows have no description when several do", async () => {
+    const r = await find();
+    expect(r.data.notes.join(" ")).toContain("3 of these have no description: use get_details or say you do not know what it is");
+  });
+
+  test("find_events: no note when every row has a description", async () => {
+    const r = await find(rich().slice(0, 2));
+    expect(r.data.notes.join(" ")).not.toContain("no description");
+  });
+
+  test("find_events: the note counts the rows of the page, not of the whole search", async () => {
+    const r = await find(rich(), { limit: 2 });
+    expect(r.data.events).toHaveLength(2);
+    expect(r.data.notes.join(" ")).not.toContain("no description");
+  });
+
+  test("plan_outing: items carry description, categories and ageFrom", async () => {
+    const { call } = await connectTools(fakeDeps({ items: rich() }));
+    const r = await call("plan_outing", { brief: { people: [{ age: 30 }], date: DATE, wishes: "jazz" } });
+    expect(r.isError).toBe(false);
+    const items = [r.data.best, ...r.data.alternatives].filter(Boolean).flatMap((s: any) => s.items);
+    expect(items.find((i: any) => i.title === "Jazzkoncert i Huset")).toMatchObject({ description: "Kvartet spiller standards.", categories: ["Musik", "Jazz"], ageFrom: 16 });
+  });
+
+  test("get_details: the full description with categories, audience, age, venue, price and links; a note when there is none", async () => {
+    const { call } = await connectTools(fakeDeps({ items: rich() }));
+    const list = await call("find_events", { from: DATE });
+    const id = (t: string) => list.data.events.find((e: any) => e.title === t).id;
+    const d = await call("get_details", { id: id("Jazzkoncert i Huset") });
+    expect(d.data).toMatchObject({ description: "Kvartet spiller standards.", categories: ["Musik", "Jazz"], audience: ["voksne"], ageFrom: 16, venue: "Huset", price: "150 kr." });
+    expect(d.data.links).toHaveLength(1);
+    expect(d.data.notes.join(" ")).not.toContain("no description");
+    const none = await call("get_details", { id: id("Åben hal") });
+    expect(none.data.description).toBeUndefined();
+    expect(none.data.notes.join(" ")).toContain("No description is stored");
+  });
+});
+
+describe("the tools tell the model to read the description", () => {
+  test("find_events, plan_outing, get_details and the server instructions: read it, say you do not know when null, never guess from the title", async () => {
+    const { client } = await connectTools(fakeDeps());
+    const tools = (await client.listTools()).tools;
+    for (const name of ["find_events", "plan_outing", "get_details"]) {
+      const d = tools.find((t) => t.name === name)!.description!;
+      expect(d).toContain("description");
+      expect(d).toContain("null");
+      expect(d).toContain("do not know");
+      if (name !== "get_details") expect(d).toContain("get_details");
+    }
+    expect(tools.find((t) => t.name === "find_events")!.description).toContain("not the title");
+    expect(INSTRUCTIONS).toContain("never guess from the title");
+    expect(INSTRUCTIONS).toContain("do not know");
   });
 });
 

@@ -20,6 +20,12 @@ const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "use YYYY-MM-DD").refine
 const clock = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "use HH:MM");
 const today = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Copenhagen" });
 
+/** What the market is, from the page's teaser (else its body): one line of text, at most 500 characters. */
+const textOf = (...texts: Array<string | null>): string | null => {
+  const t = texts.map((x) => (x ?? "").replace(/\s+/g, " ").trim()).find(Boolean);
+  return t ? (t.length > 500 ? `${t.slice(0, 499)}…` : t) : null;
+};
+
 export default defineCommand({
   name: "market list",
   summary:
@@ -134,6 +140,7 @@ export default defineCommand({
         indoor,
         price,
         free,
+        description: textOf(page.teaser, page.body),
         url: new URL(card.href, site.origin).toString(),
       });
     }

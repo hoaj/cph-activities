@@ -8,7 +8,37 @@ import type { Forecast, Item, WeatherDay } from "./types";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Raw = any;
 
-const cut = (s: unknown, n = 200): string => (typeof s === "string" ? (s.length > n ? s.slice(0, n - 1) + "…" : s) : "");
+/** The longest description an item keeps. */
+export const DESCRIPTION_MAX = 300;
+const ENTITIES: Record<string, string> = {
+  amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", hellip: "…", ndash: "–", mdash: "—", lsquo: "‘", rsquo: "’", ldquo: "“", rdquo: "”",
+  aelig: "æ", oslash: "ø", aring: "å", AElig: "Æ", Oslash: "Ø", Aring: "Å", eacute: "é", Eacute: "É", auml: "ä", ouml: "ö", uuml: "ü",
+};
+const decode = (s: string): string =>
+  s.replace(/&(#x[0-9a-f]+|#\d+|[a-z][a-z0-9]*);/gi, (m, e: string) => {
+    if (e[0] === "#") {
+      const n = e[1]!.toLowerCase() === "x" ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10);
+      return Number.isFinite(n) && n > 0 && n <= 0x10ffff ? String.fromCodePoint(n) : m;
+    }
+    return ENTITIES[e] ?? m;
+  });
+
+/** Text for the model: tags dropped, entities decoded, whitespace collapsed, cut at a word boundary with "…" (at most `max` characters). "" when there is nothing. */
+export function cleanText(s: unknown, max = DESCRIPTION_MAX): string {
+  if (typeof s !== "string") return "";
+  const t = decode(s.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const head = t.slice(0, max - 1);
+  // cut on the last space when the next character is not the rest of the same word
+  const at = t[max - 1] === " " ? max - 1 : head.lastIndexOf(" ");
+  const base = at > max * 0.5 ? head.slice(0, at) : head;
+  return base.replace(/[\s,;:.\-–—]+$/, "") + "…";
+}
+/** extra.description: the cleaned text of the first non-empty parts, joined; undefined when there is none. */
+const describe = (...parts: unknown[]): { description?: string } => {
+  const d = cleanText(parts.map((p) => cleanText(p, 1000)).filter(Boolean).join(" "));
+  return d ? { description: d } : {};
+};
 const num = (x: unknown): number | null => (typeof x === "number" ? x : null);
 const hhmm = (s: unknown): string | null => (typeof s === "string" && /^\d\d:\d\d/.test(s) ? s.slice(0, 5) : null);
 
@@ -37,7 +67,7 @@ export function kulturkbh(raw: Raw, date: string): Item[] {
       venue: e.venue?.split(",")[0] ?? null, address: e.venue ?? null, area: e.area ?? "cph", priceText: e.price ?? null,
       priceMin: e.free ? 0 : p.min, priceMax: e.free ? 0 : p.max, free: e.free ?? null, categories: [e.type].filter(Boolean),
       indoor: ["film", "teater", "udstilling", "foredrag", "litteratur"].includes(e.type) ? true : null,
-      url: e.url ?? null, extra: { description: cut(e.description), alsoAt: e.alsoAt ?? [] },
+      url: e.url ?? null, extra: { ...describe(e.description), alsoAt: e.alsoAt ?? [] },
     });
   });
 }
@@ -53,7 +83,7 @@ export function billetto(raw: Raw, date: string): Item[] {
         venue: e.venue ?? null, address: e.address ?? null, priceText: e.priceRange ?? null, priceMin: e.free ? 0 : num(e.price),
         priceMax: e.free ? 0 : (parsePrice(e.priceRange).max ?? num(e.price)), free: e.free ?? null,
         categories: [e.category, e.subcategory].filter(Boolean), url: e.url ?? null, times: e.times ?? undefined,
-        extra: { description: cut(e.description), onSale: e.onSale, slots: e.slots },
+        extra: { ...describe(e.description), onSale: e.onSale, slots: e.slots },
       });
     });
 }
@@ -67,7 +97,7 @@ export function kultunaut(raw: Raw, date: string, tag = "all"): Item[] {
         id: `kultunaut:${e.id}`, source: "kultunaut", title: e.title, date: e.date ?? date, time: hhmm(e.time), endTime: hhmm(e.endTime),
         venue: e.venue ?? null, area: e.area ?? "cph", categories: genres, audience: genres.some((g) => /børn/i.test(g)) ? ["børn"] : [],
         indoor: genres.some((g) => /biograf|film|teater|udstilling|foredrag/i.test(g)) ? true : null,
-        url: e.url ?? null, extra: { description: cut(e.description), fetch: tag },
+        url: e.url ?? null, extra: { ...describe(e.description), fetch: tag },
       });
     });
 }
@@ -93,7 +123,7 @@ export function teaterbilletter(raw: Raw, date: string): Item[] {
         priceMax: num(e.priceMaxDKK), free: e.priceMaxDKK === 0, ageFrom: num(e.ageFrom),
         audience: (e.ageFrom != null && e.ageFrom <= 12) || /børn/i.test(e.subCategory ?? "") ? ["børn"] : [],
         categories: [e.category, e.subCategory].filter(Boolean), indoor: true, url: e.bookingUrl ?? e.url ?? null,
-        extra: { premiere: !!e.premiere },
+        extra: { ...describe(e.teaser ?? e.subtitle, e.description), premiere: !!e.premiere },
       }),
     );
 }
@@ -109,7 +139,7 @@ export function visitorservice(raw: Raw, date: string): Item[] {
       base({
         id: `visitorservice:${e.id}`, source: "visitorservice", title: e.name, date, time: hhmm(day.time), endTime: hhmm(day.endTime),
         venue: e.venue ?? e.address ?? null, address, area: e.area ?? "cph", priceText: e.price ?? null, free: e.free ?? null,
-        priceMin: e.free ? 0 : p.min, priceMax: e.free ? 0 : p.max, categories: ["Julemarked"], indoor: e.indoor ?? null, url: e.url ?? null,
+        priceMin: e.free ? 0 : p.min, priceMax: e.free ? 0 : p.max, categories: ["Julemarked"], indoor: e.indoor ?? null, url: e.url ?? null, extra: describe(e.description),
       }),
     ];
   });
@@ -130,7 +160,7 @@ export function kglteater(raw: Raw, date: string): Item[] {
         date: e.date, time: hhmm(e.time), venue: e.stage ?? e.venue ?? null, address: e.venue ?? null, area: e.area ?? "cph",
         priceText, priceMin: min, priceMax: max, free, ageFrom: num(e.ageFrom), audience: e.forChildren ? ["børn"] : [],
         categories: [e.genre].filter(Boolean), indoor: true, url: e.bookingUrl ?? e.url ?? null,
-        extra: { premiere: !!e.premiere, onSale },
+        extra: { ...describe(e.description), premiere: !!e.premiere, onSale },
       });
     });
 }
@@ -146,7 +176,7 @@ export function absalon(raw: Raw, date: string): Item[] {
         endTime: hhmm(e.endTime), venue: e.venue ?? null, address: e.address ?? null, priceText: e.price ?? null, free: e.free ?? null,
         priceMin: e.free ? 0 : p.min, priceMax: e.free ? 0 : p.max,
         audience: cats.some((c) => /børn/i.test(c)) ? ["børn", "familie"] : [], categories: cats,
-        indoor: cats.some((c) => /ude-af-huset/i.test(c)) ? false : null, url: e.url ?? null, extra: { description: cut(e.description) },
+        indoor: cats.some((c) => /ude-af-huset/i.test(c)) ? false : null, url: e.url ?? null, extra: { ...describe(e.description) },
       });
     });
 }

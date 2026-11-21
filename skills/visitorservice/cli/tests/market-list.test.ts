@@ -94,6 +94,7 @@ describe("market list", () => {
       indoor: true,
       price: "Gratis",
       free: true,
+      description: "Et indendørs marked",
       url: "https://visitorservice.kk.dk/eventkalender/marked-a",
     });
     expect(out.markets[1]).toMatchObject({ name: "Marked B", date: "2030-12-08", venue: null, address: null, postcode: null, district: null, area: "cph", indoor: null, free: false, price: "Voksne 40 kr.; Børn Gratis" });
@@ -127,6 +128,16 @@ describe("market list", () => {
     const first = list([card(1, "/lang", "København", "Lang")]);
     const { out } = await run(site1({ "/lang": market({ name: "Lang", period: ["2030-11-01", "2030-12-31", "10:00", "21:00"] }) }, first), WEEKEND);
     expect(out.markets[0]).toMatchObject({ date: "2030-12-07", endDate: "2030-12-08", dayByDay: false });
+  });
+
+  test("each row carries the page's teaser as its description (the body when there is no teaser)", async () => {
+    const first = list([card(1, "/a", "København", "A"), card(2, "/b", "København", "B")]);
+    const day = { "2030-12-07": ["10:00", "16:00"] } as Record<string, [string, string]>;
+    const noTeaser = market({ name: "B", days: day }).replace(/<div class="field--name-teaser">.*?<\/div>/, "");
+    const { out } = await run(site1({ "/a": market({ name: "A", days: day, teaser: "Julemarked med   gløgg\n og håndværk" }), "/b": noTeaser }, first), WEEKEND);
+    const by = Object.fromEntries(out.markets.map((m: any) => [m.name, m.description]));
+    expect(by.A).toBe("Julemarked med gløgg og håndværk");
+    expect(by.B).toBe("Tekst");
   });
 
   test("--indoor keeps markets that say so and counts those that do not say", async () => {
