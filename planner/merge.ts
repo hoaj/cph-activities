@@ -16,8 +16,8 @@ export interface Merged extends Item {
   freeGuess?: boolean;
 }
 
-/** Who leads when sources disagree: Billetto sells the tickets, so it is usually the most current. */
-const PRIORITY: Record<string, number> = { billetto: 0, teaterbilletter: 1, kulturkbh: 2, absalon: 3, kultunaut: 4, brugbyen: 5 };
+/** Who leads when sources disagree: Billetto sells the tickets, so it is usually the most current; kglteater is the theatre's own programme. */
+const PRIORITY: Record<string, number> = { kglteater: -1, billetto: 0, teaterbilletter: 1, kulturkbh: 2, absalon: 3, kultunaut: 4, brugbyen: 5 };
 
 /** Same title once normalised, or one contains the other (at least five characters). */
 export function titleSame(a: string, b: string): boolean {

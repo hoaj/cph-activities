@@ -98,6 +98,26 @@ export function teaterbilletter(raw: Raw, date: string): Item[] {
     );
 }
 
+/** `stage` is the place you go to (`venue` is the institution). The top price is there only with --details. */
+export function kglteater(raw: Raw, date: string): Item[] {
+  return (raw?.shows ?? [])
+    .filter((e: Raw) => e.date === date)
+    .map((e: Raw) => {
+      const free = e.free === true;
+      const min = free ? 0 : num(e.priceMinDKK);
+      const max = free ? 0 : num(e.priceMaxDKK);
+      const priceText = free || min == null ? null : max != null ? `${min}–${max} kr.` : `fra ${min} kr.`;
+      const onSale = e.availability == null ? null : e.availability !== "soldOut" && e.availability !== "cancelled";
+      return base({
+        id: rowId("kglteater", e.date, hhmm(e.time), e.title, e.stage), source: "kglteater", kind: "show", title: e.title,
+        date: e.date, time: hhmm(e.time), venue: e.stage ?? e.venue ?? null, address: e.venue ?? null, area: e.area ?? "cph",
+        priceText, priceMin: min, priceMax: max, free, ageFrom: num(e.ageFrom), audience: e.forChildren ? ["børn"] : [],
+        categories: [e.genre].filter(Boolean), indoor: true, url: e.bookingUrl ?? e.url ?? null,
+        extra: { premiere: !!e.premiere, onSale },
+      });
+    });
+}
+
 export function absalon(raw: Raw, date: string): Item[] {
   return (raw?.events ?? [])
     .filter((e: Raw) => e.date === date)
