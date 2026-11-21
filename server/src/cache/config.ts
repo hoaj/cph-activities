@@ -5,7 +5,7 @@ import type { DayCacheOptions } from "./day-cache";
 import { createSourceCounter } from "./counting-fetch";
 
 /** Hourly upstream caps per source; a source not listed gets SOURCE_CAP_PER_HOUR (default 30). */
-export const DEFAULT_CAPS: Partial<Record<Source, number>> = { kultunaut: 150, wannasport: 60 };
+export const DEFAULT_CAPS: Partial<Record<Source, number>> = { kultunaut: 150, wannasport: 60, visitorservice: 60 };
 
 const num = (env: Record<string, string | undefined>, name: string): number | undefined => {
   const v = env[name]?.trim();

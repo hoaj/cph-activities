@@ -16,8 +16,8 @@ export interface Merged extends Item {
   freeGuess?: boolean;
 }
 
-/** Who leads when sources disagree: Billetto sells the tickets, so it is usually the most current; kglteater is the theatre's own programme. */
-const PRIORITY: Record<string, number> = { kglteater: -1, billetto: 0, teaterbilletter: 1, kulturkbh: 2, absalon: 3, kultunaut: 4, brugbyen: 5 };
+/** Who leads when sources disagree: Billetto sells the tickets, so it is usually the most current; kglteater is the theatre's own programme and visitorservice has each market's open hours. */
+const PRIORITY: Record<string, number> = { kglteater: -1, visitorservice: -1, billetto: 0, teaterbilletter: 1, kulturkbh: 2, absalon: 3, kultunaut: 4, brugbyen: 5 };
 
 /** Same title once normalised, or one contains the other (at least five characters). */
 export function titleSame(a: string, b: string): boolean {
@@ -29,9 +29,12 @@ export function titleSame(a: string, b: string): boolean {
   return s.length >= 5 && l.includes(s);
 }
 
+const isMarket = (i: Item): boolean => i.source === "visitorservice" || /marked/i.test(`${i.title} ${(i.categories ?? []).join(" ")}`);
+
 /**
  * The guide skill's merge rules: same date, start times within 30 minutes (or one has none), same title;
- * or different titles with the same exact time and place and an agreeing price ("probably the same").
+ * or different titles with the same exact time and place and an agreeing price ("probably the same");
+ * or a visitorservice market and another source's market at the same place that day, whatever their hours.
  * Court slots are never merged.
  */
 export function mergeItems(items: Item[]): Merged[] {
@@ -58,6 +61,7 @@ export function mergeItems(items: Item[]): Merged[] {
             probable = true;
           }
         }
+        if (!same && (x.source === "visitorservice" || y.source === "visitorservice") && isMarket(x) && isMarket(y) && samePlace(x.venue, y.venue)) same = true;
         if (!same) continue;
         parent[find(idx[a]!)] = find(idx[b]!);
         if (probable) {

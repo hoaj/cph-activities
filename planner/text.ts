@@ -58,7 +58,7 @@ export const RX = {
     "musik|koncert|teater|forestilling|udstilling|foredrag|film|biograf|dokumentar|litteratur|lyrik|oplæsning|opera|ballet|klassisk|jazz|comedy|stand ?up|revy|kunst|museum|performance|heritage|omvisning|show|cabaret|dukketeater|science|fine_art|books|performing|nycirkus|drama|thriller|komedie",
   ),
   social: stems(
-    "spisning|fællesspis|banko|quiz|spil(?!lested)|workshop|værksted|keramik|marked|fest|fælles|café|community|food|mad(?![\\p{L}])|hobby|craft|diy|bingo|brætspil|meetup|byfest|loppemarked|sang|kor(?![\\p{L}])|åbent hus",
+    "spisning|fællesspis|banko|quiz|spil(?!lested)|workshop|værksted|keramik|marked|fest|fælles|café|community|food|mad(?![\\p{L}])|hobby|craft|diy|bingo|brætspil|meetup|byfest|loppemarked|julemarked|juletræsmarked|sang|kor(?![\\p{L}])|åbent hus",
   ),
   calm: stems(
     "yoga|meditation|udstilling|omvisning|natur|stille|lyrik|oplæsning|spa(?![\\p{L}])|klassisk|keramik|akvarel|tegning|bibliotek|kirke|gudstjeneste|wellness|mindful",

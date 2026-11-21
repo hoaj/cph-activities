@@ -21,6 +21,7 @@ const duration = (c: Candidate): number => {
   return c.kind === "slots" ? 60 : c.kind === "show" ? 120 : 90;
 };
 const startOf = (c: Candidate): number | null => (c.kind === "slots" ? tmin(c.timesIn?.[0]) : tmin(c.time));
+const MARKET_VISIT = 90;
 
 /**
  * A simple day or evening: up to three timed stops that fit with 30 minutes between, at most one court
@@ -45,6 +46,14 @@ export function buildItinerary(pool: PlanSuggestion[], fromMin: number, toMin: n
       if (!fits(tmin(t)!, 60)) continue;
       stops.push({ start: tmin(t)!, end: tmin(t)! + 60, text: `${t} ${x.lead.title} (${x.lead.venue})` });
       courtStops++;
+    } else if (x.lead.source === "visitorservice" && tmin(x.lead.endTime) != null) {
+      // a market is a 90-minute visit at any time while it is open, not one event from opening to closing
+      const m = x.lead;
+      const last = Math.min(tmin(m.endTime)!, toMin) - MARKET_VISIT;
+      let s = Math.max(tmin(m.time)!, fromMin);
+      while (s <= last && !fits(s, MARKET_VISIT)) s += 30;
+      if (s > last) continue;
+      stops.push({ start: s, end: s + MARKET_VISIT, text: `${hhmm(s)} ${m.title}, åbent til ${m.endTime} (${m.venue || "sted ikke oplyst"})` });
     } else {
       const c = (x.isThread ? x.members : [x.lead]).find((m) => m.time && fits(tmin(m.time)!, duration(m)));
       if (!c) continue;
