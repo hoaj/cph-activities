@@ -2,7 +2,7 @@
 name: teaterbilletter
 description: Use when the user asks for theatre, revue, stand-up, musicals, opera, ballet, children's theatre or new circus in Copenhagen (Københavns and Frederiksberg Kommune) on a day or period, by price or by the age it suits. Reads teaterbilletter.dk (Det Københavnske Teatersamarbejde, 100+ theatres) for shows soonest first, each with price, age limit and a link where the user buys tickets themselves.
 ---
-<!-- version: 0.15.0 -->
+<!-- version: 0.16.0 -->
 
 # teaterbilletter
 
