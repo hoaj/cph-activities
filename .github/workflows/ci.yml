@@ -39,7 +39,7 @@ jobs:
           bun-version: "1.4.3"
       - name: Install dependencies
         run: |
-          for dir in . skills/*/cli; do
+          for dir in . server skills/*/cli; do
             [ -f "$dir/package.json" ] || continue
             echo "bun install in $dir"
             if [ -f "$dir/bun.lock" ]; then

@@ -9,7 +9,7 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "dmi",
   repo: "hoaj/cph-activities",
-  version: "0.14.0",
+  version: "0.14.1",
   generatedWith: "0.16.0",
   origin: "https://www.dmi.dk",
   graphqlPath: "/graphql",
