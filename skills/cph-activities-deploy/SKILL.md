@@ -2,7 +2,7 @@
 name: cph-activities-deploy
 description: Deploys one of the cph-activities plugin's CLI skills as a remote MCP server on a host the user controls (Railway first), so claude.ai and the phone can use it, and walks the user through the Owner password, the Session upload and the connector. Use when the user wants cph-activities on claude.ai or on their phone, asks to deploy, host or put a cph-activities CLI skill online, or has trouble with its remote server, its Setup page or an expired Session there. Not for using cph-activities on the user's own computer (that is the CLI skill itself, or its local `mcp`), for anyone else's account, or for hosting it for other people.
 ---
-<!-- version: 0.14.1 -->
+<!-- version: 0.14.2 -->
 
 # cph-activities deploy
 
