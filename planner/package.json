@@ -1,0 +1,11 @@
+{
+  "name": "cph-activities-planner",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc -p tsconfig.json",
+    "smoke": "bun smoke.ts",
+    "plan": "bun cli.ts"
+  }
+}
