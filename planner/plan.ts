@@ -128,7 +128,11 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
     } else if (t == null) {
       // no start time: kept for an alternative or a thread, but not for small children or an evening
       if (small || evening) { drop("uden tid"); continue; }
-    } else if (t < fromM || t >= toM) { drop("uden for tidsrum"); continue; }
+    } else if (t < fromM || t >= toM) {
+      // a market is open for hours: it fits when those hours overlap the window
+      const closes = it.source === "visitorservice" ? tmin(it.endTime) : null;
+      if (closes == null || t >= toM || closes <= fromM) { drop("uden for tidsrum"); continue; }
+    }
     if (f.noise && !(wishes && /kursus|hold|træning/i.test(wishes))) { drop("kurser, hold og sæsonkort"); continue; }
     if ((it.source === "billetto" || it.source === "kglteater") && it.extra.onSale === false) { drop("ikke til salg"); continue; }
 

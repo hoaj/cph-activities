@@ -98,6 +98,23 @@ export function teaterbilletter(raw: Raw, date: string): Item[] {
     );
 }
 
+/** A market row spans several open days: the item carries the asked day's hours, and no item when it is closed. */
+export function visitorservice(raw: Raw, date: string): Item[] {
+  return (raw?.markets ?? []).flatMap((e: Raw) => {
+    const day = (e.days ?? []).find((d: Raw) => d.date === date);
+    if (!day) return [];
+    const p = parsePrice(e.price);
+    const address = e.address ? (e.postcode ? `${e.address}, ${e.postcode}` : e.address) : null;
+    return [
+      base({
+        id: `visitorservice:${e.id}`, source: "visitorservice", title: e.name, date, time: hhmm(day.time), endTime: hhmm(day.endTime),
+        venue: e.venue ?? e.address ?? null, address, area: e.area ?? "cph", priceText: e.price ?? null, free: e.free ?? null,
+        priceMin: e.free ? 0 : p.min, priceMax: e.free ? 0 : p.max, categories: ["Julemarked"], indoor: e.indoor ?? null, url: e.url ?? null,
+      }),
+    ];
+  });
+}
+
 /** `stage` is the place you go to (`venue` is the institution). The top price is there only with --details. */
 export function kglteater(raw: Raw, date: string): Item[] {
   return (raw?.shows ?? [])

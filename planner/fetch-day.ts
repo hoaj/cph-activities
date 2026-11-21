@@ -30,6 +30,7 @@ const LOADERS: Record<Source, () => Promise<SkillApp>> = {
   kglteater: () => load(import("../skills/kglteater/cli/src/main"), import("../skills/kglteater/cli/src/site"), import("../skills/kglteater/cli/src/registry")),
   absalon: () => load(import("../skills/absalon/cli/src/main"), import("../skills/absalon/cli/src/site"), import("../skills/absalon/cli/src/registry")),
   wannasport: () => load(import("../skills/wannasport/cli/src/main"), import("../skills/wannasport/cli/src/site"), import("../skills/wannasport/cli/src/registry")),
+  visitorservice: () => load(import("../skills/visitorservice/cli/src/main"), import("../skills/visitorservice/cli/src/site"), import("../skills/visitorservice/cli/src/registry")),
   dmi: () => load(import("../skills/dmi/cli/src/main"), import("../skills/dmi/cli/src/site"), import("../skills/dmi/cli/src/registry")),
 };
 const apps = new Map<Source, Promise<SkillApp>>();
@@ -143,6 +144,9 @@ export async function fetchDay(source: Source, date: string, opts: FetchDayOptio
       break;
     case "kglteater":
       calls.push({ argv: ["show", "list", "--from", D, "--limit", "300"], into: (o) => { raw(o, "shows"); collected.push(...N.kglteater(o, D)); } });
+      break;
+    case "visitorservice":
+      calls.push({ argv: ["market", "list", "--from", D, "--to", D, "--limit", "60"], into: (o) => { raw(o, "markets"); collected.push(...N.visitorservice(o, D)); } });
       break;
     case "wannasport":
       for (const s of opts.sports ?? SPORTS) {

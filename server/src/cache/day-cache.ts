@@ -67,7 +67,7 @@ export interface DayCacheOptions {
 
 const HOUR = 3600_000;
 export const DEFAULT_TTL_MS: Record<Source, number> = {
-  kulturkbh: HOUR, billetto: HOUR, kultunaut: HOUR, brugbyen: HOUR, teaterbilletter: HOUR, kglteater: HOUR, absalon: HOUR,
+  kulturkbh: HOUR, billetto: HOUR, kultunaut: HOUR, brugbyen: HOUR, teaterbilletter: HOUR, kglteater: HOUR, absalon: HOUR, visitorservice: HOUR,
   wannasport: 10 * 60_000,
   dmi: HOUR,
 };
