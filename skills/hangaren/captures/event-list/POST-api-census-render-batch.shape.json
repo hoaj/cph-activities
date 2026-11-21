@@ -1,0 +1,122 @@
+{
+  "operation": "POST /api/census/render-batch",
+  "kind": "rest",
+  "effect": "write",
+  "resourceType": "xhr",
+  "host": "www.hangaren.dk",
+  "method": "POST",
+  "path": "/api/census/render-batch",
+  "request": {
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "content-type": "application/json",
+      "cookie": null,
+      "origin": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-model": null,
+      "sec-ch-ua-platform": null,
+      "sec-ch-ua-platform-version": null,
+      "user-agent": null,
+      "x-csrf-token": null
+    },
+    "body": {
+      "kind": "json",
+      "shape": {
+        "type": "object",
+        "fields": {
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "fields": {
+                "type": {
+                  "type": "string"
+                },
+                "payload": {
+                  "type": "object",
+                  "fields": {
+                    "event": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "object",
+                      "fields": {
+                        "localStorageSupported": {
+                          "type": "boolean"
+                        },
+                        "queryString": {
+                          "type": "string"
+                        },
+                        "referrer": {
+                          "type": "string"
+                        },
+                        "websiteId": {
+                          "type": "string"
+                        },
+                        "templateId": {
+                          "type": "string"
+                        },
+                        "website_locale": {
+                          "type": "string"
+                        },
+                        "userAgent": {
+                          "type": "string"
+                        },
+                        "clientDate": {
+                          "type": "number"
+                        },
+                        "viewportInnerHeight": {
+                          "type": "number"
+                        },
+                        "viewportInnerWidth": {
+                          "type": "number"
+                        },
+                        "screenHeight": {
+                          "type": "number"
+                        },
+                        "screenWidth": {
+                          "type": "number"
+                        },
+                        "url": {
+                          "type": "string"
+                        },
+                        "pagePermissionTypeValue": {
+                          "type": "number"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "collectionId": {
+                          "type": "string"
+                        },
+                        "itemId": {
+                          "type": "string"
+                        },
+                        "recordType": {
+                          "type": "number"
+                        }
+                      },
+                      "optional": [
+                        "collectionId",
+                        "itemId",
+                        "recordType"
+                      ]
+                    },
+                    "ss_cvr": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": [],
+  "seen": 2,
+  "aborted": 0
+}

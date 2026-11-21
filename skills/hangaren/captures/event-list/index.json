@@ -1,0 +1,54 @@
+{
+  "task": "event-list",
+  "startPath": "/robots.txt",
+  "write": false,
+  "operations": [
+    {
+      "operation": "GET /events",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "www.hangaren.dk",
+      "path": "/events",
+      "file": "GET-events.shape.json",
+      "pages": [
+        "/events"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /api/census/render-batch",
+      "kind": "rest",
+      "effect": "write",
+      "method": "POST",
+      "host": "www.hangaren.dk",
+      "path": "/api/census/render-batch",
+      "file": "POST-api-census-render-batch.shape.json",
+      "pages": [
+        "/events",
+        "/events/:id/:id/:id"
+      ],
+      "seen": 2,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /events/:id/:id/:id",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "www.hangaren.dk",
+      "path": "/events/:id/:id/:id",
+      "file": "GET-events-id-id-id.shape.json",
+      "pages": [
+        "/events/:id/:id/:id"
+      ],
+      "seen": 1,
+      "aborted": 0
+    }
+  ]
+}
