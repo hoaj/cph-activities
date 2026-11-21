@@ -2,7 +2,7 @@
 name: wannasport
 description: Use when the user wants to play a sport in Copenhagen and asks where a court, lane or slot is free on a day (padel, tennis, badminton, squash, football, volleyball, swimming, table tennis and 30-odd more). Searches wannasport (https://www.wannasport.com) for free times at venues in Københavns and Frederiksberg Kommune, nearest first, with price and a link to each venue's page where the user books themselves.
 ---
-<!-- version: 0.15.1 -->
+<!-- version: 0.15.2 -->
 
 # wannasport
 

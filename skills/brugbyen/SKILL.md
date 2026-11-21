@@ -2,7 +2,7 @@
 name: brugbyen
 description: Use when the user asks what is on at Københavns Kommune's own culture houses, libraries and halls (HUSET, Krudttønden, BRØK, Kulturhuset Islands Brygge ...), on a day or period, optionally only free, for an audience (børn, unge, voksne, seniorer), a category or a district. Every event links to its page on brugbyen.kk.dk. Gives no prices.
 ---
-<!-- version: 0.15.1 -->
+<!-- version: 0.15.2 -->
 
 # brugbyen
 

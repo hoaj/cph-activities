@@ -9,6 +9,7 @@ A remote MCP server for the plugin's sources, for the maintainer and a few frien
 | `POST /mcp/<secret>` | MCP (stateless Streamable HTTP). `GET` and `DELETE` answer 405. |
 | `POST /mcp` with `Authorization: Bearer <secret>` | The same, for clients that can set headers. |
 | `GET /healthz` | `200 ok`. Outside the links; starts no Chrome and calls no source. |
+| `GET`/`HEAD /icon.svg`, `/icon.png` (512x512), `/icon-192.png`, `/favicon.ico` | The compass logo from `server/public/`, read once at start. Public, no link, `Cache-Control: public, max-age=86400`, `405` for other methods. Not counted as misses. |
 | anything else, or an unknown or revoked secret | a bare `404` (no body, so clients do not start OAuth discovery). After 10 such misses in 10 minutes from one address, that address gets a bare `429` with `Retry-After` for further misses; a valid link is never blocked. |
 
 Each link may make 60 tool calls an hour and 300 a day (sliding windows, in memory, so a restart resets them). Over the limit, the tool call returns an error result saying when the limit resets (not an HTTP error, which clients may retry badly).
@@ -49,7 +50,7 @@ The model drafts the report, shows it to the user and calls the tool only after 
 | Variable | Meaning |
 |---|---|
 | `LINKS` | Secret. Comma-separated `name:<sha256 hex of the secret>` entries, e.g. `anna:9f86...,peter:2c26...`. Names are `[a-z0-9-]`, 1-32 characters. A malformed entry stops the server at start. Empty means every `/mcp` request gets 404. |
-| `PUBLIC_URL` | The server's public address, e.g. `https://cph.example.com`. `links.ts` reads it to print finished links; `send_feedback` refuses text that contains it. |
+| `PUBLIC_URL` | The server's public address, e.g. `https://cph.example.com`. `links.ts` reads it to print finished links; `send_feedback` refuses text that contains it. It also sets the `icons` of `serverInfo` (`<PUBLIC_URL>/icon.png`, 512x512, and `<PUBLIC_URL>/icon.svg`); without it `serverInfo` carries no icons. Clients decide whether to show them. |
 | `PORT` | Port to listen on. Default 8080 (Railway sets it). |
 | `TRUST_PROXY` | Default on: the client address for the miss throttle is the last entry of `X-Forwarded-For` (what Railway's proxy appends). Set `0` to use the socket address. |
 | `SOURCE_CAP_PER_HOUR` | Upstream requests one source may make in a sliding hour. Defaults per source: kultunaut 150, wannasport 60, every other source 30. This variable sets the default for sources without their own entry; `SOURCE_CAP_PER_HOUR_<SOURCE>` (e.g. `SOURCE_CAP_PER_HOUR_KULTUNAUT=300`) overrides any one source. Counted by a wrapper around each skill's `fetch`, retries and pages included. |
@@ -59,6 +60,10 @@ The model drafts the report, shows it to the user and calls the tool only after 
 | `CACHE_MAX_ENTRIES`, `CACHE_MAX_AGE_S` | Days kept, least recently used first out (default 500); nothing older than this is ever served (default 86400). |
 | `SITE_CLI_CHROME` | Path to Chrome for the Billetto and wannasport skills. The image sets `/opt/google/chrome/chrome`. |
 | `CPH_STATE_ROOT` | Parent of each skill's state folder (`<root>/<skill>`, the skill's `SITE_CLI_HOME`). Default `/tmp/cph-state`; must be writable. |
+
+## The logo
+
+`server/public/icon.svg` is the source; `icon-512.png`, `icon-192.png` and `favicon.ico` (an ICO holding a 64x64 PNG) are generated from it. After changing the SVG, run `bun server/scripts/make-icons.ts` (headless Google Chrome; `SITE_CLI_CHROME` overrides the path) and commit the three files.
 
 ## The cache
 

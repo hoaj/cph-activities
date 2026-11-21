@@ -5,6 +5,7 @@ import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/
 import pkg from "../package.json";
 import type { ToolDeps } from "./common";
 import type { Feedback } from "./feedback";
+import { ICON_ROUTES, serverIcons } from "./icons";
 import { INSTRUCTIONS, registerPrompts } from "./instructions";
 import type { LinkTable } from "./links";
 import type { Limiter } from "./limits";
@@ -24,6 +25,8 @@ export type AppConfig = {
   missWindowMs?: number;
   /** Take the client address from the proxy's X-Forwarded-For (its last entry), not the socket. */
   trustProxy?: boolean;
+  /** The server's public address: when set, serverInfo carries icons pointing at it. */
+  publicUrl?: string;
   now?: () => number;
 };
 
@@ -50,6 +53,7 @@ function missCounter(limit: number, windowMs: number, now: () => number) {
 
 export function createApp(cfg: AppConfig): Handler {
   const now = cfg.now ?? Date.now;
+  const icons = serverIcons(cfg.publicUrl);
   const misses = missCounter(cfg.missLimit ?? 10, cfg.missWindowMs ?? 10 * 60_000, now);
 
   const ipOf = (req: Request, socketIp?: string) => {
@@ -91,6 +95,12 @@ export function createApp(cfg: AppConfig): Handler {
       return new Response(req.method === "HEAD" ? null : "ok", { status: 200, headers: { "content-type": "text/plain" } });
     }
 
+    const icon = Object.hasOwn(ICON_ROUTES, path) ? ICON_ROUTES[path] : undefined;
+    if (icon) {
+      if (req.method !== "GET" && req.method !== "HEAD") return done(bare(405, { allow: "GET, HEAD" }));
+      return done(new Response(req.method === "HEAD" ? null : icon.body, { status: 200, headers: { "content-type": icon.type, "content-length": String(icon.body.length), "cache-control": "public, max-age=86400" } }));
+    }
+
     const secret = secretOf(req, path);
     const link = secret ? cfg.links.find(secret) : null;
     if (secret === undefined || !link) {
@@ -101,7 +111,7 @@ export function createApp(cfg: AppConfig): Handler {
 
     if (req.method !== "POST") return done(bare(405, { allow: "POST" }), link);
 
-    const server = new McpServer({ name: "cph-activities", version: pkg.version }, { instructions: INSTRUCTIONS });
+    const server = new McpServer({ name: "cph-activities", title: "Copenhagen activities", version: pkg.version, ...(icons && { icons }) }, { instructions: INSTRUCTIONS });
     registerTools(server, { link, limiter: cfg.limiter, deps: cfg.deps, feedback: cfg.feedback, log: cfg.log, now });
     registerPrompts(server);
     const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });

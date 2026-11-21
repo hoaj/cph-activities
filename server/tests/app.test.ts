@@ -41,6 +41,7 @@ beforeAll(() => {
     feedback,
     missLimit: 5,
     trustProxy: true,
+    publicUrl: "https://cph.example.com/",
   });
   base = `http://localhost:${server.port}`;
 });
@@ -212,5 +213,79 @@ describe("instructions", () => {
     for (const step of ["1. Brief", "2. Fetch", "3. Shortlist", "4. Answer"]) expect(INSTRUCTIONS).toContain(step);
     expect(INSTRUCTIONS).toContain("Mention it only when it matters");
     expect(PLAN_A_DAY_GUIDE.length).toBeGreaterThan(INSTRUCTIONS.length);
+  });
+});
+
+describe("icons", () => {
+  const sig = async (r: Response) => Array.from(new Uint8Array(await r.arrayBuffer()).slice(0, 4));
+  const cases: [string, string, number[] | string][] = [
+    ["/icon.png", "image/png", [0x89, 0x50, 0x4e, 0x47]],
+    ["/icon-192.png", "image/png", [0x89, 0x50, 0x4e, 0x47]],
+    ["/favicon.ico", "image/x-icon", [0, 0, 1, 0]],
+    ["/icon.svg", "image/svg+xml", "<svg"],
+  ];
+
+  test("serve the right bytes, type and cache header without a link", async () => {
+    for (const [path, type, magic] of cases) {
+      const r = await fetch(`${base}${path}`);
+      expect(r.status).toBe(200);
+      expect(r.headers.get("content-type")).toBe(type);
+      expect(r.headers.get("cache-control")).toBe("public, max-age=86400");
+      if (typeof magic === "string") expect(await r.text()).toContain(magic);
+      else expect(await sig(r)).toEqual(magic);
+    }
+  });
+
+  test("the 512 png is 512x512 and the ico holds a png", async () => {
+    const png = new DataView(await (await fetch(`${base}/icon.png`)).arrayBuffer());
+    expect([png.getUint32(16), png.getUint32(20)]).toEqual([512, 512]);
+    const ico = new Uint8Array(await (await fetch(`${base}/favicon.ico`)).arrayBuffer());
+    expect(Array.from(ico.slice(22, 26))).toEqual([0x89, 0x50, 0x4e, 0x47]);
+  });
+
+  test("HEAD answers headers only; other methods get 405", async () => {
+    const h = await fetch(`${base}/icon.png`, { method: "HEAD" });
+    expect(h.status).toBe(200);
+    expect(h.headers.get("content-type")).toBe("image/png");
+    expect(Number(h.headers.get("content-length"))).toBeGreaterThan(0);
+    expect((await h.arrayBuffer()).byteLength).toBe(0);
+    const p = await fetch(`${base}/icon.png`, { method: "POST" });
+    expect(p.status).toBe(405);
+  });
+
+  test("unknown paths still get the bare 404", async () => {
+    for (const path of ["/icon.gif", "/icon.png/x", "/public/icon.svg", "/constructor", "/favicon.ico/"]) {
+      const r = await fetch(`${base}${path}`);
+      expect(r.status).toBe(404);
+      expect(await r.text()).toBe("");
+    }
+  });
+
+  test("icon requests do not use up the miss throttle", async () => {
+    const from = { "x-forwarded-for": "6.6.6.6" };
+    for (let i = 0; i < 20; i++) expect((await fetch(`${base}/icon.png`, { headers: from })).status).toBe(200);
+    const statuses: number[] = [];
+    for (let i = 0; i < 6; i++) statuses.push((await fetch(`${base}/mcp/nope${i}`, { headers: from })).status);
+    expect(statuses).toEqual([404, 404, 404, 404, 404, 429]);
+  });
+
+  test("initialize returns the title and icons when PUBLIC_URL is set, none otherwise", async () => {
+    const c = await connect(`${base}/mcp/${SECRET}`);
+    const info = c.getServerVersion();
+    expect(info?.title).toBe("Copenhagen activities");
+    expect(info?.icons).toEqual([
+      { src: "https://cph.example.com/icon.png", mimeType: "image/png", sizes: ["512x512"] },
+      { src: "https://cph.example.com/icon.svg", mimeType: "image/svg+xml", sizes: ["any"] },
+    ]);
+    await c.close();
+
+    const bare = startServer({ port: 0, links: parseLinks(`anna:${sha256Hex(SECRET)}`), limiter: slidingLimiter(), log: createLogger(() => {}), deps });
+    try {
+      const c2 = await connect(`http://localhost:${bare.port}/mcp/${SECRET}`);
+      expect(c2.getServerVersion()?.icons).toBeUndefined();
+      await c2.close();
+    } finally {
+      bare.stop(true);
+    }
   });
 });
