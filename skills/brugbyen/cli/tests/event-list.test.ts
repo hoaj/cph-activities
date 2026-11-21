@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { readFileSync } from "node:fs";
 import { Failure } from "../src/runtime/envelope";
 import { Client } from "../src/runtime/call";
 import eventList from "../src/commands/event-list";
@@ -153,4 +154,31 @@ describe("event list", () => {
 test("an empty ribbon is null in the command output", async () => {
   const { out } = await run(() => html(page([card(1, "X", "Man. 16. nov. 2026")], 1)), eventList, { from: "2026-11-16" });
   expect(out.events[0].ribbon).toBeNull();
+});
+
+describe("text-only list items", () => {
+  const strays = readFileSync(new URL("./fixtures/event-list-strays.html", import.meta.url), "utf8");
+  test("are dropped and the cards kept", async () => {
+    const f = fakeFetch(() => html(strays));
+    const r = await new Client(site, makeDeps(f.fetch, home.dir).deps, { confirm: false }).call(listEvents, {});
+    expect(r.events.map((e) => e.id)).toEqual(["40389", "40390", "40391"]);
+    expect(r.events.map((e) => e.title)).toEqual(["Koncert", "Workshop", "Teater"]);
+  });
+  test("a real card without an id is still Drift", async () => {
+    const broken = strays.replace(' data-node-id="40390"', "");
+    const f = fakeFetch(() => html(broken));
+    const e = await failure(new Client(site, makeDeps(f.fetch, home.dir).deps, { confirm: false }).call(listEvents, {}));
+    expect(e.kind).toBe("drift");
+  });
+  test("a short page that is not the last does not end paging", async () => {
+    const make = (p: number, n: number) => Array.from({ length: n }, (_, i) => card(p * 100 + i + 1, `E${p}-${i}`, "Man. 16. nov. 2026 Kl. 10"));
+    const handler = (req: Recorded) => {
+      const p = Number(new URL(req.url).searchParams.get("page") ?? "0");
+      return html(page(p === 0 ? make(0, 20) : p === 1 ? make(1, 19) : make(2, 5), 45, p * 21 + 1));
+    };
+    const all = await run(handler, eventList, { from: "2026-11-16", limit: 200 });
+    expect(all.calls.length).toBe(3);
+    expect(all.out.events.length).toBe(44);
+    expect(all.out.complete).toBe(true);
+  });
 });
