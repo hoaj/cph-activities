@@ -1,0 +1,1501 @@
+{
+  "operation": "GET /events/:id/:id/:id",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "www.hangaren.dk",
+  "method": "GET",
+  "path": "/events/:id/:id/:id",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "cookie": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/html",
+      "headers": {
+        "accept-ranges": null,
+        "age": null,
+        "content-encoding": null,
+        "content-length": null,
+        "content-type": "text/html",
+        "date": null,
+        "etag": null,
+        "expires": null,
+        "server": null,
+        "strict-transport-security": null,
+        "vary": null,
+        "x-content-type-options": null,
+        "x-contextid": null
+      },
+      "body": {
+        "kind": "html",
+        "outline": [
+          {
+            "tag": "script",
+            "attrs": [
+              "type"
+            ],
+            "type": "application/ld+json",
+            "json": {
+              "type": "record",
+              "values": {
+                "type": "union",
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "record",
+                    "values": {
+                      "type": "string"
+                    }
+                  }
+                ]
+              }
+            },
+            "many": true
+          },
+          {
+            "tag": "body",
+            "id": ":id",
+            "classes": [
+              "form-field-border-all",
+              "form-field-shape-square",
+              "form-field-style-solid",
+              "form-use-theme-colors",
+              "has-banner-image",
+              "header-width-full",
+              "hide-opentable-icons",
+              "item-main-image",
+              "mobile-style-available",
+              "opentable-style-dark",
+              "sqs-seven-one",
+              "view-item"
+            ],
+            "attrs": [
+              "tabindex"
+            ],
+            "children": [
+              {
+                "tag": "div",
+                "id": "siteWrapper",
+                "classes": [
+                  "clearfix",
+                  "site-wrapper"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "id": "floatingCart",
+                    "classes": [
+                      "floating-cart",
+                      "hidden"
+                    ],
+                    "children": [
+                      {
+                        "tag": "a",
+                        "classes": [
+                          "icon",
+                          "icon--cart",
+                          "icon--fill",
+                          "icon--stroke",
+                          "sqs-custom-cart"
+                        ],
+                        "attrs": [
+                          "href"
+                        ],
+                        "children": [
+                          {
+                            "tag": "span",
+                            "classes": [
+                              "Cart-inner"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "classes": [
+                                  "icon",
+                                  "icon--cart"
+                                ],
+                                "attrs": [
+                                  "viewbox"
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "icon-cart-quantity",
+                                  "legacy-cart"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "span",
+                                    "classes": [
+                                      "sqs-cart-quantity"
+                                    ],
+                                    "text": true
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "header",
+                    "id": "header",
+                    "classes": [
+                      "header",
+                      "theme-col--primary"
+                    ],
+                    "attrs": [
+                      "data-controller",
+                      "data-current-styles",
+                      "data-first-focusable-element",
+                      "data-header-style",
+                      "data-language-picker",
+                      "data-section-id",
+                      "data-section-theme",
+                      "data-test",
+                      "tabindex"
+                    ],
+                    "children": [
+                      {
+                        "tag": "svg",
+                        "attrs": [
+                          "viewbox",
+                          "xmlns"
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "children": [
+                          {
+                            "tag": "a",
+                            "classes": [
+                              "header-skip-link"
+                            ],
+                            "attrs": [
+                              "href"
+                            ],
+                            "text": true
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "header-border"
+                            ],
+                            "attrs": [
+                              "data-header-border",
+                              "data-header-style",
+                              "data-test"
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "header-dropshadow"
+                            ],
+                            "attrs": [
+                              "data-header-dropshadow",
+                              "data-header-style",
+                              "data-test"
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "container--fluid",
+                              "header-inner"
+                            ],
+                            "attrs": [
+                              "data-test"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "header-background",
+                                  "theme-bg--primary"
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "header-display-desktop"
+                                ],
+                                "attrs": [
+                                  "data-content-field"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "header-nav"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "header-nav-wrapper"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "nav",
+                                                "classes": [
+                                                  "header-nav-list"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "header-nav-item"
+                                                    ],
+                                                    "many": true,
+                                                    "children": [
+                                                      {
+                                                        "tag": "a",
+                                                        "attrs": [
+                                                          "aria-current",
+                                                          "data-animation-role",
+                                                          "href"
+                                                        ],
+                                                        "text": true
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "header-title"
+                                        ],
+                                        "attrs": [
+                                          "data-animation-role"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "header-title-logo"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "data-animation-role",
+                                                  "href"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "img",
+                                                    "attrs": [
+                                                      "alt",
+                                                      "data-loader",
+                                                      "decoding",
+                                                      "elementtiming",
+                                                      "fetchpriority",
+                                                      "loading",
+                                                      "src"
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "header-actions",
+                                      "header-actions--right"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "showOnMobile"
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "showOnDesktop"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "header-burger",
+                                      "no-actions"
+                                    ],
+                                    "attrs": [
+                                      "data-animation-role"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "button",
+                                        "classes": [
+                                          "burger",
+                                          "header-burger-btn"
+                                        ],
+                                        "attrs": [
+                                          "data-test"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "classes": [
+                                              "visually-hidden"
+                                            ],
+                                            "attrs": [
+                                              "hidden"
+                                            ],
+                                            "text": true,
+                                            "many": true
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "burger-box"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "burger-inner"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "top-bun"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "patty"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "bottom-bun"
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "header-display-mobile"
+                                ],
+                                "attrs": [
+                                  "data-content-field"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "header-nav"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "header-nav-wrapper"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "nav",
+                                                "classes": [
+                                                  "header-nav-list"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "header-nav-item"
+                                                    ],
+                                                    "many": true,
+                                                    "children": [
+                                                      {
+                                                        "tag": "a",
+                                                        "attrs": [
+                                                          "aria-current",
+                                                          "data-animation-role",
+                                                          "href"
+                                                        ],
+                                                        "text": true
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "header-title"
+                                        ],
+                                        "attrs": [
+                                          "data-animation-role"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "header-title-logo"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "attrs": [
+                                                  "data-animation-role",
+                                                  "href"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "img",
+                                                    "attrs": [
+                                                      "alt",
+                                                      "data-loader",
+                                                      "decoding",
+                                                      "elementtiming",
+                                                      "fetchpriority",
+                                                      "loading",
+                                                      "src"
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "header-actions",
+                                      "header-actions--right"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "showOnMobile"
+                                        ]
+                                      },
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "showOnDesktop"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "header-burger",
+                                      "no-actions"
+                                    ],
+                                    "attrs": [
+                                      "data-animation-role"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "button",
+                                        "classes": [
+                                          "burger",
+                                          "header-burger-btn"
+                                        ],
+                                        "attrs": [
+                                          "data-test"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "classes": [
+                                              "visually-hidden"
+                                            ],
+                                            "attrs": [
+                                              "hidden"
+                                            ],
+                                            "text": true,
+                                            "many": true
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "burger-box"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "burger-inner"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "top-bun"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "patty"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "bottom-bun"
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "many": true
+                      },
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "header-menu"
+                        ],
+                        "attrs": [
+                          "data-current-styles",
+                          "data-section-id",
+                          "data-section-theme",
+                          "data-show-account-login",
+                          "data-test"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "header-menu-bg",
+                              "theme-bg--primary"
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "header-menu-nav"
+                            ],
+                            "children": [
+                              {
+                                "tag": "nav",
+                                "classes": [
+                                  "header-menu-nav-list"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "header-menu-nav-folder"
+                                    ],
+                                    "attrs": [
+                                      "data-folder"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "header-menu-nav-wrapper"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "container",
+                                                  "header-menu-nav-item"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "a",
+                                                    "attrs": [
+                                                      "aria-current",
+                                                      "href"
+                                                    ],
+                                                    "text": true,
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "text": true
+                                                      }
+                                                    ]
+                                                  }
+                                                ],
+                                                "many": true
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "main",
+                    "id": "page",
+                    "classes": [
+                      "container"
+                    ],
+                    "attrs": [
+                      "role"
+                    ],
+                    "children": [
+                      {
+                        "tag": "article",
+                        "id": "sections",
+                        "classes": [
+                          "sections"
+                        ],
+                        "attrs": [
+                          "data-page-sections"
+                        ],
+                        "children": [
+                          {
+                            "tag": "section",
+                            "classes": [
+                              "cdk-section",
+                              "full-bleed-section",
+                              "page-section"
+                            ],
+                            "attrs": [
+                              "data-definition-name",
+                              "data-section-id",
+                              "data-section-theme",
+                              "data-sqsp-section",
+                              "data-temporary-legacy-id",
+                              "data-test",
+                              "data-website-component-id"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "section-border"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "sqs-section-background"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "content-wrapper"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "content"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "events-item-wrapper"
+                                        ],
+                                        "attrs": [
+                                          "data-block-id",
+                                          "data-content-field",
+                                          "data-height",
+                                          "data-item-id"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "events",
+                                              "events-item"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "classes": [
+                                                  "eventitem-backlink"
+                                                ],
+                                                "attrs": [
+                                                  "href"
+                                                ],
+                                                "text": true
+                                              },
+                                              {
+                                                "tag": "article",
+                                                "id": ":id",
+                                                "classes": [
+                                                  "eventitem",
+                                                  "eventitem--multiday"
+                                                ],
+                                                "attrs": [
+                                                  "data-item-id"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "eventitem-column-meta"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "h1",
+                                                        "classes": [
+                                                          "eventitem-title"
+                                                        ],
+                                                        "attrs": [
+                                                          "data-content-field"
+                                                        ],
+                                                        "text": true
+                                                      },
+                                                      {
+                                                        "tag": "ul",
+                                                        "classes": [
+                                                          "event-meta",
+                                                          "eventitem-meta"
+                                                        ],
+                                                        "attrs": [
+                                                          "data-content-field"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "li",
+                                                            "classes": [
+                                                              "event-meta-item",
+                                                              "eventitem-meta-date",
+                                                              "eventitem-meta-item"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "time",
+                                                                "classes": [
+                                                                  "event-date"
+                                                                ],
+                                                                "attrs": [
+                                                                  "datetime"
+                                                                ],
+                                                                "text": true,
+                                                                "many": true
+                                                              },
+                                                              {
+                                                                "tag": "span",
+                                                                "classes": [
+                                                                  "eventitem-meta-time"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "time",
+                                                                    "classes": [
+                                                                      "event-time-localized"
+                                                                    ],
+                                                                    "attrs": [
+                                                                      "datetime"
+                                                                    ],
+                                                                    "text": true
+                                                                  }
+                                                                ],
+                                                                "many": true
+                                                              },
+                                                              {
+                                                                "tag": "span",
+                                                                "classes": [
+                                                                  "event-datetime-divider"
+                                                                ]
+                                                              },
+                                                              {
+                                                                "tag": "br"
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "li",
+                                                            "classes": [
+                                                              "event-meta-item",
+                                                              "eventitem-meta-export",
+                                                              "eventitem-meta-item"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "a",
+                                                                "attrs": [
+                                                                  "href"
+                                                                ],
+                                                                "text": true,
+                                                                "many": true
+                                                              },
+                                                              {
+                                                                "tag": "span"
+                                                              }
+                                                            ]
+                                                          }
+                                                        ],
+                                                        "many": true
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "id": ":id",
+                                                        "classes": [
+                                                          "columns-:id",
+                                                          "sqs-grid-:id",
+                                                          "sqs-layout"
+                                                        ],
+                                                        "attrs": [
+                                                          "data-layout-label",
+                                                          "data-type"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "row",
+                                                              "sqs-row"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "col",
+                                                                  "span-:id",
+                                                                  "sqs-col-:id"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "id": ":id",
+                                                                    "classes": [
+                                                                      "html-block",
+                                                                      "sqs-block",
+                                                                      "sqs-block-html",
+                                                                      "website-component-block"
+                                                                    ],
+                                                                    "attrs": [
+                                                                      "data-block-css",
+                                                                      "data-block-scripts",
+                                                                      "data-block-type",
+                                                                      "data-definition-name",
+                                                                      "data-sqsp-block",
+                                                                      "data-website-component-id"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "div",
+                                                                        "classes": [
+                                                                          "sqs-block-content"
+                                                                        ],
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "div",
+                                                                            "children": [
+                                                                              {
+                                                                                "tag": "div",
+                                                                                "classes": [
+                                                                                  "sqs-html-content"
+                                                                                ],
+                                                                                "attrs": [
+                                                                                  "data-sqsp-text-block-content"
+                                                                                ],
+                                                                                "children": [
+                                                                                  {
+                                                                                    "tag": "p",
+                                                                                    "attrs": [
+                                                                                      "data-rte-preserve-empty"
+                                                                                    ],
+                                                                                    "text": true,
+                                                                                    "children": [
+                                                                                      {
+                                                                                        "tag": "br",
+                                                                                        "many": true
+                                                                                      },
+                                                                                      {
+                                                                                        "tag": "strong",
+                                                                                        "text": true,
+                                                                                        "many": true,
+                                                                                        "children": [
+                                                                                          {
+                                                                                            "tag": "br"
+                                                                                          }
+                                                                                        ]
+                                                                                      },
+                                                                                      {
+                                                                                        "tag": "a",
+                                                                                        "attrs": [
+                                                                                          "href"
+                                                                                        ],
+                                                                                        "text": true,
+                                                                                        "children": [
+                                                                                          {
+                                                                                            "tag": "strong",
+                                                                                            "text": true
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ],
+                                                                                    "many": true
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "div"
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "clear"
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "clear"
+                                                ]
+                                              },
+                                              {
+                                                "tag": "section",
+                                                "id": "itemPagination",
+                                                "classes": [
+                                                  "item-pagination"
+                                                ],
+                                                "attrs": [
+                                                  "data-collection-type"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "a",
+                                                    "classes": [
+                                                      "item-pagination-link"
+                                                    ],
+                                                    "attrs": [
+                                                      "href"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "icon",
+                                                          "icon--stroke",
+                                                          "item-pagination-icon"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "svg",
+                                                            "classes": [
+                                                              "caret-left-icon--small"
+                                                            ],
+                                                            "attrs": [
+                                                              "viewbox"
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "svg",
+                                                            "classes": [
+                                                              "caret-right-icon--small"
+                                                            ],
+                                                            "attrs": [
+                                                              "viewbox"
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "span",
+                                                        "children": [
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "visually-hidden"
+                                                            ],
+                                                            "text": true
+                                                          },
+                                                          {
+                                                            "tag": "div",
+                                                            "text": true,
+                                                            "many": true
+                                                          },
+                                                          {
+                                                            "tag": "h2",
+                                                            "classes": [
+                                                              "item-pagination-title"
+                                                            ],
+                                                            "text": true
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "div",
+                                                        "children": [
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "visually-hidden"
+                                                            ],
+                                                            "text": true
+                                                          },
+                                                          {
+                                                            "tag": "div",
+                                                            "text": true,
+                                                            "many": true
+                                                          },
+                                                          {
+                                                            "tag": "h2",
+                                                            "classes": [
+                                                              "item-pagination-title"
+                                                            ],
+                                                            "text": true
+                                                          }
+                                                        ]
+                                                      }
+                                                    ],
+                                                    "many": true
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "footer",
+                    "id": "footer-sections",
+                    "classes": [
+                      "sections"
+                    ],
+                    "attrs": [
+                      "data-footer-sections"
+                    ],
+                    "children": [
+                      {
+                        "tag": "section",
+                        "classes": [
+                          "content-width--wide",
+                          "dark",
+                          "layout-engine-section",
+                          "page-section",
+                          "section-height--custom"
+                        ],
+                        "attrs": [
+                          "data-animation",
+                          "data-controller",
+                          "data-current-context",
+                          "data-current-styles",
+                          "data-section-id",
+                          "data-section-theme",
+                          "data-sqsp-section",
+                          "data-test"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "section-border"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "section-background"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "content-wrapper"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "content"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "id": ":id",
+                                    "classes": [
+                                      "columns-:id",
+                                      "sqs-grid-:id",
+                                      "sqs-layout"
+                                    ],
+                                    "attrs": [
+                                      "data-type"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "row",
+                                          "sqs-row"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "col",
+                                              "span-:id",
+                                              "sqs-col-:id"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "row",
+                                                  "sqs-row"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "col"
+                                                    ],
+                                                    "many": true,
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "id": ":id",
+                                                        "classes": [
+                                                          "html-block",
+                                                          "sqs-block",
+                                                          "sqs-block-html",
+                                                          "website-component-block"
+                                                        ],
+                                                        "attrs": [
+                                                          "data-block-css",
+                                                          "data-block-scripts",
+                                                          "data-block-type",
+                                                          "data-definition-name",
+                                                          "data-sqsp-block",
+                                                          "data-website-component-id"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "sqs-block-content"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "div",
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "sqs-html-content"
+                                                                    ],
+                                                                    "attrs": [
+                                                                      "data-sqsp-text-block-content"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "p",
+                                                                        "text": true,
+                                                                        "many": true,
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "strong",
+                                                                            "text": true
+                                                                          },
+                                                                          {
+                                                                            "tag": "br"
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "div",
+                                                        "id": ":id",
+                                                        "classes": [
+                                                          "sqs-block",
+                                                          "website-component-block"
+                                                        ],
+                                                        "attrs": [
+                                                          "data-block-css",
+                                                          "data-block-scripts",
+                                                          "data-block-type",
+                                                          "data-definition-name",
+                                                          "data-sqsp-block",
+                                                          "data-website-component-id"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "sqs-block-content"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "div",
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "sqs-html-content"
+                                                                    ],
+                                                                    "attrs": [
+                                                                      "data-sqsp-text-block-content"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "p",
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "strong",
+                                                                            "text": true
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  },
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "sqs-svg-icon--outer"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "nav",
+                                                                        "classes": [
+                                                                          "sqs-svg-icon--list"
+                                                                        ],
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "a",
+                                                                            "classes": [
+                                                                              "sqs-svg-icon--wrapper"
+                                                                            ],
+                                                                            "attrs": [
+                                                                              "aria-label",
+                                                                              "href",
+                                                                              "target"
+                                                                            ],
+                                                                            "children": [
+                                                                              {
+                                                                                "tag": "div",
+                                                                                "children": [
+                                                                                  {
+                                                                                    "tag": "svg",
+                                                                                    "classes": [
+                                                                                      "sqs-svg-icon--social"
+                                                                                    ],
+                                                                                    "attrs": [
+                                                                                      "viewbox"
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ],
+                                                                            "many": true
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ],
+                                                        "many": true
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "id": ":id",
+                                                "classes": [
+                                                  "html-block",
+                                                  "sqs-block",
+                                                  "sqs-block-html",
+                                                  "website-component-block"
+                                                ],
+                                                "attrs": [
+                                                  "data-block-css",
+                                                  "data-block-scripts",
+                                                  "data-block-type",
+                                                  "data-definition-name",
+                                                  "data-sqsp-block",
+                                                  "data-website-component-id"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "sqs-block-content"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "children": [
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "sqs-html-content"
+                                                            ],
+                                                            "attrs": [
+                                                              "data-sqsp-text-block-content"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "p",
+                                                                "text": true
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ],
+                                        "many": true
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "svg",
+                "attrs": [
+                  "data-usage",
+                  "version",
+                  "xmlns"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0,
+  "html": true
+}
