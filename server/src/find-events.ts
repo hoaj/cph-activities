@@ -168,7 +168,7 @@ export async function findEvents(deps: ToolDeps, a: FindEventsArgs) {
   const next = offset + page.length;
   const rows = page.map(eventRow);
   const blank = rows.filter((r) => r.description === null).length;
-  if (blank >= NO_DESCRIPTION_NOTE_AT) notes.push(`${blank} of these have no description: use get_details or say you do not know what it is.`);
+  if (blank >= NO_DESCRIPTION_NOTE_AT) notes.push(`${blank} of these have no description (brugbyen's lists never carry one): call get_details on the 2-3 you are about to suggest, which fetches brugbyen's from its page, or say you do not know what it is.`);
   return ok({
     total: kept.length,
     events: rows,

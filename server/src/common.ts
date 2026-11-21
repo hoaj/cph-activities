@@ -4,12 +4,15 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import type { DayLoader, SourceStatus } from "./days";
 import type { ItemIndex } from "./item-index";
+import type { DescriptionLoader } from "./details";
 import type { OptionsLoader } from "./options";
 
 export interface ToolDeps {
   cache: DayLoader;
   index: ItemIndex;
   options: OptionsLoader;
+  /** get_details' on-demand read of a brugbyen event's description. Absent: none is read. */
+  descriptions?: DescriptionLoader;
   /** YYYY-MM-DD in Copenhagen. Tests fix it. */
   today?: () => string;
 }

@@ -267,7 +267,7 @@ describe("rows carry details", () => {
 
   test("find_events: a note says how many rows have no description when several do", async () => {
     const r = await find();
-    expect(r.data.notes.join(" ")).toContain("3 of these have no description: use get_details or say you do not know what it is");
+    expect(r.data.notes.join(" ")).toContain("3 of these have no description (brugbyen's lists never carry one): call get_details on the 2-3 you are about to suggest");
   });
 
   test("find_events: no note when every row has a description", async () => {
