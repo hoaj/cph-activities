@@ -207,3 +207,36 @@ export async function fetchDay(source: Source, date: string, opts: FetchDayOptio
   result.ok = result.errors.length === 0;
   return result;
 }
+
+/**
+ * One command of a skill, run in this process with the same env and counting `fetch` as `fetchDay`: for
+ * the lists a skill offers (`filter list`, `genre list`) that are no day's rows. Never throws.
+ */
+export async function runSkill(source: Source, argv: string[], deps: FetchDayDeps = {}, timeoutMs = 60_000): Promise<{ ok: true; output: any } | { ok: false; error: SourceError }> {
+  const command = argv.slice(0, 2).join(" ");
+  const fail = (kind: SourceErrorKind, code: number, message: string, fingerprint?: string): { ok: false; error: SourceError } => ({ ok: false, error: { kind, code, command, message, ...(fingerprint ? { fingerprint } : {}) } });
+  let app: SkillApp;
+  try {
+    app = await appOf(source);
+  } catch (e) {
+    apps.delete(source);
+    return fail("bug", 1, `could not load the ${source} skill: ${(e as Error).message}`);
+  }
+  const env = { ...process.env, ...deps.env, SITE_CLI_HOME: join(deps.stateRoot ?? join(tmpdir(), "cph-planner"), source), SITE_CLI_NONINTERACTIVE: "1" };
+  const skillDeps = { env, note: deps.note ?? (() => {}), ...(deps.fetch ? { fetch: deps.fetch } : {}), ...(deps.retryDelays ? { retryDelays: deps.retryDelays } : {}) };
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const run = app.run(argv, { site: app.site, operations: app.operations, commands: app.commands, deps: skillDeps });
+    const r = await Promise.race([run, new Promise<"timeout">((res) => { timer = setTimeout(() => res("timeout"), timeoutMs); })]);
+    if (r === "timeout") return fail("timeout", 0, `${source} ${command} took longer than ${timeoutMs} ms`);
+    if (r.code !== 0) {
+      const e = r.output?.error ?? {};
+      return fail(ERROR_KINDS[r.code] ?? "bug", r.code, String(e.message ?? "no message"), e.fingerprint ? String(e.fingerprint) : undefined);
+    }
+    return { ok: true, output: r.output };
+  } catch (e) {
+    return fail("bug", 1, (e as Error).message);
+  } finally {
+    clearTimeout(timer);
+  }
+}

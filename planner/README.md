@@ -37,7 +37,7 @@ else { /* r.weather, r.best, r.alternatives, r.plan, r.assumptions, r.more, r.ne
 const refined = planOuting(applyPatch(brief, r.next[0].patch), days);
 ```
 
-The contract is #24's: `needs_input` when a person lacks an age or the brief has no "what" (a mood or wishes; budget, times and indoor-only do not count), with one Danish message of at most two questions and options; otherwise a shortlist with a weather line, a best bet, two to four alternatives of different kinds, an optional plan, assumptions, facet counts (`more`) and `next` as `{ label, patch }` where the patch is applied to the brief by `applyPatch` (a value sets a key, `null` deletes it).
+The contract is #24's: `needs_input` when a person lacks an age or the brief has no "what" (a mood or wishes; budget, times and indoor-only do not count), with one Danish message of at most two questions and options; otherwise a shortlist with a weather line (only when the weather matters: wet, showers, cold, windy or snow; otherwise null), a best bet, two to four alternatives of different kinds, an optional plan, assumptions, facet counts (`more`) and `next` as `{ label, patch }` where the patch is applied to the brief by `applyPatch` (a value sets a key, `null` deletes it).
 
 Rules, in the order they act (the guide skill `skills/cph-activities/SKILL.md` has the longer reasoning):
 

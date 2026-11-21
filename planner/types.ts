@@ -167,7 +167,8 @@ export interface NextStep {
 
 export interface Shortlist {
   status: "ok";
-  weather: string;
+  /** A Danish weather line, only when the weather decided something or is worth knowing (wet, showers, cold, windy, snow); null on a dry, mild day. */
+  weather: string | null;
   /** null when nothing fits, or when only events without a start time do. */
   best: Suggestion | null;
   alternatives: Suggestion[];
