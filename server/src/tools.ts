@@ -1,4 +1,4 @@
-// The server's six tools. Every tool goes through guard(), which counts the call against the link's
+// The server's seven tools. Every tool goes through guard(), which counts the call against the link's
 // limits and, over the limit, answers with an error result (never an HTTP 429, which clients may retry).
 // Bad input is a tool error result with a message the model can act on, not a protocol error.
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -6,6 +6,7 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { ToolInputError, toolError, type ToolDeps } from "./common";
 import { getDetails, getDetailsInput, getDetailsOutput } from "./details";
 import { findEvents, findEventsInput, findEventsOutput } from "./find-events";
+import { createFeedback, feedbackInput, feedbackOutput, type Feedback, type FeedbackInput } from "./feedback";
 import { findSlots, findSlotsInput, findSlotsOutput } from "./find-slots";
 import { listOptions, listOptionsOutput } from "./list-options";
 import type { LimitResult, Limiter } from "./limits";
@@ -19,6 +20,7 @@ export const limitMessage = (r: Extract<LimitResult, { ok: false }>, now: number
 };
 
 const annotations = { readOnlyHint: true, openWorldHint: true } as const;
+const feedbackAnnotations = { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true } as const;
 
 export const DESCRIPTIONS = {
   plan_outing: `Plan an outing in Copenhagen (Københavns and Frederiksberg Kommune) from a brief: who goes, when, what kind of thing. Returns a shortlist: a best bet, two to four alternatives of different kinds, each with time, place, price, link and why it fits. Use it first for any open question like "what should we do Saturday?"; it merges events from all sources, checks the weather and applies age, budget and weather rules for you.
@@ -37,11 +39,16 @@ Example: {"date":"2026-11-28","from":"17:00","to":"23:00"}.`,
   get_details: `Everything known about one item: the full description, every source's link, all start times or free court times, address, price, age. Use it when the user asks about one result ("tell me more about the second one", "where do I book?"), with the id from plan_outing, find_events or find_activity_slots.
 Ids are kept for about two hours after the tool returned them. For an unknown id, repeat the search first.
 Example: {"id":"billetto:123456"}.`,
+  send_feedback: `Report a bug, an idea or something missing about these tools: it becomes a GitHub issue, or a comment on an issue that already covers the case.
+Use it when the user wants to report a problem or suggest something. FIRST show the user the draft (title and text) and ask whether to send it. Call only after a yes, with approved: true.
+The issue is PUBLIC on GitHub. Leave out names, e-mail addresses, phone numbers, addresses, tokens and the user's personal link. Describe the request in general terms ("a 17-year-old, Saturday evening, active"), not with identifying details. Text with an e-mail address, a phone number, a long token-like string or a link containing /mcp/ is refused.
+The result has an action. "created": a new issue was opened; give the user its issueUrl. "commented": the case was already reported and this was added to that issue. "already_noted": the user's report is already on it; nothing was sent. "possible_duplicate": nothing was sent; ask the user whether it is the same case as one of the candidates, never decide yourself. If yes, call again with the same text and existing_issue set to its number; if it is a new case, call again with force_new: true.
+Example: {"kind":"bug","title":"Padel search returns no courts on Saturday","what_happened":"Asked for padel for four on Saturday afternoon; find_activity_slots returned an empty list although courts were free.","tool":"find_activity_slots","approved":true}.`,
   list_options: `The values the other tools accept: sports, moods, audiences, category and genre names, and brugbyen's districts. Use it before filtering by category or district or when the user asks what is possible. Takes no input; the answer changes rarely.
 Example: {}.`,
 };
 
-export function registerTools(server: McpServer, ctx: { link: string; limiter: Limiter; deps: ToolDeps; log?: Log; now?: () => number }): void {
+export function registerTools(server: McpServer, ctx: { link: string; limiter: Limiter; deps: ToolDeps; feedback?: Feedback; log?: Log; now?: () => number }): void {
   const run =
     <A extends unknown[]>(name: string, fn: (...args: A) => CallToolResult | Promise<CallToolResult>) =>
     async (...args: A): Promise<CallToolResult> => {
@@ -62,6 +69,7 @@ export function registerTools(server: McpServer, ctx: { link: string; limiter: L
       return res;
     };
   const d = ctx.deps;
+  const feedback = ctx.feedback ?? createFeedback({ github: null, log: ctx.log });
 
   server.registerTool("plan_outing", { title: "Plan an outing", description: DESCRIPTIONS.plan_outing, inputSchema: planOutingInput, outputSchema: planOutingOutput, annotations }, run("plan_outing", (a) => planOutingTool(d, a)));
   server.registerTool("find_events", { title: "Find events", description: DESCRIPTIONS.find_events, inputSchema: findEventsInput, outputSchema: findEventsOutput, annotations }, run("find_events", (a) => findEvents(d, a)));
@@ -69,4 +77,5 @@ export function registerTools(server: McpServer, ctx: { link: string; limiter: L
   server.registerTool("get_weather", { title: "Weather forecast", description: DESCRIPTIONS.get_weather, inputSchema: getWeatherInput, outputSchema: getWeatherOutput, annotations }, run("get_weather", (a) => getWeather(d, a)));
   server.registerTool("get_details", { title: "Details of one item", description: DESCRIPTIONS.get_details, inputSchema: getDetailsInput, outputSchema: getDetailsOutput, annotations }, run("get_details", (a) => getDetails(d, a)));
   server.registerTool("list_options", { title: "Valid options", description: DESCRIPTIONS.list_options, outputSchema: listOptionsOutput, annotations }, run("list_options", () => listOptions(d)));
+  server.registerTool("send_feedback", { title: "Send feedback", description: DESCRIPTIONS.send_feedback, inputSchema: feedbackInput, outputSchema: feedbackOutput, annotations: feedbackAnnotations }, run("send_feedback", (a: FeedbackInput) => feedback.send(ctx.link, a)));
 }

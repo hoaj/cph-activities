@@ -10,6 +10,7 @@ import type { ToolDeps } from "../src/common";
 import type { DayLoader } from "../src/days";
 import { ItemIndex } from "../src/item-index";
 import type { OptionsLoader } from "../src/options";
+import type { Feedback } from "../src/feedback";
 import { slidingLimiter } from "../src/limits";
 import { registerTools } from "../src/tools";
 
@@ -78,10 +79,10 @@ export function fakeDeps(o: FakeOptions = {}): ToolDeps & { calls: ReturnType<ty
   return { cache, calls, index: new ItemIndex(), options: fakeOptions(), today: () => TODAY };
 }
 
-/** A client wired in memory to a server with the six tools. */
-export async function connectTools(deps: ToolDeps, opts: { perHour?: number; log?: (evt: string, f?: Record<string, unknown>) => void } = {}) {
+/** A client wired in memory to a server with the seven tools. */
+export async function connectTools(deps: ToolDeps, opts: { perHour?: number; feedback?: Feedback; log?: (evt: string, f?: Record<string, unknown>) => void } = {}) {
   const server = new McpServer({ name: "t", version: "1" });
-  registerTools(server, { link: "anna", limiter: slidingLimiter({ perHour: opts.perHour ?? 1000, perDay: 10000 }), deps, ...(opts.log ? { log: opts.log } : {}) });
+  registerTools(server, { link: "anna", limiter: slidingLimiter({ perHour: opts.perHour ?? 1000, perDay: 10000 }), deps, ...(opts.feedback ? { feedback: opts.feedback } : {}), ...(opts.log ? { log: opts.log } : {}) });
   const [a, b] = InMemoryTransport.createLinkedPair();
   await server.connect(a);
   const client = new Client({ name: "c", version: "1" });

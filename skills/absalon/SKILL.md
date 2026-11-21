@@ -2,7 +2,7 @@
 name: absalon
 description: "Use when the user asks what is on at Folkehuset Absalon (Vesterbro, Copenhagen): daily communal dinners (fællesspisning), dance, yoga, workshops, ceramics, bingo and quiz, parties and concerts, markets, children's activities and films, on a day or period, in a category, free ones or at a time of day. Lists occurrences from absaloncph.dk with a link to each event's own page, where the user reads more and signs up themselves."
 ---
-<!-- version: 0.14.5 -->
+<!-- version: 0.14.6 -->
 
 # absalon
 
