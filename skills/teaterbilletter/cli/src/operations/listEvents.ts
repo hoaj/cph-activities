@@ -14,6 +14,9 @@ const item = z.object({
   eventNo: z.number(),
   title: z.string(),
   slug: z.string(),
+  subtitle: z.string().nullish(),
+  teaser: z.string().nullish(),
+  description: z.string().nullish(), // plain text with line breaks, up to ~700 characters; may hold HTML
   categoryName: z.string().nullish(),
   subCategoryName: z.string().nullish(),
   mappedCategoryNames: z.array(z.string()).nullish(), // the names /api/categories lists
