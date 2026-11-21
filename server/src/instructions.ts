@@ -1,13 +1,48 @@
-// Server instructions, written for the model that connects. ChatGPT reads the first 512
-// characters, Claude Code up to 4,096: the opening stands alone, the rest adds the detail.
-export const INSTRUCTIONS = `cph-activities helps people decide what to do in Copenhagen (Københavns and Frederiksberg Kommune): events, bookable activities and the weather. It books and buys nothing; the user does that through the link in each result. Work in four steps (brief, fetch, shortlist, answer) and end with 3-5 suggestions that fit this person, each with a reason, not a list of everything found.
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
 
-1. Brief. Write down who (and the ages of any children or teenagers), when, mood (active, culture, social, calm, playful, food), budget and constraints (indoors, area, a time to be home). Use everything the user already said. Ask first, in one short message with at most two questions of two to four options each, when you do not know who it is for, how old a companion is, or what kind of outing they want. Go on without asking when you know who (with ages) and either the mood or a concrete wish; fill the rest with sensible defaults and say what you assumed.
+// Server instructions, written for the model that connects. ChatGPT reads the first 512 characters,
+// Claude Code up to 4,096: the opening stands alone, the rest adds the detail.
+export const INSTRUCTIONS = `cph-activities finds things to do in Copenhagen (Københavns and Frederiksberg Kommune): events, bookable courts and the weather. For an open question call plan_outing; if it answers needs_input, ask the user its question first, then call again. Show 3-5 suggestions with a reason each, and mention the weather only when it matters. Nothing is booked or bought here: the user does that through the link in each result.
 
-2. Fetch. Ask only the sources the brief needs, with the filters that narrow on the source's side (age, time window, free, category). Check the weather first for a day or an evening: wet or cold weather moves plans indoors. Run independent calls together. If a source fails, answer from the others and say which one is missing.
+Work in four steps: brief, fetch, shortlist, answer.
 
-3. Shortlist. Merge duplicates of the same event listed by several sources. Cut what does not fit: content for adults only when someone is under 18, children's events for teenagers, anything outside the time window or budget, outdoor plans in bad weather, courses and season passes unless asked. Look for a thread (a festival, a venue, a theme) that several sources point to and show its best two to four events rather than all of them. Keep at most five, ranked by fit to the brief and then by the chance the user will like it.
+1. Brief. Collect who goes (with ages), the day, the kind of outing (mood: active, culture, social, calm, food, gaming, nightlife), budget and constraints from what the user already said. plan_outing needs every age and a "what" (a mood or a wish). If one is missing it returns status "needs_input" with a Danish question in "ask": put that question to the user as it stands, then call plan_outing again with the answer in the brief. Do not guess ages.
 
-4. Answer. Start with the weather in one line. Give the best bet first (what, when, where, price, link, and why it fits them), then two to four alternatives of different kinds, such as one active, one cultural, one social. Add a short plan for the day when it helps, say what you assumed, and end with one offer to go further. Reply in the user's language. Show more only when asked.
+2. Fetch. Prefer plan_outing for open questions: it fetches, merges duplicates and applies the age, budget and weather rules. Use find_events to browse one kind of thing ("jazz Friday under 200 kr."), find_activity_slots for court times (padel, badminton, ...), get_weather for the forecast alone, get_details for one result's full text and every link, list_options for valid sports, categories and districts. Run independent calls together.
 
-Write "price not given" when a source has no price. Never invent times, prices or links; use what the results contain. The ping tool only checks that the connection works.`;
+3. Shortlist. Show at most 3-5 suggestions: a best bet and alternatives of different kinds, each with a reason from its "why". To refine, merge a patch from "next" into the brief and call plan_outing again; pass "excludeIds" to see others.
+
+4. Answer. Give the best bet first: what, when, where, price, link, why it fits them. Then the alternatives, a short plan for the day when it helps, and what was assumed (see "assumptions"). End with one offer to go further. Reply in the user's language.
+
+Weather. It is checked for you whenever a date is given. Mention it only when it matters: a "weather" line is present only then (rain, showers, cold, wind, snow, or when it moved plans indoors). When "weather" is null, say nothing about it.
+
+Sources. Every result lists "sources" with status fresh, stale, capped or missing. Tell the user when a source is missing or stale ("Billetto is not available right now") and answer from the rest. "notes" holds what to pass on.
+
+Prices and times. Write "pris ikke oplyst" when a price is missing and "tid: se siden" when there is no start time. Never invent times, prices or links; use what the results contain. Ids belong to one result set and expire after about two hours.`;
+
+// The longer guide behind the MCP prompt "plan_a_day": the rules the tools encode, for a model that wants them spelled out.
+export const PLAN_A_DAY_GUIDE = `${INSTRUCTIONS}
+
+The rules plan_outing applies, so you can explain a result or plan by hand with find_events:
+- Age: nothing 18+ (club nights, bars) when someone is under 18; children's events are left out for teenagers; for children under 10 only events made for them, none after 19:00. When someone under 18 wants nightlife, late concerts, comedy and theatre from about 19:00 replace clubs and bars, and the answer says why.
+- Budget: per person. A court's price is split between the players (at least two). Budget 0 means free only; where a source gives no price (KultuNaut, brugbyen, most of Absalon) the item stays and says "pris ikke oplyst".
+- Weather: outdoor items only when the weather allows. Rain moves them indoors; showers rank them lower; cold, wind and snow move anything long outdoors, even on a dry day.
+- Time: events with no start time are never the best bet alone and have no fixed slot in a plan.
+- Duplicates: the same event listed by several sources is one suggestion with every link; Billetto's link leads.
+- Threads: a festival, venue or theme that several sources point to on one day is one suggestion with its best two to four events.
+- No source for bowling: point to https://www.easybowl.com/bc/dgi/booking.
+
+Ask the user for what is missing before you search; at most two questions, each with two to four options.`;
+
+export function registerPrompts(server: McpServer): void {
+  server.registerPrompt(
+    "plan_a_day",
+    {
+      title: "Plan a day in Copenhagen",
+      description: "The full guide for planning a day or an evening in Copenhagen with this server's tools.",
+      argsSchema: { request: z.string().max(500).optional().describe("What the user asked, in their words.") },
+    },
+    ({ request }) => ({ messages: [{ role: "user", content: { type: "text", text: PLAN_A_DAY_GUIDE + (request ? `\n\nThe user asks: ${request}` : "") } }] }),
+  );
+}
