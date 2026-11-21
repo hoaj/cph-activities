@@ -2,7 +2,7 @@
 name: kglteater
 description: Use when the user asks for opera, ballet, plays, musicals, dance or concerts at Det Kongelige Teater (the Royal Danish Theatre: Operaen, Gamle Scene, Skuespilhuset) on a day or period, by genre, stage, time, price or the age it suits. Reads Det Kongelige Teater's calendar on kglteater.dk, soonest first, with the cheapest ticket price, whether tickets are running out, and a link where the user buys tickets themselves.
 ---
-<!-- version: 0.16.0 -->
+<!-- version: 0.16.1 -->
 
 # kglteater
 

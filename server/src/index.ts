@@ -1,4 +1,4 @@
-// Entry point: LINKS (name:sha256 entries), PORT (default 8080), the cache settings (see README). PUBLIC_URL is only for `links.ts`.
+// Entry point: LINKS (name:sha256 entries), PORT (default 8080), the cache settings (see README). PUBLIC_URL is for `links.ts` and the serverInfo icons.
 import { feedbackGitHubFromEnv } from "./cache";
 import { createToolDeps } from "./deps";
 import { createFeedback } from "./feedback";
@@ -19,6 +19,7 @@ const server = startServer({
   deps: createToolDeps(process.env, log),
   feedback: createFeedback({ github: feedbackGitHubFromEnv(process.env), log, linkBase: process.env.PUBLIC_URL }),
   log,
+  publicUrl: process.env.PUBLIC_URL,
   // Railway puts the client address last in X-Forwarded-For; set TRUST_PROXY=0 to use the socket.
   trustProxy: process.env.TRUST_PROXY !== "0",
 });
