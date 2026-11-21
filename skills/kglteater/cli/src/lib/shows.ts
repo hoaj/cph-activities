@@ -7,6 +7,7 @@ const CPH_STAGES = new Set(["gamle scene", "skuespilhuset", "operaen", "stæreka
 export type Item = {
   startDate: string;
   showName: string;
+  showLead?: string | null;
   showUrl: string;
   showId: number;
   category?: string | null;
@@ -40,6 +41,7 @@ export type Row = {
   forChildren: boolean;
   availability: "available" | "few" | "soldOut" | "cancelled" | null;
   premiere: boolean;
+  description: string | null;
   note: string | null;
   url: string;
   bookingUrl: string | null;
@@ -140,6 +142,30 @@ export function resolveNames(wanted: string[], options: { id: string; name: stri
   return unknown.length ? { unknown } : { ids: [...ids] };
 }
 
+const NAMED: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", ndash: "–", mdash: "—", hellip: "…", laquo: "«", raquo: "»", aelig: "æ", oslash: "ø", aring: "å", AElig: "Æ", Oslash: "Ø", Aring: "Å" };
+export const DESCRIPTION_MAX = 500;
+
+/** The calendar's lead as plain text: tags removed, entities decoded, whitespace collapsed, at most 500 characters cut at a word boundary with `…`; null when empty. */
+export function leadText(s: string | null | undefined): string | null {
+  const text = (s ?? "")
+    .replace(/<\s*(br|\/p|\/div|\/li|\/h\d)\b[^>]*>/gi, " ")
+    .replace(/<[^>]*>/g, "")
+    .replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) => {
+      if (e[0] === "#") {
+        const n = e[1] === "x" || e[1] === "X" ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10);
+        return n > 0 && n <= 0x10ffff ? String.fromCodePoint(n) : m;
+      }
+      return NAMED[e] ?? NAMED[e.toLowerCase()] ?? m;
+    })
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!text) return null;
+  if (text.length <= DESCRIPTION_MAX) return text;
+  const head = text.slice(0, DESCRIPTION_MAX - 1);
+  const cut = head.lastIndexOf(" ");
+  return (cut > 0 ? head.slice(0, cut) : head).trimEnd() + "…";
+}
+
 export function toRow(item: Item): Row {
   const area = areaOf(item.location, item.isTour);
   const min = priceMin(item);
@@ -158,6 +184,7 @@ export function toRow(item: Item): Row {
     forChildren: /^for børn$/i.test(item.label?.trim() ?? ""),
     availability: availability(item),
     premiere: /premiere/i.test(item.specialMarking ?? ""),
+    description: leadText(item.showLead),
     note: orNull(item.promotedLabel),
     url: item.showUrl,
     bookingUrl: safeLink(item.externalBuyLink) ?? safeLink(item.tixlyBuyLink),
