@@ -1,0 +1,49 @@
+{
+  "operation": "GET /da/itix",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "billet.kglteater.dk",
+  "method": "GET",
+  "path": "/da/itix",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 403,
+      "contentType": "text/html",
+      "headers": {
+        "content-length": null,
+        "content-type": "text/html",
+        "date": null,
+        "server": null
+      },
+      "body": {
+        "kind": "html",
+        "outline": [
+          {
+            "tag": "center",
+            "children": [
+              {
+                "tag": "h1",
+                "text": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0
+}
