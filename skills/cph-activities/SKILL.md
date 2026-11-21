@@ -42,6 +42,7 @@ Ask only the sources the brief needs, with the filters that cut on the site. Run
   - active: `wannasport slot search --sport <slug>` for one to three sports that fit (`sport list` has 41); bowling has no source: give https://www.easybowl.com/bc/dgi/booking.
   - markets, a family weekend, late November and December: `visitorservice market list --from <day> --to <day>` for Christmas markets (`--indoor` on a wet or cold day, `--free`), plus `kultunaut event list --genre Loppemarked/Genbrug` and `brugbyen event list --category Marked` for flea and neighbourhood markets.
   - one kind of thing (comedy, jazz, a talk): Billetto `--query`/`--category`, KultuNaut `--genre`, kulturKBH `--type`/`--query`.
+  - club nights, DJs, electronic music (only when everyone is 18 or older): no source here covers them well. Use what Billetto and KultuNaut list, and give https://ra.co/events/dk/copenhagen for the user to open themselves. Never fetch ra.co: its terms forbid automated access.
 
 Done when every source the brief needs has answered, or failed with an `error.kind` you will mention.
 
