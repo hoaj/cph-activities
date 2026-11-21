@@ -23,7 +23,7 @@ Logs are JSON lines on stderr. The secret is never logged: every line passes thr
 | `PUBLIC_URL` | The server's public address, e.g. `https://cph.example.com`. Only `links.ts` reads it, to print finished links. |
 | `PORT` | Port to listen on. Default 8080 (Railway sets it). |
 | `TRUST_PROXY` | Default on: the client address for the miss throttle is the last entry of `X-Forwarded-For` (what Railway's proxy appends). Set `0` to use the socket address. |
-| `SOURCE_CAP_PER_HOUR` | Upstream requests one source may make in a sliding hour. Default 30. `SOURCE_CAP_PER_HOUR_<SOURCE>` (e.g. `SOURCE_CAP_PER_HOUR_KULTUNAUT=300`) overrides it for one source. Counted by a wrapper around each skill's `fetch`, retries and pages included. |
+| `SOURCE_CAP_PER_HOUR` | Upstream requests one source may make in a sliding hour. Defaults per source: kultunaut 150, wannasport 60, every other source 30. This variable sets the default for sources without their own entry; `SOURCE_CAP_PER_HOUR_<SOURCE>` (e.g. `SOURCE_CAP_PER_HOUR_KULTUNAUT=300`) overrides any one source. Counted by a wrapper around each skill's `fetch`, retries and pages included. |
 | `GITHUB_TOKEN` | Secret. A token with issues scope only, for `hoaj/cph-activities` (`GITHUB_REPO` changes the repo). Without it the server logs the issue it would file (`drift_issue_would_file`). |
 | `CACHE_TTL_EVENTS_S`, `CACHE_TTL_SLOTS_S`, `CACHE_TTL_WEATHER_S` | Seconds a day stays fresh: event sources (default 3600), court slots from wannasport (600), weather from dmi (3600). |
 | `CACHE_MAX_ENTRIES`, `CACHE_MAX_AGE_S` | Days kept, least recently used first out (default 500); nothing older than this is ever served (default 86400). |

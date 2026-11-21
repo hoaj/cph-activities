@@ -4,6 +4,9 @@ import type { Source } from "../../../planner/types";
 import type { DayCacheOptions } from "./day-cache";
 import { createSourceCounter } from "./counting-fetch";
 
+/** Hourly upstream caps per source; a source not listed gets SOURCE_CAP_PER_HOUR (default 30). */
+export const DEFAULT_CAPS: Partial<Record<Source, number>> = { kultunaut: 150, wannasport: 60 };
+
 const num = (env: Record<string, string | undefined>, name: string): number | undefined => {
   const v = env[name]?.trim();
   if (!v) return undefined;
@@ -21,7 +24,7 @@ export function cacheOptionsFromEnv(env: Record<string, string | undefined>, now
     const sec = s === "dmi" ? weather : s === "wannasport" ? slots : events;
     if (sec) ttlMs[s] = sec * 1000;
   }
-  const caps: Partial<Record<Source, number>> = {};
+  const caps: Partial<Record<Source, number>> = { ...DEFAULT_CAPS };
   for (const s of SOURCES) {
     const c = num(env, `SOURCE_CAP_PER_HOUR_${s.toUpperCase()}`);
     if (c) caps[s] = c;

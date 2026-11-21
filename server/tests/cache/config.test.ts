@@ -1,16 +1,21 @@
 import { expect, test } from "bun:test";
 import { cacheOptionsFromEnv } from "../../src/cache";
 
-test("defaults: cap 30 an hour, no overrides", () => {
+test("default caps: kultunaut 150, wannasport 60, every other source 30", () => {
   const o = cacheOptionsFromEnv({});
-  expect(o.counter!.cap("kultunaut")).toBe(30);
+  expect(o.counter!.cap("kultunaut")).toBe(150);
+  expect(o.counter!.cap("wannasport")).toBe(60);
+  for (const s of ["kulturkbh", "billetto", "brugbyen", "teaterbilletter", "absalon", "dmi"] as const) expect(o.counter!.cap(s)).toBe(30);
   expect(o.ttlMs).toEqual({});
 });
 
 test("SOURCE_CAP_PER_HOUR and per-source overrides", () => {
   const o = cacheOptionsFromEnv({ SOURCE_CAP_PER_HOUR: "12", SOURCE_CAP_PER_HOUR_BILLETTO: "5" });
-  expect(o.counter!.cap("kultunaut")).toBe(12);
+  expect(o.counter!.cap("absalon")).toBe(12); // the default for sources without their own entry
+  expect(o.counter!.cap("kultunaut")).toBe(150);
   expect(o.counter!.cap("billetto")).toBe(5);
+  expect(cacheOptionsFromEnv({ SOURCE_CAP_PER_HOUR_KULTUNAUT: "400", SOURCE_CAP_PER_HOUR_WANNASPORT: "7" }).counter!.cap("kultunaut")).toBe(400);
+  expect(cacheOptionsFromEnv({ SOURCE_CAP_PER_HOUR_WANNASPORT: "7" }).counter!.cap("wannasport")).toBe(7);
 });
 
 test("TTL variables map to events, court slots and weather", () => {
