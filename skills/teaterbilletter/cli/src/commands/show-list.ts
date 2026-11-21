@@ -2,7 +2,7 @@ import { z } from "zod";
 import { defineCommand, inputFailure } from "../runtime/command";
 import listCategories from "../operations/listCategories";
 import listEvents from "../operations/listEvents";
-import { bookingUrl, fitsAge, fitsMinAgeFrom, matchesCategory, isCopenhagen, localDate, localTime, pageUrl } from "../lib/shows";
+import { bookingUrl, fitsAge, fitsMinAgeFrom, matchesCategory, isCopenhagen, localDate, localTime, pageUrl, showDescription } from "../lib/shows";
 
 // 356 productions over 8 pages of 50 at the time of writing; the site has no date filter, so a run reads every page.
 const PAGE_SIZE = 50;
@@ -69,6 +69,7 @@ export default defineCommand({
         if (args.maxPrice != null && !(item.ticketPriceMin != null && item.ticketPriceMin <= args.maxPrice)) continue;
         const title = item.title.trim();
         if (words.length && !words.every((w) => title.toLowerCase().includes(w))) continue;
+        const description = showDescription(item);
         const v = item.venue;
         const address = [[v?.street, v?.number].filter(Boolean).join(" ").trim(), orNull(v?.city)].filter(Boolean).join(", ");
         for (const s of item.scheduledShows ?? []) {
@@ -93,6 +94,7 @@ export default defineCommand({
             priceMinDKK: item.ticketPriceMin ?? null,
             priceMaxDKK: item.ticketPriceMax ?? null,
             ageFrom: item.ageFrom ?? null,
+            description,
             premiere: s.type === "Premiere" || s.type === "Forpremiere",
             url: pageUrl(item),
             bookingUrl: bookingUrl(item),

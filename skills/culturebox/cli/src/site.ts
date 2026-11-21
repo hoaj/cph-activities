@@ -8,7 +8,7 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "culturebox",
   repo: "hoaj/cph-activities",
-  version: "0.17.1",
+  version: "0.17.2",
   generatedWith: "0.12.1",
   origin: "https://culture-box.com",
   graphqlPath: "/graphql",

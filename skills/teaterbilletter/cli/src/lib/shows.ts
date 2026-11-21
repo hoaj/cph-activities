@@ -46,3 +46,36 @@ export function matchesCategory(
 
 /** True when the production has no age limit or its limit is at least `min` (leaves out ones meant for younger children). */
 export const fitsMinAgeFrom = (ageFrom: number | null | undefined, min: number): boolean => ageFrom == null || ageFrom >= min;
+
+const NAMED: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", ndash: "–", mdash: "—", hellip: "…", laquo: "«", raquo: "»" };
+
+/** Plain text of a field that may hold HTML: tags removed, entities decoded, whitespace collapsed. */
+export function plainText(s: string | null | undefined): string {
+  return (s ?? "")
+    .replace(/<\s*(br|\/p|\/div|\/li|\/h\d)\b[^>]*>/gi, " ")
+    .replace(/<[^>]*>/g, "")
+    .replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) => {
+      if (e[0] === "#") {
+        const n = e[1] === "x" || e[1] === "X" ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10);
+        return n > 0 && n <= 0x10ffff ? String.fromCodePoint(n) : m;
+      }
+      return NAMED[e.toLowerCase()] ?? m;
+    })
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export const DESCRIPTION_MAX = 500;
+
+/**
+ * One short plain-text description of a production: its teaser, else subtitle, else the start of its
+ * description; at most 500 characters, cut at a word boundary with `…`; null when all are empty.
+ */
+export function showDescription(item: { teaser?: string | null; subtitle?: string | null; description?: string | null }): string | null {
+  const text = [item.teaser, item.subtitle, item.description].map(plainText).find(Boolean);
+  if (!text) return null;
+  if (text.length <= DESCRIPTION_MAX) return text;
+  const head = text.slice(0, DESCRIPTION_MAX - 1);
+  const cut = head.lastIndexOf(" ");
+  return (cut > 0 ? head.slice(0, cut) : head).trimEnd() + "…";
+}

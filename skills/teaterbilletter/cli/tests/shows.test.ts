@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { bookingUrl, fitsAge, fitsMinAgeFrom, matchesCategory, isCopenhagen, localDate, localTime, pageUrl } from "../src/lib/shows";
+import { bookingUrl, showDescription, fitsAge, fitsMinAgeFrom, matchesCategory, isCopenhagen, localDate, localTime, pageUrl } from "../src/lib/shows";
 
 describe("isCopenhagen", () => {
   test("Københavns and Frederiksberg Kommune only", () => {
@@ -77,5 +77,28 @@ describe("fitsMinAgeFrom", () => {
   test("leaves out productions meant for younger children", () => {
     expect(fitsMinAgeFrom(7, 10)).toBe(false);
     expect(fitsMinAgeFrom(0, 1)).toBe(false);
+  });
+});
+
+describe("showDescription", () => {
+  test("the teaser comes before the subtitle and the description", () => {
+    expect(showDescription({ teaser: "Et eventyr", subtitle: "Musical", description: "Lang tekst" })).toBe("Et eventyr");
+    expect(showDescription({ teaser: " ", subtitle: "Musical", description: "Lang tekst" })).toBe("Musical");
+    expect(showDescription({ teaser: null, subtitle: null, description: "Lang tekst" })).toBe("Lang tekst");
+  });
+  test("tags are removed, entities decoded and whitespace collapsed", () => {
+    expect(showDescription({ description: "<p>Peter &amp; Wendy&nbsp;flyver</p>\n\n<p>til &quot;Ønskeland&quot; &#8211; &#x27;nu&#x27;</p><br/>Slut" })).toBe("Peter & Wendy flyver til \"Ønskeland\" – 'nu' Slut");
+    expect(showDescription({ description: "a\n\n  b\tc" })).toBe("a b c");
+  });
+  test("long text is cut at a word boundary with an ellipsis, at most 500 characters", () => {
+    const d = showDescription({ description: "ord ".repeat(300) })!;
+    expect(d.length).toBeLessThanOrEqual(500);
+    expect(d.endsWith(" ord…")).toBe(true);
+    expect(showDescription({ description: "x".repeat(600) })!.length).toBe(500);
+    expect(showDescription({ description: "kort" })).toBe("kort");
+  });
+  test("empty, missing or tag-only input gives null", () => {
+    expect(showDescription({})).toBeNull();
+    expect(showDescription({ teaser: "", subtitle: "  ", description: "<p> </p>" })).toBeNull();
   });
 });
