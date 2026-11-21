@@ -3,5 +3,5 @@
     "target": "ESNext", "module": "ESNext", "moduleResolution": "bundler", "strict": true,
     "noEmit": true, "skipLibCheck": true, "resolveJsonModule": true, "types": ["bun"]
   },
-  "include": ["src", "tests", "links.ts"]
+  "include": ["src", "tests", "scripts", "links.ts"]
 }

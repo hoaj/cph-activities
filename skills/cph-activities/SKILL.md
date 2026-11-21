@@ -2,7 +2,7 @@
 name: cph-activities
 description: Use when the user asks what to do in Copenhagen (a date, an evening out, the weekend, plans with a friend, a sibling or kids, "what's on Wednesday"). Finds the few activities that fit the user's need across this plugin's sources (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, absalon, wannasport) and the weather (dmi), asks first when the need is unclear, and merges events several sources list.
 ---
-<!-- version: 0.14.4 -->
+<!-- version: 0.14.5 -->
 
 # cph-activities: the right plan, not a list
 
@@ -32,7 +32,7 @@ Done when every part of the brief has a value or a stated default, and nothing y
 
 Ask only the sources the brief needs, with the filters that cut on the site. Run independent commands in parallel.
 
-- **Weather first** for a day or an evening: `dmi forecast --date <day> [--from-time --to-time]`. `verdict.outdoor` steers everything after it: `wet` → indoor plans (theatre, cinema, indoor courts, Absalon, indoor events), and say outdoor courts and markets are a poor idea; `showers` → mostly indoor, an outdoor plan only with a fallback; `dry` → outdoor plans are fine (outdoor padel, markets, runs, the harbour). `cold` (under 5 °C), `windy` (gusts from 12 m/s) or `snow` move anything that lasts long outdoors (a court, a market) indoors even on a dry day; mention them. Indoor vs outdoor in the sources: wannasport court names with "inde/indendørs" or "ude/udendørs"; Absalon's `ude-af-huset`; kulturKBH's `active`. Beyond about 10 days DMI has no forecast: say so.
+- **Check the weather** for every day you plan: `dmi forecast --date <day> [--from-time --to-time]`. `verdict.outdoor` steers everything after it: `wet` → indoor plans (theatre, cinema, indoor courts, Absalon, indoor events), and say outdoor courts and markets are a poor idea; `showers` → mostly indoor, an outdoor plan only with a fallback; `dry` → outdoor plans are fine (outdoor padel, markets, runs, the harbour). `cold` (under 5 °C), `windy` (gusts from 12 m/s) or `snow` move anything that lasts long outdoors (a court, a market) indoors even on a dry day. Mention the weather in the answer only when it matters: wet, showers, cold, windy, snow, or when it changed the plan. On a dry, mild day say nothing about it. Indoor vs outdoor in the sources: wannasport court names with "inde/indendørs" or "ude/udendørs"; Absalon's `ude-af-huset`; kulturKBH's `active`. Beyond about 10 days DMI has no forecast: say so.
 - **Age** for every source that can use it: `teaterbilletter show list --age <youngest guest> --min-age-from <N>` (for a teenager N = 10, so children's theatre drops out; for small children leave `--min-age-from` out); `brugbyen event list --group børn|unge|voksne|seniorer` (e.g. `unge,voksne` for an adult with a teenager); `--exclude-kids` on `kultunaut event list` and `absalon event list` when nobody in the brief is a child.
 - **Time and budget:** `--from-time`/`--to-time` where a source has them; `--free` (kulturkbh, billetto, brugbyen, absalon) for a free brief; `--max-price` on teaterbilletter (it compares the cheapest ticket).
 - **By mood:**
@@ -59,7 +59,7 @@ Done when you hold at most five suggestions, each fitting every part of the brie
 
 ## 4. Answer
 
-- Start with the weather in one line ("Lørdag: 4–6 grader, tørt, koldt").
+- Mention the weather in one line ("Lørdag: 4–6 grader, regn") only when it matters (wet, showers, cold, windy, snow, or it changed the plan); never as a mandatory line.
 - **Bedste bud** first: what, when, where, price and link, and one line on why it fits *them*.
 - Then two to four alternatives of a different kind (e.g. one active, one cultural, one social), each with time, place, price and link.
 - When it helps, a simple plan for the day or evening (activity → food → event) with times that fit together.

@@ -10,7 +10,7 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "wannasport",
   repo: "hoaj/cph-activities",
-  version: "0.14.4",
+  version: "0.14.5",
   generatedWith: "0.16.0",
   origin: "https://wsapi.wannasport.com",
   graphqlPath: "/graphql",

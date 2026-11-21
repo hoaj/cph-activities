@@ -97,6 +97,9 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
   const wet = wx.verdict.outdoor === "wet";
   const showers = wx.verdict.outdoor === "showers";
   const coldish = !!(wx.verdict.cold || wx.verdict.windy || wx.verdict.snow);
+  // The weather is always read; it is mentioned only when it decided something or is worth knowing.
+  const weather = wx.known && (wet || showers || coldish) ? wx.line : null;
+  if (!wx.known) assumptions.push(wx.line);
 
   const moods = uniq([...moodIn, ...(wishes ? WISH_MOOD.filter(([r]) => r.test(wishes)).map(([, m]) => m) : [])]);
   const wWords = wishWords(wishes);
@@ -325,7 +328,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
     const reasons = Object.entries(dropped).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([k, v]) => `${v} fjernet: ${k}`);
     const untimed = alternatives.length > 0;
     return {
-      status: "ok", weather: wx.line, best: null, alternatives: alternatives.map((s) => s.out), plan: undefined,
+      status: "ok", weather, best: null, alternatives: alternatives.map((s) => s.out), plan: undefined,
       assumptions: [
         ...assumptions,
         untimed ? "Intet med fast starttid passede jeres brief; det der er med, har ingen tid: tjek siden." : "Intet passede jeres brief.",
@@ -364,7 +367,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
   chosen.flatMap((s) => s.members.flatMap((m) => m.notes)).filter((n) => !n.startsWith("tider afviger")).slice(0, 2).forEach((n) => A.push("Samme begivenhed: " + n));
 
   return {
-    status: "ok", weather: wx.line, best: best.out, alternatives: alternatives.map((s) => s.out), plan, assumptions: A, more, next,
+    status: "ok", weather, best: best.out, alternatives: alternatives.map((s) => s.out), plan, assumptions: A, more, next,
     stats: { candidates: kept.length, dropped, mergedAway },
   };
 }
