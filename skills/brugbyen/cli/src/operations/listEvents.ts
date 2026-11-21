@@ -24,7 +24,9 @@ export default defineOperation({
   html: {
     fields: {
       events: {
-        each: "li.card-grid-item--wrapper",
+        // Only wrappers that hold a card: the list sometimes has text-only li.card-grid-item--wrapper
+        // items between cards, which are not events. A card without data-node-id is still Drift.
+        each: "li.card-grid-item--wrapper:has(div.card-grid-item)",
         // div.view-content (with the list) is absent when a search has no results, but
         // div.view-events-list is on every page.
         in: "div.view-events-list",
