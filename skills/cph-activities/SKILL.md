@@ -2,7 +2,7 @@
 name: cph-activities
 description: Use when the user asks what to do in Copenhagen (a date, an evening out, the weekend, plans with a friend, a sibling or kids, "what's on Wednesday"). Finds the few activities that fit the user's need across this plugin's sources (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, kglteater, absalon, wannasport, visitorservice, culturebox, hangaren) and the weather (dmi), asks first when the need is unclear, and merges events several sources list.
 ---
-<!-- version: 0.17.0 -->
+<!-- version: 0.17.1 -->
 
 # cph-activities: the right plan, not a list
 
@@ -51,6 +51,7 @@ Done when every source the brief needs has answered, or failed with an `error.ki
 Merge the duplicates (see *Merging* below), then cut everything that does not fit the brief:
 
 - **Age:** nothing 18+ (club nights, bars, natfest, wine tastings) when someone is under 18; nothing for small children when the youngest is a teenager or older (`ageFrom` far below the youngest's age, "For børn", baby and family events, and in sources without an age, such as Billetto, a title or text that addresses children); for small children, only events made for them.
+- **Fit:** judge each event from its `description`, `categories`, audience and `ageFrom`, not from its title, and cut those whose description shows they do not fit the brief (a course when the user wants a one-off evening, an event for professionals, a children's activity for adults). Without a description (brugbyen's list has none; teaterbilletter and kglteater give none today), say you do not know what it is: read its page through the link, or keep it out of the main suggestions.
 - **Time:** inside the window, and with time to get from one stop to the next.
 - **Budget:** inside it; free first for a free brief. wannasport prices are per court per booking: divide by the players. Where a source gives no price (KultuNaut, brugbyen, most of Absalon), keep the item only if it fits otherwise, and write "pris ikke oplyst".
 - **Weather:** outdoor items only when `verdict.outdoor` allows them.
@@ -58,7 +59,7 @@ Merge the duplicates (see *Merging* below), then cut everything that does not fi
 
 Then look for a **thread**: a festival, a theme or a venue that several sources point to on that day (e.g. a gaming festival across brugbyen, Billetto and KultuNaut). A thread makes one strong suggestion out of many rows: show the two to four of its events that fit best and have clear times, not all of them. Rank by fit to the brief, then by the user's chance of liking it (a premiere, a thread, a good price, a place the sources agree on).
 
-Done when you hold at most five suggestions, each fitting every part of the brief, and you can say in one line why each fits.
+Done when you hold at most five suggestions, each fitting every part of the brief by its description, and you can say in one line why each fits.
 
 ## 4. Answer
 

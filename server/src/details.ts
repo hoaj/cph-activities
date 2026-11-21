@@ -12,7 +12,7 @@ export const getDetailsOutput = {
   date: z.string(), time: z.string().optional(), endTime: z.string().optional(), venue: z.string().optional(), address: z.string().optional(),
   price: z.string().optional(), priceMin: z.number().optional(), priceMax: z.number().optional(), free: z.boolean().optional(),
   ageFrom: z.number().optional(), audience: z.array(z.string()).optional(), categories: z.array(z.string()).optional(), indoor: z.boolean().optional(),
-  description: z.string().optional(),
+  description: z.string().optional().describe("The full stored description, up to 300 characters. Absent: no source gives one."),
   links: z.array(z.object({ source: z.string(), url: z.string(), title: z.string().optional() })).describe("One per source that lists it. The user books or buys there."),
   slots: z.array(z.string()).optional().describe("Every free court time, or every start time of the event."),
   perCourt: z.boolean().optional().describe("true when the price is per court, not per person."),
@@ -29,5 +29,5 @@ export async function getDetails(deps: ToolDeps, a: { id: string }) {
     venue: m.venue ?? undefined, address: m.address ?? undefined, price: priceOf(m), priceMin: m.priceMin ?? undefined, priceMax: m.priceMax ?? undefined,
     free: m.free === true || m.priceMin === 0 ? true : undefined, ageFrom: m.ageFrom ?? undefined, audience: m.audience, categories: m.categories, indoor: m.indoor ?? undefined,
     description: m.extra.description || undefined, links, slots: m.times, perCourt: m.extra.perCourt || undefined,
-  }), [], [...m.notes, ...(m.timeMayDiffer ? ["The time shown is from another date: check the page."] : [])]);
+  }), [], [...m.notes, ...(m.extra.description || m.kind === "slots" ? [] : ["No description is stored for this event: say you do not know what it is; do not guess from the title. Point the user to the link."]), ...(m.timeMayDiffer ? ["The time shown is from another date: check the page."] : [])]);
 }

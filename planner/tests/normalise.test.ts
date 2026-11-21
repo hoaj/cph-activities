@@ -72,3 +72,74 @@ describe("cacheKey", () => {
     expect(cacheKey("brugbyen", "2026-11-21")).toBe("brugbyen|2026-11-21|all");
   });
 });
+
+describe("descriptions", () => {
+  const D = "2026-11-28";
+  test("cleaned: entities decoded, tags and whitespace collapsed", () => {
+    const [r] = N.kultunaut({ events: [{ id: "1", title: "T", date: D, time: "10:00", genre: "Børn", description: "  Tr&aelig;f os &amp; spis &#8211; &quot;gratis&quot;&nbsp;kage\n\n<b>kl.</b>   10 &#x2013; 12  " }] }, D);
+    expect(r!.extra.description).toBe('Træf os & spis – "gratis" kage kl. 10 – 12');
+  });
+
+  test("cut at a word boundary with an ellipsis, 300 characters at most", () => {
+    const long = Array.from({ length: 80 }, (_, i) => `ord${i}`).join(" ");
+    const [r] = N.absalon({ events: [{ title: "A", date: D, time: "10:00", description: long }] }, D);
+    const d = r!.extra.description!;
+    expect(d.length).toBeLessThanOrEqual(300);
+    expect(d.length).toBeGreaterThan(250);
+    expect(d.endsWith("…")).toBe(true);
+    expect(long.startsWith(d.slice(0, -1))).toBe(true);
+    expect(long[d.length - 1]).toBe(" "); // the cut fell on a space, not inside a word
+    const exactly = "x".repeat(300);
+    expect(N.absalon({ events: [{ title: "A", date: D, time: "10:00", description: exactly }] }, D)[0]!.extra.description).toBe(exactly);
+  });
+
+  test("an empty or missing description is absent, never an empty string", () => {
+    const [r] = N.kulturkbh({ events: [{ title: "A", date: D, time: "10:00", description: "  ", type: "film" }] }, D);
+    expect(r!.extra.description).toBeUndefined();
+  });
+
+  test("kulturkbh: description, category, venue, price text, free", () => {
+    const [r] = N.kulturkbh({ events: [{ date: D, time: "13:00", type: "udstilling", title: "Stencilworkshop", description: "Lav din egen streetart.", venue: "Københavns Museum", price: "Se billetsiden", free: null, url: "https://k" }] }, D);
+    expect(r).toMatchObject({ venue: "Københavns Museum", priceText: "Se billetsiden", free: null, categories: ["udstilling"], extra: { description: "Lav din egen streetart." } });
+  });
+
+  test("billetto: description, category and subcategory, venue, price range", () => {
+    const [r] = N.billetto({ events: [{ id: "5", title: "Quiz", startsAt: `${D}T19:00:00`, description: "Pubquiz &amp; øl.", category: "Music", subcategory: "Quiz", venue: "Baren", priceRange: "50-80 kr.", price: 50, free: false }] }, D);
+    expect(r).toMatchObject({ venue: "Baren", priceText: "50-80 kr.", free: false, categories: ["Music", "Quiz"], extra: { description: "Pubquiz & øl." } });
+  });
+
+  test("kultunaut: description, genres as categories, children's genre as audience", () => {
+    const [r] = N.kultunaut({ events: [{ id: "2", title: "Toddlerhold", date: D, time: "08:00", genre: "Andet motionstilbud, Børn", description: "Begynder 3-6 år.", venue: "Skatepark" }] }, D);
+    expect(r).toMatchObject({ categories: ["Andet motionstilbud", "Børn"], audience: ["børn"], venue: "Skatepark", extra: { description: "Begynder 3-6 år." } });
+  });
+
+  test("absalon: description, categories, venue, price", () => {
+    const [r] = N.absalon({ events: [{ title: "Yoga", date: D, time: "09:30", categories: ["Bevægelse", "Yoga"], price: "75 kr.", free: false, venue: "Folkehuset Absalon", description: "Alle niveauer." }] }, D);
+    expect(r).toMatchObject({ categories: ["Bevægelse", "Yoga"], venue: "Folkehuset Absalon", priceText: "75 kr.", extra: { description: "Alle niveauer." } });
+  });
+
+  test("teaterbilletter: teaser (or subtitle) and description joined, genre, age, audience, price", () => {
+    const row = { title: "Peter Pan", category: "Teater", subCategory: "Børneteater", date: D, time: "14:00", venue: "Teatret", priceMinDKK: 100, priceMaxDKK: 300, ageFrom: 5, url: "https://t" };
+    const [a] = N.teaterbilletter({ shows: [{ ...row, teaser: "Et flyvende eventyr", description: "Peter tager Wendy med til Ønskeland." }] }, D);
+    expect(a).toMatchObject({ categories: ["Teater", "Børneteater"], audience: ["børn"], ageFrom: 5, priceText: "100–300 kr.", free: false, extra: { description: "Et flyvende eventyr Peter tager Wendy med til Ønskeland." } });
+    const [b] = N.teaterbilletter({ shows: [{ ...row, subtitle: "Musical" }] }, D);
+    expect(b!.extra.description).toBe("Musical");
+    expect(N.teaterbilletter({ shows: [row] }, D)[0]!.extra.description).toBeUndefined();
+  });
+
+  test("kglteater: description, genre, venue, age, price", () => {
+    const [r] = N.kglteater({ shows: [{ title: "Evita", genre: "Musical", date: D, time: "12:00", stage: "Operaen", venue: "Det Kongelige Teater", priceMinDKK: 200, ageFrom: 12, description: "Musical om Eva Peron." }] }, D);
+    expect(r).toMatchObject({ categories: ["Musical"], venue: "Operaen", priceText: "fra 200 kr.", ageFrom: 12, extra: { description: "Musical om Eva Peron." } });
+  });
+
+  test("visitorservice: description, category, venue, price, free", () => {
+    const [r] = N.visitorservice({ markets: [{ id: "1", name: "Julemarked", price: "Gratis", free: true, venue: "Remisen", description: "Julemarked med håndværk og gløgg.", days: [{ date: D, time: "10:00", endTime: "17:00" }] }] }, D);
+    expect(r).toMatchObject({ categories: ["Julemarked"], venue: "Remisen", priceText: "Gratis", free: true, extra: { description: "Julemarked med håndværk og gløgg." } });
+  });
+
+  test("brugbyen: the list has no description, so there is none", () => {
+    const [r] = N.brugbyen({ events: [{ id: "9", title: "Åben hal", venue: "Korsgadehallen", date: D, time: "09:00", ribbon: "Gratis", dateText: "Lør. 28. nov." }] }, D, "børn");
+    expect(r!.extra.description).toBeUndefined();
+    expect(r).toMatchObject({ venue: "Korsgadehallen", audience: ["børn"] });
+  });
+});

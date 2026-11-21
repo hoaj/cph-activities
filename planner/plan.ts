@@ -222,7 +222,8 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
     return c.time ? c.time + (c.endTime ? "–" + c.endTime : "") : "tid: se siden";
   };
   const toItem = (c: Candidate): SuggestionItem => ({
-    time: timeText(c), title: c.title, place: c.venue ?? "", price: price(c), url: c.urls[0] || c.url, sources: c.sources, ids: c.ids,
+    time: timeText(c), title: c.title, place: c.venue ?? "", price: price(c), url: c.urls[0] || c.url, description: c.extra.description || null, categories: c.categories, ageFrom: c.ageFrom,
+    sources: c.sources, ids: c.ids,
   });
   const why = (c: Candidate): string[] => {
     const w: string[] = [];

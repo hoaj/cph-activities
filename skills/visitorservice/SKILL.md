@@ -2,7 +2,7 @@
 name: visitorservice
 description: Use when the user asks which Christmas markets (julemarkeder) are open in Copenhagen (Københavns and Frederiksberg Kommune) on a day, a weekend or in December. Reads the municipality's Copenhagen Visitor Service calendar: each open day's hours, place, price, indoor or outdoor when the page says so, and a link. Has no flea markets.
 ---
-<!-- version: 0.17.0 -->
+<!-- version: 0.17.1 -->
 
 # visitorservice
 
@@ -27,7 +27,7 @@ Run the command the user's question needs. There is no setup step; recover only 
 - A row is one market: `date`/`time`/`endTime` are its first open day in the search, `endDate` the last, and `days` lists every open day with its own hours. Hours often differ by weekday: read `days`.
 - `dayByDay: false` means the page gives one long period with one pair of hours and does not say whether the market closes on some day: tell the user to check the page.
 - `indoor` is true or false only when the page's text says so, else null. Null is unknown, never outdoors. `--indoor` keeps only true and counts the rest in `indoorUnknown`.
-- `venue`, `address`, `postcode`, `district`, `price` and `free` are null when the page does not give them. `complete: false` means some market could not be read or the search was too wide: narrow the dates. `unreadable` counts the Copenhagen markets left out because their page gave no dates; name the gap instead of saying there are no more.
+- `description` is the page's teaser (else the start of its body), at most 500 characters; read it to know what the market is. `venue`, `address`, `postcode`, `district`, `price` and `free` are null when the page does not give them. `complete: false` means some market could not be read or the search was too wide: narrow the dates. `unreadable` counts the Copenhagen markets left out because their page gave no dates; name the gap instead of saying there are no more.
 - The page's calendar holds coming openings only, so past dates, and sometimes today once it has closed, come back empty or short.
 
 ## When it fails
