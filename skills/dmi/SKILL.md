@@ -2,7 +2,7 @@
 name: dmi
 description: Use when the user plans something in Copenhagen (Københavns and Frederiksberg Kommune) for a day or a few hours and the weather matters (outdoor vs indoor), or asks about the weather: DMI's forecast hour by hour for up to 10 days, with a dry/showers/wet verdict, temperature, wind and DMI's own text and warnings. Use the Commands table to see which Tasks it covers.
 ---
-<!-- version: 0.14.3 -->
+<!-- version: 0.14.4 -->
 
 # dmi
 
