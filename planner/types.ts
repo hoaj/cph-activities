@@ -6,6 +6,7 @@ export const EVENT_SOURCES = [
   "kultunaut",
   "brugbyen",
   "teaterbilletter",
+  "kglteater",
   "absalon",
   "wannasport",
 ] as const;

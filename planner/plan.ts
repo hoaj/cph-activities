@@ -127,7 +127,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
       if (small || evening) { drop("uden tid"); continue; }
     } else if (t < fromM || t >= toM) { drop("uden for tidsrum"); continue; }
     if (f.noise && !(wishes && /kursus|hold|træning/i.test(wishes))) { drop("kurser, hold og sæsonkort"); continue; }
-    if (it.source === "billetto" && it.extra.onSale === false) { drop("ikke til salg"); continue; }
+    if ((it.source === "billetto" || it.source === "kglteater") && it.extra.onSale === false) { drop("ikke til salg"); continue; }
 
     // age
     if (minors && f.adult) { drop(ADULT_DROP); continue; }

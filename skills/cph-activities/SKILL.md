@@ -1,8 +1,8 @@
 ---
 name: cph-activities
-description: Use when the user asks what to do in Copenhagen (a date, an evening out, the weekend, plans with a friend, a sibling or kids, "what's on Wednesday"). Finds the few activities that fit the user's need across this plugin's sources (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, absalon, wannasport, visitorservice) and the weather (dmi), asks first when the need is unclear, and merges events several sources list.
+description: Use when the user asks what to do in Copenhagen (a date, an evening out, the weekend, plans with a friend, a sibling or kids, "what's on Wednesday"). Finds the few activities that fit the user's need across this plugin's sources (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, kglteater, absalon, wannasport, visitorservice) and the weather (dmi), asks first when the need is unclear, and merges events several sources list.
 ---
-<!-- version: 0.14.4 -->
+<!-- version: 0.15.0 -->
 
 # cph-activities: the right plan, not a list
 
@@ -33,10 +33,11 @@ Done when every part of the brief has a value or a stated default, and nothing y
 Ask only the sources the brief needs, with the filters that cut on the site. Run independent commands in parallel.
 
 - **Weather first** for a day or an evening: `dmi forecast --date <day> [--from-time --to-time]`. `verdict.outdoor` steers everything after it: `wet` → indoor plans (theatre, cinema, indoor courts, Absalon, indoor events), and say outdoor courts and markets are a poor idea; `showers` → mostly indoor, an outdoor plan only with a fallback; `dry` → outdoor plans are fine (outdoor padel, markets, runs, the harbour). `cold` (under 5 °C), `windy` (gusts from 12 m/s) or `snow` move anything that lasts long outdoors (a court, a market) indoors even on a dry day; mention them. Indoor vs outdoor in the sources: wannasport court names with "inde/indendørs" or "ude/udendørs"; Absalon's `ude-af-huset`; kulturKBH's `active`; visitorservice's `indoor` (null is unknown, so say so instead of calling it outdoors). Beyond about 10 days DMI has no forecast: say so.
-- **Age** for every source that can use it: `teaterbilletter show list --age <youngest guest> --min-age-from <N>` (for a teenager N = 10, so children's theatre drops out; for small children leave `--min-age-from` out); `brugbyen event list --group børn|unge|voksne|seniorer` (e.g. `unge,voksne` for an adult with a teenager); `--exclude-kids` on `kultunaut event list` and `absalon event list` when nobody in the brief is a child.
-- **Time and budget:** `--from-time`/`--to-time` where a source has them; `--free` (kulturkbh, billetto, brugbyen, absalon) for a free brief; `--max-price` on teaterbilletter (it compares the cheapest ticket).
+- **Age** for every source that can use it: `teaterbilletter show list --age <youngest guest> --min-age-from <N>` (for a teenager N = 10, so children's theatre drops out; for small children leave `--min-age-from` out); `brugbyen event list --group børn|unge|voksne|seniorer` (e.g. `unge,voksne` for an adult with a teenager); `--exclude-kids` on `kultunaut event list`, `absalon event list` and `kglteater show list` when nobody in the brief is a child; `kglteater show list --age <youngest guest>` for children (it reads up to 10 show pages, so narrow first).
+- **Time and budget:** `--from-time`/`--to-time` where a source has them; `--free` (kulturkbh, billetto, brugbyen, absalon, kglteater) for a free brief; `--max-price` on teaterbilletter and kglteater (it compares the cheapest ticket).
 - **By mood:**
   - culture, a night out: `kultunaut event list` (narrow with `--genre`, `--from-time`, `--limit`), `billetto event search`, `kulturkbh event list`, `brugbyen event list`, `teaterbilletter show list`.
+  - opera, ballet, big drama, classical concerts: `kglteater show list --genre opera,ballet,skuespil,koncert` (`--stage`, `--from-time`), with `--details` when the top price or age matters.
   - social, food, playful: `absalon event list` (communal dinners, bingo, quiz, workshops), `billetto event search --query <word>`, `brugbyen event list --category <name>` (`filter list` has the names).
   - active: `wannasport slot search --sport <slug>` for one to three sports that fit (`sport list` has 41); bowling has no source: give https://www.easybowl.com/bc/dgi/booking.
   - markets, a family weekend, late November and December: `visitorservice market list --from <day> --to <day>` for Christmas markets (`--indoor` on a wet or cold day, `--free`), plus `kultunaut event list --genre Loppemarked/Genbrug` and `brugbyen event list --category Marked` for flea and neighbourhood markets.
@@ -82,6 +83,7 @@ Keep it to these suggestions. Show more only when the user asks for more, for a 
 | KultuNaut | `kultunaut event list` (`genre list`) | The broadest calendar: concerts, theatre, cinema, exhibitions, talks, church, sport, children; no prices; can return hundreds a day | Link to the event's KultuNaut page |
 | brugbyen | `brugbyen event list` (`filter list`) | The municipality's culture houses, libraries and halls; filters on the site for audience, free, category and district; no prices; sometimes slow | Link to the event's brugbyen page |
 | teaterbilletter | `teaterbilletter show list` (`category list`) | Theatre, revue, stand-up, musicals, opera, ballet, children's theatre, new circus at 100+ theatres; price range and age limit (`ageFrom`) | The seller's ticket page (`bookingUrl`) |
+| kglteater | `kglteater show list` (`genre list`, `stage list`) | Det Kongelige Teater (Operaen, Gamle Scene, Skuespilhuset): opera, ballet, plays, musicals, dance, concerts; cheapest price and availability, top price and age with `--details`; not part of teaterbilletter | The performance's page on kglteater.dk (`url`) or the ticket link (`bookingUrl`) |
 | absalon | `absalon event list` (`category list`) | Folkehuset Absalon (Vesterbro): communal dinners, dance, yoga, workshops, ceramics, bingo, quiz, parties, concerts, markets, children's activities | The event's page on absaloncph.dk |
 | wannasport | `wannasport slot search --sport <slug>` (`sport list`) | Free times to play a sport: padel, tennis, squash, table tennis, badminton … | The venue's booking page |
 | visitorservice | `visitorservice market list` | Christmas markets from the municipality's Visitor Service: each open day's hours, place, price, `indoor` when the page says; no flea markets | The market's page on visitorservice.kk.dk |
@@ -110,14 +112,14 @@ The sources often list the same event; one may be more current or say more. Merg
 | Field | Keep |
 |---|---|
 | time | an exact time over none |
-| price | a number or range over a pointer ("Se billetsiden"); "free" from either; teaterbilletter's `priceMinDKK`–`priceMaxDKK` for theatre; KultuNaut and brugbyen have none |
-| age limit | teaterbilletter's `ageFrom` |
+| price | a number or range over a pointer ("Se billetsiden"); "free" from either; teaterbilletter's `priceMinDKK`–`priceMaxDKK` for theatre, kglteater's for Det Kongelige Teater (it is not in teaterbilletter, so its price replaces KultuNaut's missing one); KultuNaut and brugbyen have none |
+| age limit | teaterbilletter's or kglteater's `ageFrom` |
 | description | the longer one |
 | venue and address | the one with a street and postcode |
-| on sale / sold out | Billetto's |
+| on sale / sold out | Billetto's; kglteater's `availability` for its own performances |
 | links | every source's: the ticket link first, then the others as "more info" |
 
-**When they disagree** on time, price or place, Billetto leads (it sells the tickets, so it is usually the most current). Show both values and who says what: "Billetto: Chr. Hansen Auditorium; kulturKBH: Universitetets Festsal — tjek billetsiden."
+**When they disagree** on time, price or place, Billetto leads (it sells the tickets, so it is usually the most current), and kglteater leads for Det Kongelige Teater's own performances. Show both values and who says what: "Billetto: Chr. Hansen Auditorium; kulturKBH: Universitetets Festsal — tjek billetsiden."
 
 ## When NOT to use
 

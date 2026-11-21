@@ -8,7 +8,7 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "teaterbilletter",
   repo: "hoaj/cph-activities",
-  version: "0.14.4",
+  version: "0.15.0",
   generatedWith: "0.16.0",
   // The apex answers; www redirects every request to it, which the runtime reads as Drift.
   origin: "https://teaterbilletter.dk",
