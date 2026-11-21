@@ -9,6 +9,7 @@ export const EVENT_SOURCES = [
   "kglteater",
   "absalon",
   "wannasport",
+  "visitorservice",
 ] as const;
 export type EventSource = (typeof EVENT_SOURCES)[number];
 export type Source = EventSource | "dmi";
