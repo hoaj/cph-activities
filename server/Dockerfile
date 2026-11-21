@@ -27,6 +27,7 @@ USER bun
 COPY --chown=bun:bun package.json bun.lock ./
 COPY --chown=bun:bun server/package.json server/bun.lock server/
 RUN cd server && bun install --frozen-lockfile --production
+COPY --chown=bun:bun .claude-plugin/plugin.json .claude-plugin/plugin.json
 COPY --chown=bun:bun planner/ planner/
 COPY --chown=bun:bun skills/ skills/
 RUN set -e; for d in skills/*/cli; do (cd "$d" && bun install --frozen-lockfile --production); done

@@ -2,7 +2,7 @@
 name: billetto
 description: Use when the user asks what is on in Copenhagen at small venues, culture houses, clubs, talks, workshops, courses or parties, or searches for an event by words, date, category or free entry. Searches Billetto (https://billetto.dk) around the city centre, soonest first, with a link to each event's page where the user buys tickets themselves. Needs Google Chrome, which it opens unseen to read the search settings billetto.dk's own page uses.
 ---
-<!-- version: 0.15.0 -->
+<!-- version: 0.15.1 -->
 
 # billetto
 
