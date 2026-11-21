@@ -1,6 +1,10 @@
 import type { Item, Mood } from "./types";
 import { RX, norm, tmin } from "./text";
 
+/** A club's `ageFrom` is its door limit: someone younger is not let in, also at 18 or 19. */
+export const belowDoorAge = (it: Pick<Item, "source" | "ageFrom">, age: number): boolean =>
+  (it.source === "culturebox" || it.source === "hangaren") && it.ageFrom != null && age < it.ageFrom;
+
 /** What the planner reads off one (merged) item: age, kind of thing, mood, outdoors. */
 export interface Features {
   minAge: number | null;

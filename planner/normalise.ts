@@ -128,6 +128,29 @@ export function teaterbilletter(raw: Raw, date: string): Item[] {
     );
 }
 
+/** A club night stays on the date it opens, also when it ends the next morning. "Natklub" puts it under the age and nightlife rules. */
+const clubNight = (source: "culturebox" | "hangaren", e: Raw, ageFrom: number | null, artists: string[], priceText: string | null, indoor: boolean | null): Item => {
+  const free = e.free === true;
+  return base({
+    id: `${source}:${e.id}`, source, title: e.title, date: e.date, time: hhmm(e.time), endTime: hhmm(e.endTime), venue: e.venue ?? null,
+    address: e.address ?? null, area: e.area ?? "cph", priceText, priceMin: free ? 0 : num(e.priceMinDKK), priceMax: free ? 0 : num(e.priceMaxDKK),
+    free: e.free ?? null, ageFrom, categories: ["Natklub"], indoor, url: e.url ?? null,
+    extra: { ...describe(artists.join(", ")), onSale: e.soldOut ? false : null },
+  });
+};
+
+export function culturebox(raw: Raw, date: string): Item[] {
+  return (raw?.events ?? [])
+    .filter((e: Raw) => e.date === date)
+    .map((e: Raw) => clubNight("culturebox", e, num(e.ageFrom) ?? num(raw.houseAgeFrom), (e.rooms ?? []).flatMap((r: Raw) => r.artists ?? []), e.price ?? null, true));
+}
+
+export function hangaren(raw: Raw, date: string): Item[] {
+  return (raw?.events ?? [])
+    .filter((e: Raw) => e.date === date)
+    .map((e: Raw) => clubNight("hangaren", e, num(e.ageFrom), e.artists ?? [], e.priceText ?? null, null));
+}
+
 /** A market row spans several open days: the item carries the asked day's hours, and no item when it is closed. */
 export function visitorservice(raw: Raw, date: string): Item[] {
   return (raw?.markets ?? []).flatMap((e: Raw) => {

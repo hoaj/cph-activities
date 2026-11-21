@@ -1,0 +1,823 @@
+{
+  "operation": "GET /event/:id/",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "culture-box.com",
+  "method": "GET",
+  "path": "/event/:id/",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "cookie": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/html",
+      "headers": {
+        "cache-control": null,
+        "connection": null,
+        "content-encoding": null,
+        "content-type": "text/html",
+        "date": null,
+        "expires": null,
+        "link": null,
+        "pragma": null,
+        "server": null,
+        "transfer-encoding": null,
+        "x-powered-by": null
+      },
+      "body": {
+        "kind": "html",
+        "outline": [
+          {
+            "tag": "body",
+            "classes": [
+              "event-template-default",
+              "single",
+              "single-event",
+              "structural__body",
+              "wp-singular",
+              "wp-theme-culture-box"
+            ],
+            "children": [
+              {
+                "tag": "div",
+                "classes": [
+                  "structural__wrap"
+                ],
+                "children": [
+                  {
+                    "tag": "header",
+                    "classes": [
+                      "structural__header"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "children": [
+                          {
+                            "tag": "div",
+                            "children": [
+                              {
+                                "tag": "div",
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "attrs": [
+                                      "href"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "h1",
+                                        "classes": [
+                                          "sr-only"
+                                        ],
+                                        "text": true
+                                      },
+                                      {
+                                        "tag": "svg",
+                                        "attrs": [
+                                          "viewbox",
+                                          "xmlns"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "button",
+                                "classes": [
+                                  "js-mobile-nav-toggle"
+                                ],
+                                "attrs": [
+                                  "aria-label"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "span",
+                                    "text": true,
+                                    "children": [
+                                      {
+                                        "tag": "span",
+                                        "many": true
+                                      }
+                                    ],
+                                    "many": true
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "nav",
+                        "classes": [
+                          "menu-primary-container"
+                        ],
+                        "children": [
+                          {
+                            "tag": "ul",
+                            "id": "menu-primary",
+                            "classes": [
+                              "structural__header__nav"
+                            ],
+                            "children": [
+                              {
+                                "tag": "li",
+                                "id": ":id",
+                                "classes": [
+                                  "menu-item",
+                                  "menu-item-object-page"
+                                ],
+                                "many": true,
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "attrs": [
+                                      "href"
+                                    ],
+                                    "text": true
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "main",
+                    "classes": [
+                      "structural__main"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "pull-left",
+                          "pull-up",
+                          "structural__content"
+                        ],
+                        "children": [
+                          {
+                            "tag": "article",
+                            "classes": [
+                              "indented",
+                              "inverted",
+                              "post-block",
+                              "single-block"
+                            ],
+                            "children": [
+                              {
+                                "tag": "h2",
+                                "classes": [
+                                  "post-block__title"
+                                ],
+                                "text": true
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "post-block__image"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "image__container"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "image__wrap"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "img",
+                                            "attrs": [
+                                              "alt",
+                                              "data-src",
+                                              "data-srcset",
+                                              "src"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "post-block__content",
+                                  "text-formatting"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "text": true,
+                                        "children": [
+                                          {
+                                            "tag": "h3",
+                                            "classes": [
+                                              "is-capitalized"
+                                            ],
+                                            "text": true
+                                          }
+                                        ],
+                                        "many": true
+                                      },
+                                      {
+                                        "tag": "h3",
+                                        "classes": [
+                                          "is-capitalized"
+                                        ],
+                                        "text": true
+                                      },
+                                      {
+                                        "tag": "p",
+                                        "text": true,
+                                        "children": [
+                                          {
+                                            "tag": "strong",
+                                            "text": true
+                                          },
+                                          {
+                                            "tag": "br",
+                                            "many": true
+                                          },
+                                          {
+                                            "tag": "a",
+                                            "attrs": [
+                                              "href",
+                                              "rel",
+                                              "target"
+                                            ],
+                                            "text": true,
+                                            "many": true
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "many": true
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "post-block__buttons"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "a",
+                                    "classes": [
+                                      "button",
+                                      "button--inverted",
+                                      "button--large",
+                                      "button--outline"
+                                    ],
+                                    "attrs": [
+                                      "href",
+                                      "target"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "svg",
+                                        "classes": [
+                                          "button-icon",
+                                          "button-icon--facebook"
+                                        ],
+                                        "attrs": [
+                                          "height",
+                                          "viewbox",
+                                          "width",
+                                          "xmlns"
+                                        ]
+                                      },
+                                      {
+                                        "tag": "span",
+                                        "text": true
+                                      },
+                                      {
+                                        "tag": "svg",
+                                        "classes": [
+                                          "arrow-icon",
+                                          "button-icon"
+                                        ],
+                                        "attrs": [
+                                          "viewbox",
+                                          "xmlns"
+                                        ]
+                                      }
+                                    ],
+                                    "many": true
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "text-formatting"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "p",
+                                    "text": true,
+                                    "children": [
+                                      {
+                                        "tag": "strong",
+                                        "text": true,
+                                        "many": true
+                                      },
+                                      {
+                                        "tag": "br"
+                                      },
+                                      {
+                                        "tag": "a",
+                                        "attrs": [
+                                          "href",
+                                          "rel",
+                                          "target"
+                                        ],
+                                        "text": true
+                                      }
+                                    ],
+                                    "many": true
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "footer",
+                "classes": [
+                  "structural__footer"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "structural__columns"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "text-formatting"
+                        ],
+                        "children": [
+                          {
+                            "tag": "h4",
+                            "text": true
+                          },
+                          {
+                            "tag": "p",
+                            "text": true,
+                            "children": [
+                              {
+                                "tag": "a",
+                                "attrs": [
+                                  "href",
+                                  "rel",
+                                  "target"
+                                ],
+                                "text": true,
+                                "many": true,
+                                "children": [
+                                  {
+                                    "tag": "br",
+                                    "many": true
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "br",
+                                "many": true
+                              }
+                            ]
+                          }
+                        ],
+                        "many": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "id": ":id",
+                "attrs": [
+                  "data-nosnippet"
+                ],
+                "children": [
+                  {
+                    "tag": "span",
+                    "text": true,
+                    "children": [
+                      {
+                        "tag": "a",
+                        "id": ":id",
+                        "classes": [
+                          "cli-plugin-button",
+                          "cli-plugin-main-button",
+                          "cli_action_button",
+                          "medium",
+                          "wt-cli-accept-btn"
+                        ],
+                        "attrs": [
+                          "data-cli_action",
+                          "role",
+                          "tabindex"
+                        ],
+                        "text": true
+                      },
+                      {
+                        "tag": "a",
+                        "id": "CONSTANT_OPEN_URL",
+                        "classes": [
+                          "cli-plugin-main-link"
+                        ],
+                        "attrs": [
+                          "href",
+                          "target"
+                        ],
+                        "text": true
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "span",
+                    "id": "cookie_hdr_showagain",
+                    "text": true
+                  }
+                ],
+                "many": true
+              },
+              {
+                "tag": "div",
+                "id": "cliSettingsPopup",
+                "classes": [
+                  "cli-modal"
+                ],
+                "attrs": [
+                  "aria-hidden",
+                  "aria-labelledby",
+                  "data-nosnippet",
+                  "role",
+                  "tabindex"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "cli-modal-dialog"
+                    ],
+                    "attrs": [
+                      "role"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "cli-bar-popup",
+                          "cli-modal-content"
+                        ],
+                        "children": [
+                          {
+                            "tag": "button",
+                            "id": "cliModalClose",
+                            "classes": [
+                              "cli-modal-close"
+                            ],
+                            "attrs": [
+                              "type"
+                            ],
+                            "children": [
+                              {
+                                "tag": "svg",
+                                "attrs": [
+                                  "viewbox"
+                                ]
+                              },
+                              {
+                                "tag": "span",
+                                "classes": [
+                                  "wt-cli-sr-only"
+                                ],
+                                "text": true
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "cli-modal-body"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "cli-container-fluid",
+                                  "cli-tab-container"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "cli-row"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "cli-align-items-stretch",
+                                          "cli-col-:id",
+                                          "cli-px-0"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "cli-privacy-overview"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "h4",
+                                                "text": true
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "cli-privacy-content"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "text": true
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "a",
+                                                "classes": [
+                                                  "cli-privacy-readmore"
+                                                ],
+                                                "attrs": [
+                                                  "aria-label",
+                                                  "data-readless-text",
+                                                  "data-readmore-text",
+                                                  "role",
+                                                  "tabindex"
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "cli-tab-section"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "cli-tab-header"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "a",
+                                                    "classes": [
+                                                      "cli-nav-link",
+                                                      "cli-settings-mobile"
+                                                    ],
+                                                    "attrs": [
+                                                      "data-target",
+                                                      "data-toggle",
+                                                      "role",
+                                                      "tabindex"
+                                                    ],
+                                                    "text": true
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "children": [
+                                                      {
+                                                        "tag": "input",
+                                                        "id": ":id",
+                                                        "attrs": [
+                                                          "checked",
+                                                          "data-id",
+                                                          "type"
+                                                        ],
+                                                        "type": "checkbox"
+                                                      },
+                                                      {
+                                                        "tag": "label",
+                                                        "classes": [
+                                                          "form-check-label"
+                                                        ],
+                                                        "attrs": [
+                                                          "for"
+                                                        ],
+                                                        "text": true
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "span",
+                                                    "classes": [
+                                                      "cli-necessary-caption"
+                                                    ],
+                                                    "text": true
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "cli-switch"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "input",
+                                                        "id": ":id",
+                                                        "attrs": [
+                                                          "checked",
+                                                          "data-id",
+                                                          "type"
+                                                        ],
+                                                        "type": "checkbox"
+                                                      },
+                                                      {
+                                                        "tag": "label",
+                                                        "classes": [
+                                                          "cli-slider"
+                                                        ],
+                                                        "attrs": [
+                                                          "data-cli-disable",
+                                                          "data-cli-enable",
+                                                          "for"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "span",
+                                                            "classes": [
+                                                              "wt-cli-sr-only"
+                                                            ],
+                                                            "text": true
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "cli-tab-content"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "cli-fade",
+                                                      "cli-tab-pane"
+                                                    ],
+                                                    "attrs": [
+                                                      "data-id"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "text": true
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ],
+                                            "many": true
+                                          }
+                                        ],
+                                        "many": true
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "cli-modal-footer"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "cli-container-fluid",
+                                  "cli-tab-container",
+                                  "wt-cli-element"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "cli-row"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "cli-align-items-stretch",
+                                          "cli-col-:id",
+                                          "cli-px-0"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "cli-tab-footer"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "a",
+                                                "id": ":id",
+                                                "classes": [
+                                                  "cli-btn",
+                                                  "cli_setting_save_button",
+                                                  "wt-cli-privacy-btn"
+                                                ],
+                                                "attrs": [
+                                                  "data-cli-action",
+                                                  "role",
+                                                  "tabindex"
+                                                ],
+                                                "text": true
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "cli-fade",
+                  "cli-modal-backdrop",
+                  "cli-settings-overlay"
+                ]
+              },
+              {
+                "tag": "div",
+                "classes": [
+                  "cli-fade",
+                  "cli-modal-backdrop",
+                  "cli-popupbar-overlay"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0,
+  "html": true
+}

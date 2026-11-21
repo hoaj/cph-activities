@@ -1,0 +1,139 @@
+{
+  "operation": "GET /wp-admin/admin-ajax.php",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "culture-box.com",
+  "method": "GET",
+  "path": "/wp-admin/admin-ajax.php",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "cookie": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null,
+      "x-requested-with": "XMLHttpRequest"
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "action": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "cache-control": null,
+        "connection": null,
+        "content-encoding": null,
+        "content-security-policy": null,
+        "content-type": "application/json",
+        "date": null,
+        "expires": null,
+        "referrer-policy": null,
+        "server": null,
+        "transfer-encoding": null,
+        "x-content-type-options": null,
+        "x-frame-options": null,
+        "x-powered-by": null,
+        "x-robots-tag": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "object",
+          "fields": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "fields": {
+                "pbid": {
+                  "type": "string"
+                },
+                "all_disabled_by_api": {
+                  "type": "boolean"
+                },
+                "facebook_disabled_by_api": {
+                  "type": "boolean"
+                },
+                "analytics_disabled_by_api": {
+                  "type": "boolean"
+                },
+                "pinterest_disabled_by_api": {
+                  "type": "boolean"
+                },
+                "bing_disabled_by_api": {
+                  "type": "boolean"
+                },
+                "openai_disabled_by_api": {
+                  "type": "boolean"
+                },
+                "reddit_disabled_by_api": {
+                  "type": "boolean"
+                },
+                "externalID_disabled_by_api": {
+                  "type": "boolean"
+                },
+                "disabled_all_cookie": {
+                  "type": "boolean"
+                },
+                "disabled_start_session_cookie": {
+                  "type": "boolean"
+                },
+                "disabled_advanced_form_data_cookie": {
+                  "type": "boolean"
+                },
+                "disabled_landing_page_cookie": {
+                  "type": "boolean"
+                },
+                "disabled_first_visit_cookie": {
+                  "type": "boolean"
+                },
+                "disabled_trafficsource_cookie": {
+                  "type": "boolean"
+                },
+                "disabled_utmTerms_cookie": {
+                  "type": "boolean"
+                },
+                "disabled_utmId_cookie": {
+                  "type": "boolean"
+                }
+              },
+              "optional": [
+                "all_disabled_by_api",
+                "analytics_disabled_by_api",
+                "bing_disabled_by_api",
+                "disabled_advanced_form_data_cookie",
+                "disabled_all_cookie",
+                "disabled_first_visit_cookie",
+                "disabled_landing_page_cookie",
+                "disabled_start_session_cookie",
+                "disabled_trafficsource_cookie",
+                "disabled_utmId_cookie",
+                "disabled_utmTerms_cookie",
+                "externalID_disabled_by_api",
+                "facebook_disabled_by_api",
+                "openai_disabled_by_api",
+                "pbid",
+                "pinterest_disabled_by_api",
+                "reddit_disabled_by_api"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "seen": 4,
+  "aborted": 0
+}

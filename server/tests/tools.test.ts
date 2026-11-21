@@ -40,7 +40,7 @@ describe("plan_outing", () => {
     expect(r.data.status).toBe("ok");
     expect(r.data.weather).toBeNull();
     expect(r.data.best.items[0].url).toMatch(/^https:/);
-    expect(r.data.sources.map((s: any) => s.source).sort()).toEqual(["absalon", "billetto", "brugbyen", "dmi", "kglteater", "kultunaut", "kulturkbh", "teaterbilletter", "visitorservice", "wannasport"]);
+    expect(r.data.sources.map((s: any) => s.source).sort()).toEqual(["absalon", "billetto", "brugbyen", "culturebox", "dmi", "hangaren", "kglteater", "kultunaut", "kulturkbh", "teaterbilletter", "visitorservice", "wannasport"]);
     expect(r.data.sources.every((s: any) => s.status === "fresh")).toBe(true);
     expect(Array.isArray(r.data.next)).toBe(true);
     for (const step of r.data.next) expect(typeof step.patch).toBe("object");
