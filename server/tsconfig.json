@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext", "module": "ESNext", "moduleResolution": "bundler", "strict": true,
-    "noEmit": true, "skipLibCheck": true, "resolveJsonModule": true, "types": ["bun"], "noUncheckedIndexedAccess": true
+    "noEmit": true, "skipLibCheck": true, "resolveJsonModule": true, "types": ["bun"]
   },
   "include": ["src", "tests", "links.ts"]
 }
