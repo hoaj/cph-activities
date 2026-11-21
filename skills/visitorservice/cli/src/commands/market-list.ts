@@ -3,9 +3,11 @@ import { defineCommand, inputFailure } from "../runtime/command";
 import listMarkets from "../operations/listMarkets";
 import getCalendarMarket from "../operations/getCalendarMarket";
 import getMarket from "../operations/getMarket";
+import { Failure } from "../runtime/envelope";
+import { driftFingerprint } from "../runtime/fingerprint";
 import site from "../site";
 import type { MarketPage } from "../lib/market-page";
-import { CHRISTMAS_MARKET_CATEGORY, daysIn, districtOf, freeOf, inCph, indoorOf, inWindow, placeInCph, placeOf, priceOf, slugOf, totalOf } from "../lib/markets";
+import { CHRISTMAS_MARKET_CATEGORY, daysIn, districtOf, freeOf, hasDates, inCph, indoorOf, inWindow, placeInCph, placeOf, priceOf, slugOf, totalOf } from "../lib/markets";
 
 const PAGE_SIZE = 12;
 const MAX_LIST_PAGES = 6;
@@ -81,17 +83,33 @@ export default defineCommand({
       );
     }
 
+    // Single pages can lack the Event block. When none that was read gives an Event or dates (or no link
+    // could be read at all), the site has changed: that is Drift, never an empty list.
+    const read = pages.filter((p) => p !== null);
+    if (toRead.length > 0 && read.every((p) => p.page.event === null && !hasDates(p.page))) {
+      throw new Failure("drift", `${getMarket.name}: no market page read has an Event block or dates.`, {
+        fingerprint: driftFingerprint(site, getMarket.name, "html", "event", "no_dates"),
+        diff: [{ path: "event", code: "no_dates" }],
+      });
+    }
+
+    let unreadable = pages.length - read.length;
     let indoorUnknown = 0;
     const markets: Array<Record<string, unknown> & { date: string; time: string | null }> = [];
     for (const item of pages) {
       if (!item) continue;
       const { card, page } = item;
       if (!inCph(card.place, page)) continue;
+      if (!hasDates(page)) {
+        unreadable++;
+        complete = false;
+        continue;
+      }
       const { days: all, dayByDay } = daysIn(page, from, to);
       const days = all.filter((d) => inWindow(d, args.fromTime, args.toTime));
       if (days.length === 0) continue;
       const price = priceOf(page);
-      const free = freeOf(price, page.event.isAccessibleForFree);
+      const free = freeOf(price, page.event?.isAccessibleForFree);
       if (args.free && free !== true) continue;
       const indoor = indoorOf(page.teaser, page.body);
       if (args.indoor && indoor === null) indoorUnknown++;
@@ -100,7 +118,7 @@ export default defineCommand({
       const { venue, address } = placeOf(page.contactName, page.street);
       markets.push({
         id: card.id,
-        name: page.event.name,
+        name: page.event?.name ?? card.title,
         type: "julemarked",
         date: first.date,
         endDate: days[days.length - 1]!.date,
@@ -125,6 +143,7 @@ export default defineCommand({
     return {
       total: markets.length,
       complete,
+      unreadable,
       ...(args.indoor ? { indoorUnknown } : {}),
       markets: markets.slice(0, args.limit),
     };

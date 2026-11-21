@@ -3,9 +3,12 @@ import { z } from "zod";
 
 export const marketPageHtml = {
   fields: {
+    // Cached copies of a page can lack this block, so it may be null; the other date sources then carry the market.
     event: { css: 'script[type="application/ld+json"]', json: true },
     // The page's own calendar: every coming open day with its hours. The schema.org schedule can be stale.
     settings: { css: 'script[data-drupal-selector="drupal-settings-json"]', json: true },
+    // The dates as the page shows them: what a page without the block and without calendar days still has.
+    dateText: ".field--name-scheduled-dates .date-text",
     // The contact box with the address; the page's footer has another, so stay inside #places.
     contactName: "#places h2.kk-contact__name",
     street: "#places .kk-contact__line1",
@@ -48,15 +51,24 @@ const eventNode = (v: unknown): unknown => {
   return nodes.find((n) => (n as { "@type"?: unknown } | null)?.["@type"] === "Event") ?? v;
 };
 
-export const marketPageResponse = z.object({
-  event: z.preprocess(eventNode, event),
-  settings,
-  contactName: z.string().nullable(),
-  street: z.string().nullable(),
-  postcode: z.string().nullable(),
-  district: z.string().nullable(),
-  teaser: z.string().nullable(),
-  body: z.string().nullable(),
-});
+export const marketPageResponse = z
+  .object({
+    // A block that is there must be a valid Event; only a missing block is null.
+    event: z.preprocess(eventNode, event.nullable()),
+    settings,
+    dateText: z.string().nullable(),
+    contactName: z.string().nullable(),
+    street: z.string().nullable(),
+    postcode: z.string().nullable(),
+    district: z.string().nullable(),
+    teaser: z.string().nullable(),
+    body: z.string().nullable(),
+  })
+  .superRefine((page, ctx) => {
+    // Every event page has at least one of these: with none, this is no longer a market page.
+    if (page.event === null && page.dateText === null && Object.keys(page.settings.eventCalendar ?? {}).length === 0) {
+      ctx.addIssue({ code: "custom", path: ["event"], message: "the page has no Event block, calendar or date text" });
+    }
+  });
 
 export type MarketPage = z.infer<typeof marketPageResponse>;

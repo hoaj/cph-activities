@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { daysIn, districtOf, freeOf, inCph, indoorOf, inWindow, isCphPostcode, placeInCph, placeOf, priceOf, slugOf, totalOf } from "../src/lib/markets";
+import { daysIn, dateTextOf, districtOf, freeOf, inCph, indoorOf, inWindow, isCphPostcode, placeInCph, placeOf, priceOf, slugOf, totalOf } from "../src/lib/markets";
 
 const occ = (hour_start: string, hour_end: string) => ({ date: { hour_start, hour_end } });
 const page = (occurrences: Record<string, ReturnType<typeof occ>[]> | unknown[], eventSchedule?: unknown, price_value: unknown = "Gratis") =>
@@ -33,6 +33,24 @@ describe("daysIn", () => {
   });
   test("no calendar and no schedule is no days", () => {
     expect(daysIn(page([]), "2030-12-07", "2030-12-07")).toEqual({ days: [], dayByDay: false });
+  });
+});
+
+describe("dateTextOf", () => {
+  test("one day, with hours in either form", () => {
+    expect(dateTextOf("Lør. 07. dec. 2030 Kl. 11 - 17")).toEqual({ startDate: "2030-12-07", endDate: "2030-12-07", startTime: "11:00", endTime: "17:00" });
+    expect(dateTextOf("Lør. 07. dec. 2030 Kl. 10.30 - 17")).toMatchObject({ startTime: "10:30", endTime: "17:00" });
+  });
+  test("periods in the page's forms", () => {
+    expect(dateTextOf("13. nov. - 20. dec. 2030 Kl. 10 - 21")).toEqual({ startDate: "2030-11-13", endDate: "2030-12-20", startTime: "10:00", endTime: "21:00" });
+    expect(dateTextOf("07. - 08. dec. 2030")).toEqual({ startDate: "2030-12-07", endDate: "2030-12-08", startTime: null, endTime: null });
+    expect(dateTextOf("13.11.2030 - 30.12.2030 Kl. 10 - 21")).toMatchObject({ startDate: "2030-11-13", endDate: "2030-12-30" });
+  });
+  test("a period across New Year starts in the year before", () => {
+    expect(dateTextOf("28. dec. - 03. jan. 2031")).toMatchObject({ startDate: "2030-12-28", endDate: "2031-01-03" });
+  });
+  test("what is no date is null", () => {
+    for (const s of [null, "", "Se hjemmesiden", "32. dec. 2030", "07. foo. 2030", "07. dec."]) expect(dateTextOf(s)).toBeNull();
   });
 });
 

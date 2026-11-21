@@ -27,7 +27,7 @@ Run the command the user's question needs. There is no setup step; recover only 
 - A row is one market: `date`/`time`/`endTime` are its first open day in the search, `endDate` the last, and `days` lists every open day with its own hours. Hours often differ by weekday: read `days`.
 - `dayByDay: false` means the page gives one long period with one pair of hours and does not say whether the market closes on some day: tell the user to check the page.
 - `indoor` is true or false only when the page's text says so, else null. Null is unknown, never outdoors. `--indoor` keeps only true and counts the rest in `indoorUnknown`.
-- `venue`, `address`, `postcode`, `district`, `price` and `free` are null when the page does not give them. `complete: false` means some market could not be read or the search was too wide: narrow the dates.
+- `venue`, `address`, `postcode`, `district`, `price` and `free` are null when the page does not give them. `complete: false` means some market could not be read or the search was too wide: narrow the dates. `unreadable` counts the Copenhagen markets left out because their page gave no dates; name the gap instead of saying there are no more.
 - The page's calendar holds coming openings only, so past dates, and sometimes today once it has closed, come back empty or short.
 
 ## When it fails

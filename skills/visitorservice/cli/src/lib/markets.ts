@@ -64,6 +64,54 @@ const priceText = (value: string | string[] | boolean | null | undefined): strin
   return parts.length > 0 ? parts.join("; ") : null;
 };
 
+const MONTHS = ["jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov", "dec"];
+const pad = (n: number) => String(n).padStart(2, "0");
+const realDate = (y: number, mo: number, d: number): string | null => {
+  const iso = `${y}-${pad(mo)}-${pad(d)}`;
+  const parsed = new Date(`${iso}T12:00:00Z`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === iso ? iso : null;
+};
+
+/**
+ * The page's visible date line: "Lør. 28. nov. 2030 Kl. 11 - 17", "28. nov. - 20. dec. 2030 Kl. 10 - 21",
+ * "28. - 29. nov. 2030" or "13.11.2030 - 30.12.2030 Kl. 10 - 21". Null when it holds no whole date.
+ */
+export const dateTextOf = (text: string | null): { startDate: string; endDate: string; startTime: string | null; endTime: string | null } | null => {
+  if (!text) return null;
+  const at = text.search(/\bkl\./i);
+  const datePart = at === -1 ? text : text.slice(0, at);
+  const timePart = at === -1 ? "" : text.slice(at + 3);
+
+  const parts: Array<{ d: number; mo?: number; y?: number }> = [];
+  const numeric = [...datePart.matchAll(/(\d{1,2})\.(\d{1,2})\.(\d{4})/g)];
+  if (numeric.length > 0) {
+    for (const n of numeric) parts.push({ d: Number(n[1]), mo: Number(n[2]), y: Number(n[3]) });
+  } else {
+    for (const n of datePart.matchAll(/(\d{1,2})\.(?:\s*(\p{L}{3})\p{L}*\.?)?(?:\s*(\d{4}))?/gu)) {
+      const index = n[2] ? MONTHS.indexOf(n[2].toLowerCase()) : -1;
+      if (n[2] && index === -1) return null;
+      parts.push({ d: Number(n[1]), ...(index >= 0 ? { mo: index + 1 } : {}), ...(n[3] ? { y: Number(n[3]) } : {}) });
+    }
+  }
+  if (parts.length < 1 || parts.length > 2) return null;
+  const last = parts.at(-1)!;
+  const first = parts[0]!;
+  if (last.mo === undefined || last.y === undefined) return null;
+  const firstMonth = first.mo ?? last.mo;
+  const firstYear = first.y ?? (firstMonth > last.mo ? last.y - 1 : last.y); // a period across New Year
+  const startDate = realDate(firstYear, firstMonth, first.d);
+  const endDate = realDate(last.y, last.mo, last.d);
+  if (!startDate || !endDate || endDate < startDate) return null;
+
+  const t = /^\s*(\d{1,2})(?:[.:](\d{2}))?(?:\s*-\s*(\d{1,2})(?:[.:](\d{2}))?)?/.exec(timePart);
+  const hhmm = (h: string | undefined, min: string | undefined) => {
+    if (h === undefined || Number(h) > 23 || Number(min ?? 0) > 59) return null;
+    return `${pad(Number(h))}:${min ?? "00"}`;
+  };
+  const startTime = t ? hhmm(t[1], t[2]) : null;
+  return { startDate, endDate, startTime, endTime: startTime && t ? hhmm(t[3], t[4]) : null };
+};
+
 /** The page's calendar entry: its coming open days by date, and its price text. */
 const calendarOf = (page: Pick<MarketPage, "settings">) => {
   const entry = Object.values(page.settings.eventCalendar ?? {})[0];
@@ -76,12 +124,25 @@ const calendarOf = (page: Pick<MarketPage, "settings">) => {
 
 export const priceOf = (page: Pick<MarketPage, "settings">): string | null => calendarOf(page).price;
 
+/** The schema.org schedule, or without one the page's visible date line, as schedule entries. */
+const scheduleOf = (page: Pick<MarketPage, "event" | "dateText">) => {
+  const schedule = page.event?.eventSchedule;
+  if (schedule != null && (!Array.isArray(schedule) || schedule.length > 0)) return Array.isArray(schedule) ? schedule : [schedule];
+  const shown = dateTextOf(page.dateText);
+  return shown ? [shown] : [];
+};
+
+/** Whether the page gives any dates at all, inside the search or not. */
+export const hasDates = (page: Pick<MarketPage, "event" | "settings" | "dateText">): boolean =>
+  Object.keys(calendarOf(page).byDate).length > 0 || scheduleOf(page).length > 0;
+
 /**
  * The open days inside the search. The page's calendar lists each coming day with its hours. A market
- * with one long period has no such list, only one pair of hours from the schema.org schedule: then
+ * with one long period has no such list, only one pair of hours from the schema.org schedule or the
+ * page's date line: then
  * `dayByDay` is false, because the page does not say whether it closes on some day.
  */
-export const daysIn = (page: Pick<MarketPage, "event" | "settings">, from: string, to: string): { days: Day[]; dayByDay: boolean } => {
+export const daysIn = (page: Pick<MarketPage, "event" | "settings" | "dateText">, from: string, to: string): { days: Day[]; dayByDay: boolean } => {
   const { byDate } = calendarOf(page);
   const dates = Object.keys(byDate);
   if (dates.length > 0) {
@@ -95,8 +156,7 @@ export const daysIn = (page: Pick<MarketPage, "event" | "settings">, from: strin
     }
     return { days, dayByDay: true };
   }
-  const schedule = page.event.eventSchedule;
-  const entries = schedule == null ? [] : Array.isArray(schedule) ? schedule : [schedule];
+  const entries = scheduleOf(page);
   const byDay = new Map<string, Day>();
   let dayByDay = entries.length > 0;
   for (const e of entries) {
