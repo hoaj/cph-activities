@@ -1,0 +1,69 @@
+{
+  "operation": "GET /:id/player.html",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "video.kglteater.dk",
+  "method": "GET",
+  "path": "/:id/player.html",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "source": {
+          "type": "string"
+        },
+        "photo_id": {
+          "type": "string"
+        },
+        "autoPlay": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/html",
+      "headers": {
+        "accept-ranges": null,
+        "age": null,
+        "cache-control": null,
+        "content-encoding": null,
+        "content-length": null,
+        "content-type": "text/html",
+        "date": null,
+        "expires": null,
+        "mime-version": null,
+        "p3p": null,
+        "strict-transport-security": null,
+        "vary": null,
+        "via": null,
+        "x-cache": null,
+        "x-cache-hits": null,
+        "x-cacheinstruction": null,
+        "x-cachetype": null,
+        "x-compressable": null,
+        "x-compressed": null,
+        "x-served-by": null,
+        "x-timer": null
+      },
+      "body": {
+        "kind": "html"
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0
+}

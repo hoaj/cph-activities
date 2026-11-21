@@ -1,0 +1,70 @@
+{
+  "task": "show-details",
+  "startPath": "/ballet/:id/:id/",
+  "write": false,
+  "loginHosts": [
+    "app-consumeridp.puzzel.com"
+  ],
+  "operations": [
+    {
+      "operation": "GET /ballet/:id/:id/",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "www.kglteater.dk",
+      "path": "/ballet/:id/:id/",
+      "file": "GET-ballet-id-id.shape.json",
+      "pages": [
+        "/ballet/:id/:id/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /umbraco/engage/pagedata/ping/",
+      "kind": "rest",
+      "effect": "write",
+      "method": "POST",
+      "host": "www.kglteater.dk",
+      "path": "/umbraco/engage/pagedata/ping/",
+      "file": "POST-umbraco-engage-pagedata-ping.shape.json",
+      "pages": [
+        "/ballet/:id/:id/"
+      ],
+      "seen": 1,
+      "aborted": 1
+    },
+    {
+      "operation": "GET /:id/player.html",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "method": "GET",
+      "host": "video.kglteater.dk",
+      "path": "/:id/player.html",
+      "file": "video.kglteater.dk-GET-id-player.html.shape.json",
+      "pages": [
+        "/ballet/:id/:id/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /da/itix",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "method": "GET",
+      "host": "billet.kglteater.dk",
+      "path": "/da/itix",
+      "file": "billet.kglteater.dk-GET-da-itix.shape.json",
+      "pages": [
+        "/ballet/:id/:id/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    }
+  ]
+}

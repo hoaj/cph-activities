@@ -1,0 +1,220 @@
+{
+  "operation": "GET /api/calendar/activities",
+  "kind": "rest",
+  "effect": "read",
+  "resourceType": "fetch",
+  "host": "www.kglteater.dk",
+  "method": "GET",
+  "path": "/api/calendar/activities",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "v": {
+          "type": "string"
+        },
+        "page": {
+          "type": "string"
+        },
+        "pageSize": {
+          "type": "string"
+        },
+        "culture": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string"
+        },
+        "endDate": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "price": {
+          "type": "string"
+        },
+        "showCancelled": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": {
+        "api-supported-versions": null,
+        "cache-control": null,
+        "cdn-cache": null,
+        "cdn-cachedat": null,
+        "cdn-edgestorageid": null,
+        "cdn-proxyver": null,
+        "cdn-pullzone": null,
+        "cdn-requestcountrycode": null,
+        "cdn-requestid": null,
+        "cdn-requestpullcode": null,
+        "cdn-requestpullsuccess": null,
+        "cdn-requesttime": null,
+        "cdn-status": null,
+        "content-encoding": null,
+        "content-security-policy-report-only": null,
+        "content-type": "application/json",
+        "date": null,
+        "permissions-policy": null,
+        "referrer-policy": null,
+        "request-context": null,
+        "server": null,
+        "strict-transport-security": null,
+        "vary": null,
+        "x-content-type-options": null,
+        "x-frame-options": null,
+        "x-powered-by": null
+      },
+      "body": {
+        "kind": "json",
+        "shape": {
+          "type": "object",
+          "fields": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "fields": {
+                  "startDate": {
+                    "type": "string",
+                    "format": "datetime"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "format": "datetime"
+                  },
+                  "showName": {
+                    "type": "string"
+                  },
+                  "showUrl": {
+                    "type": "string"
+                  },
+                  "showLead": {
+                    "type": "string"
+                  },
+                  "showId": {
+                    "type": "number"
+                  },
+                  "showPosterUrl": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "categoryId": {
+                    "type": "number"
+                  },
+                  "canceled": {
+                    "type": "boolean"
+                  },
+                  "tixlyEventId": {
+                    "type": "string",
+                    "format": "numeric"
+                  },
+                  "tixlyBuyLink": {
+                    "type": "string"
+                  },
+                  "externalBuyLink": {
+                    "type": "string"
+                  },
+                  "fullHouse": {
+                    "type": "boolean"
+                  },
+                  "tixlySoldOut": {
+                    "type": "boolean"
+                  },
+                  "isFree": {
+                    "type": "boolean"
+                  },
+                  "isTour": {
+                    "type": "boolean"
+                  },
+                  "minPrice": {
+                    "type": "number"
+                  },
+                  "isEvent": {
+                    "type": "boolean"
+                  },
+                  "tixlySaleStatusText": {
+                    "type": "string"
+                  },
+                  "locationId": {
+                    "type": "number"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "locationSortOrder": {
+                    "type": "number"
+                  },
+                  "labelId": {
+                    "type": "number"
+                  },
+                  "label": {
+                    "type": "null"
+                  },
+                  "subCategoryIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  "promotedLabel": {
+                    "type": "string"
+                  },
+                  "promotedLabelBgColor": {
+                    "type": "string"
+                  },
+                  "promotedLabelTextColor": {
+                    "type": "string"
+                  },
+                  "specialMarking": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            "total": {
+              "type": "number"
+            },
+            "page": {
+              "type": "number"
+            },
+            "pageSize": {
+              "type": "number"
+            },
+            "hasMore": {
+              "type": "boolean"
+            },
+            "availableShowIds": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0
+}

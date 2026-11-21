@@ -1,0 +1,27 @@
+{
+  "operation": "POST /umbraco/engage/pagedata/ping/",
+  "kind": "rest",
+  "effect": "write",
+  "resourceType": "ping",
+  "host": "www.kglteater.dk",
+  "method": "POST",
+  "path": "/umbraco/engage/pagedata/ping/",
+  "request": {
+    "headers": {
+      "accept": "*/*",
+      "content-type": "text/plain",
+      "origin": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null
+    },
+    "body": {
+      "kind": "text"
+    }
+  },
+  "responses": [],
+  "seen": 1,
+  "aborted": 1
+}

@@ -27,6 +27,7 @@ const LOADERS: Record<Source, () => Promise<SkillApp>> = {
   kultunaut: () => load(import("../skills/kultunaut/cli/src/main"), import("../skills/kultunaut/cli/src/site"), import("../skills/kultunaut/cli/src/registry")),
   brugbyen: () => load(import("../skills/brugbyen/cli/src/main"), import("../skills/brugbyen/cli/src/site"), import("../skills/brugbyen/cli/src/registry")),
   teaterbilletter: () => load(import("../skills/teaterbilletter/cli/src/main"), import("../skills/teaterbilletter/cli/src/site"), import("../skills/teaterbilletter/cli/src/registry")),
+  kglteater: () => load(import("../skills/kglteater/cli/src/main"), import("../skills/kglteater/cli/src/site"), import("../skills/kglteater/cli/src/registry")),
   absalon: () => load(import("../skills/absalon/cli/src/main"), import("../skills/absalon/cli/src/site"), import("../skills/absalon/cli/src/registry")),
   wannasport: () => load(import("../skills/wannasport/cli/src/main"), import("../skills/wannasport/cli/src/site"), import("../skills/wannasport/cli/src/registry")),
   dmi: () => load(import("../skills/dmi/cli/src/main"), import("../skills/dmi/cli/src/site"), import("../skills/dmi/cli/src/registry")),
@@ -139,6 +140,9 @@ export async function fetchDay(source: Source, date: string, opts: FetchDayOptio
       break;
     case "absalon":
       calls.push({ argv: ["event", "list", "--from", D, "--limit", "300"], into: (o) => { raw(o, "events"); collected.push(...N.absalon(o, D)); } });
+      break;
+    case "kglteater":
+      calls.push({ argv: ["show", "list", "--from", D, "--limit", "300"], into: (o) => { raw(o, "shows"); collected.push(...N.kglteater(o, D)); } });
       break;
     case "wannasport":
       for (const s of opts.sports ?? SPORTS) {
