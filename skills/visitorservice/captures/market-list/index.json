@@ -1,0 +1,70 @@
+{
+  "task": "market-list",
+  "startPath": "/eventkalender",
+  "write": false,
+  "operations": [
+    {
+      "operation": "GET /eventkalender",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "visitorservice.kk.dk",
+      "path": "/eventkalender",
+      "file": "GET-eventkalender.shape.json",
+      "pages": [
+        "/eventkalender"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /eventkalender/:id",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "visitorservice.kk.dk",
+      "path": "/eventkalender/:id",
+      "file": "GET-eventkalender-id.shape.json",
+      "pages": [
+        "/eventkalender/:id"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "POST /contact/get-contact-info/:id",
+      "kind": "rest",
+      "effect": "write",
+      "method": "POST",
+      "host": "visitorservice.kk.dk",
+      "path": "/contact/get-contact-info/:id",
+      "file": "POST-contact-get-contact-info-id.shape.json",
+      "pages": [
+        "/eventkalender/:id",
+        "/:id"
+      ],
+      "seen": 2,
+      "aborted": 2
+    },
+    {
+      "operation": "GET /:id",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "visitorservice.kk.dk",
+      "path": "/:id",
+      "file": "GET-id.shape.json",
+      "pages": [
+        "/:id"
+      ],
+      "seen": 1,
+      "aborted": 0
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "operation": "POST /contact/get-contact-info/:id",
+  "kind": "rest",
+  "effect": "write",
+  "resourceType": "xhr",
+  "host": "visitorservice.kk.dk",
+  "method": "POST",
+  "path": "/contact/get-contact-info/:id",
+  "request": {
+    "headers": {
+      "accept": "application/json, text/javascript, */*; q=0.01",
+      "content-type": "application/x-www-form-urlencoded",
+      "origin": null,
+      "referer": null,
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "user-agent": null,
+      "x-requested-with": "XMLHttpRequest"
+    },
+    "query": {
+      "type": "object",
+      "fields": {
+        "_wrapper_format": {
+          "type": "string"
+        }
+      }
+    },
+    "body": {
+      "kind": "form",
+      "shape": {
+        "type": "record",
+        "values": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": [],
+  "seen": 2,
+  "aborted": 2
+}

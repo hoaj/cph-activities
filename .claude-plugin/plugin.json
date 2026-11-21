@@ -21,6 +21,7 @@
     "./skills/kultunaut",
     "./skills/kulturkbh",
     "./skills/teaterbilletter",
+    "./skills/visitorservice",
     "./skills/wannasport"
   ]
 }
