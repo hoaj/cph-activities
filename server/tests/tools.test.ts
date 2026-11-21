@@ -39,7 +39,7 @@ describe("plan_outing", () => {
     expect(r.data.status).toBe("ok");
     expect(r.data.weather).toBeNull();
     expect(r.data.best.items[0].url).toMatch(/^https:/);
-    expect(r.data.sources.map((s: any) => s.source).sort()).toEqual(["absalon", "billetto", "brugbyen", "dmi", "kglteater", "kultunaut", "kulturkbh", "teaterbilletter", "wannasport"]);
+    expect(r.data.sources.map((s: any) => s.source).sort()).toEqual(["absalon", "billetto", "brugbyen", "dmi", "kglteater", "kultunaut", "kulturkbh", "teaterbilletter", "visitorservice", "wannasport"]);
     expect(r.data.sources.every((s: any) => s.status === "fresh")).toBe(true);
     expect(Array.isArray(r.data.next)).toBe(true);
     for (const step of r.data.next) expect(typeof step.patch).toBe("object");
@@ -188,7 +188,12 @@ describe("source statuses", () => {
     const real = deps.cache.getDays.bind(deps.cache);
     deps.cache.getDays = async (s, d, o) => {
       const r = await real(s, d, o);
-      r.statuses = r.statuses.map((x, i) => (x.source === "absalon" ? { ...x, status: i % 2 ? "stale" : "fresh", ageSeconds: 600, stale: !!(i % 2) } : x)) as any;
+      let absalonDay = 0; // counted per source: the position in the list depends on how many sources there are
+      r.statuses = r.statuses.map((x) => {
+        if (x.source !== "absalon") return x;
+        const stale = absalonDay++ % 2 === 1;
+        return { ...x, status: stale ? "stale" : "fresh", ageSeconds: 600, stale };
+      }) as any;
       return r;
     };
     const { call } = await connectTools(deps);

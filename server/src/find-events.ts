@@ -21,7 +21,7 @@ export const findEventsInput = {
   categories: z.array(z.string().max(60)).max(10).optional().describe("Keep events in any of these categories (case-insensitive, matches part of a category name). Valid names: list_options."),
   free: z.boolean().optional().describe("true: only free events."),
   maxPricePerPerson: z.number().min(0).optional().describe("Highest cheapest-ticket price in DKK. Events with no price listed are kept and counted in notes."),
-  fromTime: clock("fromTime").optional().describe("Earliest start, HH:MM. Events with no start time are left out when this or toTime is set."),
+  fromTime: clock("fromTime").optional().describe("Earliest start, HH:MM; a Christmas market counts while it is open. Events with no start time are left out when this or toTime is set."),
   toTime: clock("toTime").optional().describe("Latest start, HH:MM."),
   audienceAge: z.number().int().min(0).max(120).optional().describe("Age of the youngest guest: drops 18+ events for under 18, children's events for teenagers, and keeps only child-made events for under 10."),
   excludeKids: z.boolean().optional().describe("true: drop children's events."),
@@ -74,7 +74,9 @@ export function filterEvents(merged: Merged[], a: Pick<FindEventsArgs, "query" |
     if (from != null || to != null) {
       const t = tmin(it.time);
       if (t == null) { untimed++; return false; }
-      if ((from != null && t < from) || (to != null && t > to)) return false;
+      // a market is open for hours: it matches when those hours overlap the window
+      const closes = it.source === "visitorservice" ? tmin(it.endTime) : null;
+      if (closes != null ? (from != null && closes <= from) || (to != null && t > to) : (from != null && t < from) || (to != null && t > to)) return false;
     }
     if (a.maxPricePerPerson != null) {
       if (it.priceMin == null) unpriced++;

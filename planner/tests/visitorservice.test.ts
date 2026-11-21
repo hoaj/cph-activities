@@ -4,6 +4,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DEFAULT_CAPS } from "../../server/src/cache/config";
+import { filterEvents } from "../../server/src/find-events";
 import { fetchDay } from "../fetch-day";
 import { planOuting } from "../index";
 import { buildItinerary } from "../itinerary";
@@ -81,6 +82,19 @@ describe("visitorservice in the planner", () => {
   test("a concert at the same place stays its own event", () => {
     const concert = item({ source: "kultunaut", title: "Koncert med kor", time: "15:00", venue: "Planted Plads", categories: ["Musik"] });
     expect(mergeItems([concert, ...market()])).toHaveLength(2);
+  });
+
+  test("find_events keeps a market that is open during the time window", () => {
+    const hits = (fromTime: string, toTime?: string) => filterEvents(mergeItems(market()), { fromTime, ...(toTime ? { toTime } : {}) }).kept.length;
+    expect(hits("14:00")).toBe(1);
+    expect(hits("09:00", "11:00")).toBe(1);
+    expect(hits("17:30")).toBe(0);
+    expect(hits("08:00", "09:00")).toBe(0);
+  });
+
+  test("find_events still reads other events by their start time", () => {
+    const concert = mergeItems([item({ title: "Koncert", time: "10:00", endTime: "17:00" })]);
+    expect(filterEvents(concert, { fromTime: "14:00" }).kept).toHaveLength(0);
   });
 
   test("fetchDay runs the skill's real command for that day", async () => {
