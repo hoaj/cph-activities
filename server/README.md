@@ -1,6 +1,6 @@
 # cph-activities server
 
-A remote MCP server for the plugin's sources, for the maintainer and a few friends, behind personal secret links. Built under the map [hoaj/cph-activities#19](https://github.com/hoaj/cph-activities/issues/19). Stateless Streamable HTTP, personal links, per-link limits, a health check, the read-through cache and six read-only tools on the cache and the planner.
+A remote MCP server for the plugin's sources, for the maintainer and a few friends, behind personal secret links. Built under the map [hoaj/cph-activities#19](https://github.com/hoaj/cph-activities/issues/19). Stateless Streamable HTTP, personal links, per-link limits, a health check, the read-through cache and six read-only tools on the cache and the planner, and `send_feedback`, which files chat feedback as GitHub issues.
 
 ## What it serves
 
@@ -17,7 +17,7 @@ Logs are JSON lines on stderr. The secret is never logged: every line passes thr
 
 ## Tools
 
-Six tools, each `readOnlyHint` and `openWorldHint`, each with an input schema, an output schema, and `structuredContent` plus the same compact JSON as text. Bad input (a malformed date, a limit over 50, an unknown id) is a tool error result with a message that says what to fix, never a protocol error. Nothing books or buys anything.
+Seven tools. Six are `readOnlyHint` and `openWorldHint`; `send_feedback` writes to GitHub (`readOnlyHint: false`, `destructiveHint: false`, `idempotentHint: false`, `openWorldHint: true`). Each has an input schema, an output schema, and `structuredContent` plus the same compact JSON as text. Bad input (a malformed date, a limit over 50, an unknown id) is a tool error result with a message that says what to fix, never a protocol error. Nothing books or buys anything.
 
 | Tool | Input | Answers |
 |---|---|---|
@@ -27,6 +27,7 @@ Six tools, each `readOnlyHint` and `openWorldHint`, each with an input schema, a
 | `get_weather` | `date`, `from?`, `to?` | The dmi verdict (`dry`/`showers`/`wet`, cold, windy, snow), temperatures, DMI's text, warnings, and the hours of the window. |
 | `get_details` | `id` | One item: description, every source's link, all start or court times, address, price. Ids come from the other tools and are remembered in memory for two hours (the id of any merged source works). |
 | `list_options` | none | Sports, moods, audiences, category and genre names (brugbyen and kultunaut), brugbyen districts and groups. Cached six hours. |
+| `send_feedback` | `kind` (`bug`/`idea`/`missing`), `title` (3-80), `what_happened` (10-1500), `expected?` (800), `tool?`, `approved` (must be `true`), `existing_issue?`, `force_new?` | `{ action, issueUrl?, number?, candidates? }`: `created`, `commented`, `already_noted` or `possible_duplicate` (see below). |
 
 Every result except `get_details` carries `sources: [{ source, status, kind?, ageMinutes? }]` (one entry per source asked, the worst status of its days) and `notes` (a sentence for each missing, capped or failing-stale source, and what was assumed or left out). `plan_outing`, `find_events`, `find_activity_slots` and `get_weather` go through `loadDaysFor` (`src/days.ts`) and the one shared `DayCache`.
 
@@ -34,16 +35,26 @@ Status values in `sources`: `fresh` (within its TTL), `stale` (older data served
 
 The server `instructions` (`src/instructions.ts`) are under 4,096 characters with a self-contained first 512; the MCP prompt `plan_a_day` carries the longer guide.
 
+### send_feedback
+
+The model drafts the report, shows it to the user and calls the tool only after a yes (`approved: true`). The issue is public, so the text is checked first and refused with a corrective message when it holds an e-mail address, a phone number (8 or more digits, spaces or dashes allowed; ISO dates and clock times are ignored), a URL containing `/mcp/`, a token-like string (32 or more letters, digits, `-`, `_`) or `PUBLIC_URL`. The link's name and secret are never part of an issue or comment.
+
+- **Issue:** title `feedback: <title>`, labels `feedback` plus `bug` (a bug) or `enhancement` (idea, missing), body with `## What happened`, `## What I expected` and `## Tool` when given, and a footer `Sent from the MCP server, version <plugin version>, <time>` (the version is read from `.claude-plugin/plugin.json`, which the image copies).
+- **Duplicates:** before creating, the server lists (REST, not search) open issues labelled `feedback`, `bug` or `enhancement` and `feedback` issues closed in the last 30 days, and scores each against the new title and text: lower case, punctuation and Danish/English stopwords dropped, a weighted Jaccard on word sets with a title word counting double (`similarity` in `src/feedback.ts`). A score of 0.6 or more on an open issue adds a `## Seen again` comment instead of a new issue (`commented`; at most one per link per issue per 24 hours, else `already_noted`). A score from 0.35 to 0.6, or any match with a closed issue, files nothing and returns up to three `candidates` (`possible_duplicate`): the model asks the user, then calls again with `existing_issue: <number>` (a comment) or `force_new: true` (a new issue). `existing_issue` must be a candidate returned in the last hour or an open `feedback`/`bug`/`enhancement` issue.
+- **Limits:** 5 reports (issues or comments) per link per 24 hours and 20 a day overall, in memory; refused calls and `possible_duplicate` answers consume nothing. The same title (any case) from the same link within 24 hours is refused with "already sent".
+- **No token:** the tool answers "feedback is not set up on this server yet" and logs `feedback_would_file`. A GitHub failure is a tool error; the log holds the status line, never the report.
+
 ## Environment
 
 | Variable | Meaning |
 |---|---|
 | `LINKS` | Secret. Comma-separated `name:<sha256 hex of the secret>` entries, e.g. `anna:9f86...,peter:2c26...`. Names are `[a-z0-9-]`, 1-32 characters. A malformed entry stops the server at start. Empty means every `/mcp` request gets 404. |
-| `PUBLIC_URL` | The server's public address, e.g. `https://cph.example.com`. Only `links.ts` reads it, to print finished links. |
+| `PUBLIC_URL` | The server's public address, e.g. `https://cph.example.com`. `links.ts` reads it to print finished links; `send_feedback` refuses text that contains it. |
 | `PORT` | Port to listen on. Default 8080 (Railway sets it). |
 | `TRUST_PROXY` | Default on: the client address for the miss throttle is the last entry of `X-Forwarded-For` (what Railway's proxy appends). Set `0` to use the socket address. |
 | `SOURCE_CAP_PER_HOUR` | Upstream requests one source may make in a sliding hour. Defaults per source: kultunaut 150, wannasport 60, every other source 30. This variable sets the default for sources without their own entry; `SOURCE_CAP_PER_HOUR_<SOURCE>` (e.g. `SOURCE_CAP_PER_HOUR_KULTUNAUT=300`) overrides any one source. Counted by a wrapper around each skill's `fetch`, retries and pages included. |
-| `GITHUB_TOKEN` | Secret. A token with issues scope only, for `hoaj/cph-activities` (`GITHUB_REPO` changes the repo). Without it the server logs the issue it would file (`drift_issue_would_file`). |
+| `GITHUB_TOKEN` | Secret. A fine-grained personal access token for the repository `hoaj/cph-activities` only, with the single permission **Issues: read and write** (and nothing else). It files Drift issues and `send_feedback` issues and comments. Without it the server logs the Drift issue it would file (`drift_issue_would_file`) and `send_feedback` answers that feedback is not set up. |
+| `GITHUB_REPO` | The repository for those issues. Default `hoaj/cph-activities`. |
 | `CACHE_TTL_EVENTS_S`, `CACHE_TTL_SLOTS_S`, `CACHE_TTL_WEATHER_S` | Seconds a day stays fresh: event sources (default 3600), court slots from wannasport (600), weather from dmi (3600). |
 | `CACHE_MAX_ENTRIES`, `CACHE_MAX_AGE_S` | Days kept, least recently used first out (default 500); nothing older than this is ever served (default 86400). |
 | `SITE_CLI_CHROME` | Path to Chrome for the Billetto and wannasport skills. The image sets `/opt/google/chrome/chrome`. |

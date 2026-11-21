@@ -19,7 +19,9 @@ Weather. It is checked for you whenever a date is given. Mention it only when it
 
 Sources. Every result lists "sources" with status fresh, stale, capped or missing. Tell the user when a source is missing or stale ("Billetto is not available right now") and answer from the rest. "notes" holds what to pass on.
 
-Prices and times. Write "pris ikke oplyst" when a price is missing and "tid: se siden" when there is no start time. Never invent times, prices or links; use what the results contain. Ids belong to one result set and expire after about two hours.`;
+Prices and times. Write "pris ikke oplyst" when a price is missing and "tid: se siden" when there is no start time. Never invent times, prices or links; use what the results contain. Ids belong to one result set and expire after about two hours.
+
+Feedback. To report a problem or an idea, use send_feedback after the user approves the text.`;
 
 // The longer guide behind the MCP prompt "plan_a_day": the rules the tools encode, for a model that wants them spelled out.
 export const PLAN_A_DAY_GUIDE = `${INSTRUCTIONS}

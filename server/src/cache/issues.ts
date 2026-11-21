@@ -42,22 +42,10 @@ export function loggingFiler(log: Log): IssueFiler {
   };
 }
 
-export interface GitHubFilerOptions {
-  token: string;
-  /** Default hoaj/cph-activities. */
-  repo?: string;
-  fetch?: typeof fetch;
-  log?: Log;
-  now?: () => number;
-}
-
-/** REST API filer: a token with issues scope only. Finds an open `drift` issue with the exact title; else creates one. */
-export function githubFiler(o: GitHubFilerOptions): IssueFiler {
-  const repo = o.repo ?? "hoaj/cph-activities";
+/** One authenticated call to the GitHub REST API. An error names the method, path and status, never the body. */
+export function githubApi(o: { token: string; fetch?: typeof fetch }) {
   const f = o.fetch ?? fetch;
-  const now = o.now ?? Date.now;
-  const log: Log = o.log ?? (() => {});
-  const api = async (method: string, path: string, body?: unknown) => {
+  return async (method: string, path: string, body?: unknown): Promise<any> => {
     const res = await f(`https://api.github.com${path}`, {
       method,
       headers: {
@@ -70,8 +58,25 @@ export function githubFiler(o: GitHubFilerOptions): IssueFiler {
       ...(body ? { body: JSON.stringify(body) } : {}),
     });
     if (!res.ok) throw new Error(`GitHub ${method} ${path.split("?")[0]} answered ${res.status}`);
-    return res.json() as Promise<any>;
+    return res.json();
   };
+}
+
+export interface GitHubFilerOptions {
+  token: string;
+  /** Default hoaj/cph-activities. */
+  repo?: string;
+  fetch?: typeof fetch;
+  log?: Log;
+  now?: () => number;
+}
+
+/** REST API filer: a token with issues scope only. Finds an open `drift` issue with the exact title; else creates one. */
+export function githubFiler(o: GitHubFilerOptions): IssueFiler {
+  const repo = o.repo ?? "hoaj/cph-activities";
+  const now = o.now ?? Date.now;
+  const log: Log = o.log ?? (() => {});
+  const api = githubApi({ token: o.token, fetch: o.fetch });
 
   /** Open issues labelled drift, listed (not searched: the search index lags a new issue, which would allow a duplicate). */
   const findOpen = async (title: string) => {
@@ -112,4 +117,68 @@ export function githubFiler(o: GitHubFilerOptions): IssueFiler {
 export function filerFromEnv(env: Record<string, string | undefined>, log: Log, f?: typeof fetch): IssueFiler {
   const token = env.GITHUB_TOKEN?.trim();
   return token ? githubFiler({ token, log, fetch: f, ...(env.GITHUB_REPO ? { repo: env.GITHUB_REPO } : {}) }) : loggingFiler(log);
+}
+
+/** An issue as the feedback tool sees it. */
+export interface IssueRef {
+  number: number;
+  title: string;
+  body: string;
+  url: string;
+  state: "open" | "closed";
+  closedAt?: string;
+}
+
+/** What send_feedback needs from GitHub: list, create, comment. Tests use a fake. */
+export interface FeedbackGitHub {
+  /** Open issues labelled feedback, bug or enhancement, and `feedback` issues closed within `closedWithinDays`. Listed, not searched (the search index lags). */
+  listCandidates(closedWithinDays: number): Promise<IssueRef[]>;
+  createIssue(i: { title: string; body: string; labels: string[] }): Promise<{ number: number; url: string }>;
+  comment(number: number, body: string): Promise<{ url: string }>;
+}
+
+export function githubFeedback(o: { token: string; repo?: string; fetch?: typeof fetch; now?: () => number }): FeedbackGitHub {
+  const repo = o.repo ?? "hoaj/cph-activities";
+  const now = o.now ?? Date.now;
+  const api = githubApi({ token: o.token, fetch: o.fetch });
+  const list = async (query: string): Promise<any[]> => {
+    const out: any[] = [];
+    for (let page = 1; page <= 3; page++) {
+      const rows: any[] = await api("GET", `/repos/${repo}/issues?${query}&per_page=100&page=${page}`);
+      out.push(...rows.filter((i) => !i.pull_request));
+      if (rows.length < 100) break;
+    }
+    return out;
+  };
+  const ref = (i: any): IssueRef => ({ number: i.number, title: String(i.title), body: String(i.body ?? ""), url: i.html_url, state: i.state === "closed" ? "closed" : "open", ...(i.closed_at ? { closedAt: i.closed_at } : {}) });
+  return {
+    async listCandidates(days) {
+      const cutoff = now() - days * 86400_000;
+      const since = new Date(cutoff).toISOString();
+      const [a, b, c, closed] = await Promise.all([
+        list("state=open&labels=feedback"),
+        list("state=open&labels=bug"),
+        list("state=open&labels=enhancement"),
+        list(`state=closed&labels=feedback&since=${encodeURIComponent(since)}`),
+      ]);
+      const seen = new Map<number, IssueRef>();
+      for (const i of [...a, ...b, ...c]) seen.set(i.number, ref(i));
+      for (const i of closed) if (i.closed_at && Date.parse(i.closed_at) >= cutoff) seen.set(i.number, ref(i));
+      return [...seen.values()];
+    },
+    async createIssue(i) {
+      const made = await api("POST", `/repos/${repo}/issues`, i);
+      return { number: made.number, url: made.html_url };
+    },
+    async comment(number, body) {
+      const made = await api("POST", `/repos/${repo}/issues/${number}/comments`, { body });
+      return { url: made.html_url };
+    },
+  };
+}
+
+/** GITHUB_TOKEN set: the REST client; otherwise null (the tool then says feedback is not set up). */
+export function feedbackGitHubFromEnv(env: Record<string, string | undefined>, f?: typeof fetch): FeedbackGitHub | null {
+  const token = env.GITHUB_TOKEN?.trim();
+  return token ? githubFeedback({ token, fetch: f, ...(env.GITHUB_REPO ? { repo: env.GITHUB_REPO } : {}) }) : null;
 }

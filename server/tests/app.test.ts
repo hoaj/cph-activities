@@ -3,6 +3,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { INSTRUCTIONS, PLAN_A_DAY_GUIDE } from "../src/instructions";
 import { DATE, fakeDeps, forecast, item } from "./helpers";
+import { createFeedback } from "../src/feedback";
 import { slidingLimiter } from "../src/limits";
 import { createLogger } from "../src/log";
 import { parseLinks, sha256Hex } from "../src/links";
@@ -18,6 +19,15 @@ const deps = fakeDeps({
   ],
   weather: forecast("dry"),
 });
+const filed: { title: string; body: string; labels: string[] }[] = [];
+const feedback = createFeedback({
+  github: {
+    listCandidates: async () => [],
+    createIssue: async (i) => (filed.push(i), { number: 7, url: "https://github.test/7" }),
+    comment: async () => ({ url: "https://github.test/7#c" }),
+  },
+  version: "1.2.3",
+});
 let server: ReturnType<typeof startServer>;
 let base: string;
 
@@ -28,6 +38,7 @@ beforeAll(() => {
     limiter: slidingLimiter({ perHour: 200, perDay: 1000 }),
     log: createLogger((l) => logs.push(l)),
     deps,
+    feedback,
     missLimit: 5,
     trustProxy: true,
   });
@@ -97,8 +108,9 @@ describe("MCP over a link", () => {
     const client = await connect(`${base}/mcp/${SECRET}`);
     expect(client.getInstructions()).toBe(INSTRUCTIONS);
     const tools = (await client.listTools()).tools;
-    expect(tools.map((t) => t.name).sort()).toEqual(["find_activity_slots", "find_events", "get_details", "get_weather", "list_options", "plan_outing"]);
-    for (const t of tools) expect(t.annotations).toMatchObject({ readOnlyHint: true, openWorldHint: true });
+    expect(tools.map((t) => t.name).sort()).toEqual(["find_activity_slots", "find_events", "get_details", "get_weather", "list_options", "plan_outing", "send_feedback"]);
+    for (const t of tools.filter((t) => t.name !== "send_feedback")) expect(t.annotations).toMatchObject({ readOnlyHint: true, openWorldHint: true });
+    expect(tools.find((t) => t.name === "send_feedback")!.annotations).toMatchObject({ readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true });
     const prompt = await client.getPrompt({ name: "plan_a_day", arguments: { request: "Hvad skal vi lave?" } });
     expect(JSON.stringify(prompt.messages)).toContain("Hvad skal vi lave?");
 
@@ -123,6 +135,12 @@ describe("MCP over a link", () => {
     expect(details.title).toBe("Jazzkoncert");
     const options = await call("list_options");
     expect(options.sports).toContain("padel");
+    const sent = await call("send_feedback", { kind: "idea", title: "Show cinema listings", what_happened: "There is no source for cinema showings.", approved: true });
+    expect(sent).toEqual({ action: "created", issueUrl: "https://github.test/7", number: 7 });
+    expect(filed).toHaveLength(1);
+    expect(filed[0]!.title).toBe("feedback: Show cinema listings");
+    expect(JSON.stringify(filed)).not.toContain("anna");
+    expect(JSON.stringify(filed)).not.toContain(SECRET);
     await client.close();
   });
 

@@ -4,6 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import pkg from "../package.json";
 import type { ToolDeps } from "./common";
+import type { Feedback } from "./feedback";
 import { INSTRUCTIONS, registerPrompts } from "./instructions";
 import type { LinkTable } from "./links";
 import type { Limiter } from "./limits";
@@ -13,6 +14,8 @@ import { registerTools } from "./tools";
 export type AppConfig = {
   /** The cache, item index and option lists the tools use: one set for the whole process. */
   deps: ToolDeps;
+  /** send_feedback's state and GitHub client: one for the whole process. Without it the tool says feedback is not set up. */
+  feedback?: Feedback;
   links: LinkTable;
   limiter: Limiter;
   log: Log;
@@ -99,7 +102,7 @@ export function createApp(cfg: AppConfig): Handler {
     if (req.method !== "POST") return done(bare(405, { allow: "POST" }), link);
 
     const server = new McpServer({ name: "cph-activities", version: pkg.version }, { instructions: INSTRUCTIONS });
-    registerTools(server, { link, limiter: cfg.limiter, deps: cfg.deps, log: cfg.log, now });
+    registerTools(server, { link, limiter: cfg.limiter, deps: cfg.deps, feedback: cfg.feedback, log: cfg.log, now });
     registerPrompts(server);
     const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
     try {

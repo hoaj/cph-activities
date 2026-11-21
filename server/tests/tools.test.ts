@@ -274,11 +274,11 @@ describe("get_details and list_options", () => {
 });
 
 describe("every tool", () => {
-  test("is read-only and open-world, has an output schema, and the text equals the structured content", async () => {
+  test("is read-only (but send_feedback) and open-world, has an output schema, and the text equals the structured content", async () => {
     const { client, call } = await connectTools(fakeDeps({ items: events() }));
     const tools = (await client.listTools()).tools;
-    expect(tools.map((t) => t.name).sort()).toEqual(["find_activity_slots", "find_events", "get_details", "get_weather", "list_options", "plan_outing"]);
-    for (const t of tools) {
+    expect(tools.map((t) => t.name).sort()).toEqual(["find_activity_slots", "find_events", "get_details", "get_weather", "list_options", "plan_outing", "send_feedback"]);
+    for (const t of tools.filter((t) => t.name !== "send_feedback")) {
       expect(t.annotations).toMatchObject({ readOnlyHint: true, openWorldHint: true });
       expect(t.outputSchema).toBeTruthy();
       expect(t.description!.length).toBeGreaterThan(100);
