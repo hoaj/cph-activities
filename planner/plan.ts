@@ -1,6 +1,6 @@
 import type { Brief, Mood, NeedsInput, PlanResult, PlannerDays, Shortlist, Suggestion, SuggestionItem } from "./types";
 import { MOOD_DA, cap, dayName, norm, tmin, uniq } from "./text";
-import { annotate } from "./features";
+import { annotate, belowDoorAge } from "./features";
 import { mergeItems } from "./merge";
 import { STOP, findThreads } from "./threads";
 import { readWeather } from "./weather";
@@ -134,10 +134,11 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
       if (closes == null || t >= toM || closes <= fromM) { drop("uden for tidsrum"); continue; }
     }
     if (f.noise && !(wishes && /kursus|hold|træning/i.test(wishes))) { drop("kurser, hold og sæsonkort"); continue; }
-    if ((it.source === "billetto" || it.source === "kglteater") && it.extra.onSale === false) { drop("ikke til salg"); continue; }
+    if (["billetto", "kglteater", "culturebox", "hangaren"].includes(it.source) && it.extra.onSale === false) { drop("ikke til salg"); continue; }
 
     // age
     if (minors && f.adult) { drop(ADULT_DROP); continue; }
+    if (belowDoorAge(it, youngest)) { drop("under klubbens aldersgrænse"); continue; }
     if (youngest >= 13 && (f.kids || (it.ageFrom != null && it.ageFrom <= youngest - 8 && f.audKids))) { drop("for børn"); continue; }
     if (small) {
       if (!(f.kids || f.audKids) || it.kind === "slots") { drop("ikke for små børn"); continue; }

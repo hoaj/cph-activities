@@ -31,6 +31,8 @@ const LOADERS: Record<Source, () => Promise<SkillApp>> = {
   absalon: () => load(import("../skills/absalon/cli/src/main"), import("../skills/absalon/cli/src/site"), import("../skills/absalon/cli/src/registry")),
   wannasport: () => load(import("../skills/wannasport/cli/src/main"), import("../skills/wannasport/cli/src/site"), import("../skills/wannasport/cli/src/registry")),
   visitorservice: () => load(import("../skills/visitorservice/cli/src/main"), import("../skills/visitorservice/cli/src/site"), import("../skills/visitorservice/cli/src/registry")),
+  culturebox: () => load(import("../skills/culturebox/cli/src/main"), import("../skills/culturebox/cli/src/site"), import("../skills/culturebox/cli/src/registry")),
+  hangaren: () => load(import("../skills/hangaren/cli/src/main"), import("../skills/hangaren/cli/src/site"), import("../skills/hangaren/cli/src/registry")),
   dmi: () => load(import("../skills/dmi/cli/src/main"), import("../skills/dmi/cli/src/site"), import("../skills/dmi/cli/src/registry")),
 };
 const apps = new Map<Source, Promise<SkillApp>>();
@@ -147,6 +149,12 @@ export async function fetchDay(source: Source, date: string, opts: FetchDayOptio
       break;
     case "visitorservice":
       calls.push({ argv: ["market", "list", "--from", D, "--to", D, "--limit", "60"], into: (o) => { raw(o, "markets"); collected.push(...N.visitorservice(o, D)); } });
+      break;
+    case "culturebox":
+      calls.push({ argv: ["event", "list", "--from", D, "--to", D, "--limit", "60"], into: (o) => { raw(o, "events"); collected.push(...N.culturebox(o, D)); } });
+      break;
+    case "hangaren":
+      calls.push({ argv: ["event", "list", "--from", D, "--to", D, "--limit", "300"], into: (o) => { raw(o, "events"); collected.push(...N.hangaren(o, D)); } });
       break;
     case "wannasport":
       for (const s of opts.sports ?? SPORTS) {

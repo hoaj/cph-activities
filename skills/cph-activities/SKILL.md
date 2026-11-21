@@ -1,8 +1,8 @@
 ---
 name: cph-activities
-description: Use when the user asks what to do in Copenhagen (a date, an evening out, the weekend, plans with a friend, a sibling or kids, "what's on Wednesday"). Finds the few activities that fit the user's need across this plugin's sources (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, kglteater, absalon, wannasport, visitorservice) and the weather (dmi), asks first when the need is unclear, and merges events several sources list.
+description: Use when the user asks what to do in Copenhagen (a date, an evening out, the weekend, plans with a friend, a sibling or kids, "what's on Wednesday"). Finds the few activities that fit the user's need across this plugin's sources (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, kglteater, absalon, wannasport, visitorservice, culturebox, hangaren) and the weather (dmi), asks first when the need is unclear, and merges events several sources list.
 ---
-<!-- version: 0.16.1 -->
+<!-- version: 0.17.0 -->
 
 # cph-activities: the right plan, not a list
 
@@ -42,7 +42,7 @@ Ask only the sources the brief needs, with the filters that cut on the site. Run
   - active: `wannasport slot search --sport <slug>` for one to three sports that fit (`sport list` has 41); bowling has no source: give https://www.easybowl.com/bc/dgi/booking.
   - markets, a family weekend, late November and December: `visitorservice market list --from <day> --to <day>` for Christmas markets (`--indoor` on a wet or cold day, `--free`), plus `kultunaut event list --genre Loppemarked/Genbrug` and `brugbyen event list --category Marked` for flea and neighbourhood markets.
   - one kind of thing (comedy, jazz, a talk): Billetto `--query`/`--category`, KultuNaut `--genre`, kulturKBH `--type`/`--query`.
-  - club nights, DJs, electronic music (only when everyone is 18 or older): no source here covers them well. Use what Billetto and KultuNaut list, and give https://ra.co/events/dk/copenhagen for the user to open themselves. Never fetch ra.co: its terms forbid automated access.
+  - club nights, DJs, electronic music (only when everyone is 18 or older): `culturebox event list --from <day>` for Culture Box (18+) and `hangaren event list --from <day>` for Hangaren (its limit is usually 20, so check `ageFrom` against the youngest), plus what Billetto and KultuNaut list, and give https://ra.co/events/dk/copenhagen for the user to open themselves. Never fetch ra.co, nor a `ticketUrl` that points there: its terms forbid automated access.
 
 Done when every source the brief needs has answered, or failed with an `error.kind` you will mention.
 
@@ -87,7 +87,9 @@ Keep it to these suggestions. Show more only when the user asks for more, for a 
 | kglteater | `kglteater show list` (`genre list`, `stage list`) | Det Kongelige Teater (Operaen, Gamle Scene, Skuespilhuset): opera, ballet, plays, musicals, dance, concerts; cheapest price and availability, top price and age with `--details`; not part of teaterbilletter | The performance's page on kglteater.dk (`url`) or the ticket link (`bookingUrl`) |
 | absalon | `absalon event list` (`category list`) | Folkehuset Absalon (Vesterbro): communal dinners, dance, yoga, workshops, ceramics, bingo, quiz, parties, concerts, markets, children's activities | The event's page on absaloncph.dk |
 | wannasport | `wannasport slot search --sport <slug>` (`sport list`) | Free times to play a sport: padel, tennis, squash, table tennis, badminton … | The venue's booking page |
+| culturebox | `culturebox event list` | Club nights at Culture Box (18+): opening hours past midnight, lineup per room, entrance price; a night stays on the date it opens | The night's page (`url`) or the ticket link (`ticketUrl`, often ra.co: never fetch it) |
 | visitorservice | `visitorservice market list` | Christmas markets from the municipality's Visitor Service: each open day's hours, place, price, `indoor` when the page says; no flea markets | The market's page on visitorservice.kk.dk |
+| hangaren | `hangaren event list` | Club nights at Hangaren (Refshaleøen): start and end (a night past midnight stays on its start date), line-up, price range, `ageFrom` | The event's page (`url`) or the ticket seller (`ticketUrl`), which the user opens; never fetch it |
 | dmi | `dmi forecast --date <day> [--from-time --to-time]` | The weather, not events: hour by hour for about 10 days, `verdict.outdoor` dry/showers/wet, temperature, wind, DMI's text and warnings | None |
 
 Every source is limited to Københavns and Frederiksberg Kommune by default (`area`).

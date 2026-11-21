@@ -1,0 +1,54 @@
+{
+  "task": "event-list",
+  "startPath": "/events/",
+  "write": false,
+  "operations": [
+    {
+      "operation": "GET /events/",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "culture-box.com",
+      "path": "/events/",
+      "file": "GET-events.shape.json",
+      "pages": [
+        "/events/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /wp-admin/admin-ajax.php",
+      "kind": "rest",
+      "effect": "read",
+      "method": "GET",
+      "host": "culture-box.com",
+      "path": "/wp-admin/admin-ajax.php",
+      "file": "GET-wp-admin-admin-ajax.php.shape.json",
+      "pages": [
+        "/events/",
+        "/event/:id/"
+      ],
+      "seen": 4,
+      "aborted": 0
+    },
+    {
+      "operation": "GET /event/:id/",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "culture-box.com",
+      "path": "/event/:id/",
+      "file": "GET-event-id.shape.json",
+      "pages": [
+        "/event/:id/"
+      ],
+      "seen": 1,
+      "aborted": 0
+    }
+  ]
+}

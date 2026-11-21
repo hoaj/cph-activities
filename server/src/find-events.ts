@@ -1,7 +1,7 @@
 // find_events: merged, deduplicated events across the event sources, filtered here (the cache holds
 // whole days), with facets and a cursor. Rows are compact; get_details has the rest.
 import { z } from "zod";
-import { annotate } from "../../planner/features";
+import { annotate, belowDoorAge } from "../../planner/features";
 import { mergeItems } from "../../planner/merge";
 import type { Merged } from "../../planner/merge";
 import { norm, tmin, uniq } from "../../planner/text";
@@ -67,6 +67,7 @@ export function filterEvents(merged: Merged[], a: Pick<FindEventsArgs, "query" |
     if (a.excludeKids && f.kids) return false;
     if (age != null) {
       if (age < 18 && f.adult) return false;
+      if (belowDoorAge(it, age)) return false;
       if (age >= 13 && (f.kids || (it.ageFrom != null && it.ageFrom <= age - 8 && f.audKids))) return false;
       if (age < 10 && !(f.kids || f.audKids)) return false;
       if (f.minAge != null && f.minAge > age && age < 13) return false;
