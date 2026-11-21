@@ -44,5 +44,5 @@ console.log(`done in ${Math.round(performance.now() - t0)} ms`);
 
 const days = assemble([date], results.map((x) => x.r));
 const plan = planOuting({ people: [{ age: 30 }, { age: 30 }], date, mood: ["culture"] }, days);
-console.log(plan.status === "ok" ? `planOuting: best = ${plan.best?.title ?? "none"}; ${plan.alternatives.length} alternatives; weather: ${plan.weather}` : `planOuting: ${plan.status}`);
+console.log(plan.status === "ok" ? `planOuting: best = ${plan.best?.title ?? "none"}; ${plan.alternatives.length} alternatives; weather: ${plan.weather ?? "not mentioned"}` : `planOuting: ${plan.status}`);
 process.exit(failed ? 1 : 0);

@@ -3,13 +3,16 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import pkg from "../package.json";
-import { INSTRUCTIONS } from "./instructions";
+import type { ToolDeps } from "./common";
+import { INSTRUCTIONS, registerPrompts } from "./instructions";
 import type { LinkTable } from "./links";
 import type { Limiter } from "./limits";
 import type { Log } from "./log";
 import { registerTools } from "./tools";
 
 export type AppConfig = {
+  /** The cache, item index and option lists the tools use: one set for the whole process. */
+  deps: ToolDeps;
   links: LinkTable;
   limiter: Limiter;
   log: Log;
@@ -96,7 +99,8 @@ export function createApp(cfg: AppConfig): Handler {
     if (req.method !== "POST") return done(bare(405, { allow: "POST" }), link);
 
     const server = new McpServer({ name: "cph-activities", version: pkg.version }, { instructions: INSTRUCTIONS });
-    registerTools(server, { link, limiter: cfg.limiter, now });
+    registerTools(server, { link, limiter: cfg.limiter, deps: cfg.deps, log: cfg.log, now });
+    registerPrompts(server);
     const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
     try {
       await server.connect(transport);

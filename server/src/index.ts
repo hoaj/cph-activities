@@ -1,4 +1,5 @@
-// Entry point: LINKS (name:sha256 entries), PORT (default 8080). PUBLIC_URL is only for `links.ts`.
+// Entry point: LINKS (name:sha256 entries), PORT (default 8080), the cache settings (see README). PUBLIC_URL is only for `links.ts`.
+import { createToolDeps } from "./deps";
 import { slidingLimiter } from "./limits";
 import { parseLinks } from "./links";
 import { createLogger } from "./log";
@@ -13,6 +14,7 @@ const server = startServer({
   port,
   links,
   limiter: slidingLimiter(),
+  deps: createToolDeps(process.env, log),
   log,
   // Railway puts the client address last in X-Forwarded-For; set TRUST_PROXY=0 to use the socket.
   trustProxy: process.env.TRUST_PROXY !== "0",

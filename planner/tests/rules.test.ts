@@ -224,8 +224,10 @@ describe("weather", () => {
   ];
   const b = () => brief({ mood: ["culture", "social"] });
 
-  test("the weather line: day, temperatures, verdict", () => {
-    expect(ok(planOuting(b(), days(rows(), forecast("dry")))).weather).toBe("Lørdag: 8–12 grader, tørt");
+  test("the weather line: day, temperatures, verdict, only when it matters", () => {
+    expect(ok(planOuting(b(), days(rows(), forecast("dry")))).weather).toBeNull();
+    expect(ok(planOuting(b(), days(rows(), forecast("showers")))).weather).toBe("Lørdag: 8–12 grader, byger");
+    expect(ok(planOuting(b(), days(rows(), forecast("dry", { snow: true })))).weather).toBe("Lørdag: 8–12 grader, tørt, sne");
     expect(ok(planOuting(b(), days(rows(), forecast("wet", { rainMm: 8.4 })))).weather).toBe("Lørdag: 8–12 grader, regn (8 mm)");
     expect(ok(planOuting(b(), days(rows(), forecast("dry", { cold: true, windy: true, maxGust: 14 })))).weather).toBe("Lørdag: 8–12 grader, tørt, koldt, blæsende (stød 14 m/s)");
   });
@@ -257,9 +259,10 @@ describe("weather", () => {
     expect(titles(ok(planOuting(b(), days(rows(), forecast("dry")))))).toContain("Julemarked på pladsen");
     expect(titles(ok(planOuting({ ...b(), indoorOnly: true }, days(rows(), forecast("dry")))))).not.toContain("Julemarked på pladsen");
   });
-  test("no forecast for the date: says so and plans as if dry", () => {
+  test("no forecast for the date: no weather line, an assumption says so, plans as if dry", () => {
     const r = ok(planOuting(b(), days(rows(), null)));
-    expect(r.weather).toContain("Ingen vejrudsigt");
+    expect(r.weather).toBeNull();
+    expect(r.assumptions.join(" ")).toContain("Ingen vejrudsigt");
     expect(titles(r)).toContain("Julemarked på pladsen");
   });
   test("outdoor courts follow the same rules by their name", () => {
