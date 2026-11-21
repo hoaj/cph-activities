@@ -86,8 +86,9 @@ export default defineCommand({
         const count = Math.max(1, Math.min(need, lastPage - next + 1));
         wave = await Promise.all(Array.from({ length: count }, (_, i) => fetchPage(next + i, ids)));
       }
+      const firstIndex = next;
       next += wave.length;
-      for (const r of wave) {
+      for (const [i, r] of wave.entries()) {
         seen += r.events.length;
         for (const e of r.events) {
           const d = parseDateText(e.dateText);
@@ -118,7 +119,9 @@ export default defineCommand({
             url: new URL(e.href, site.origin).toString(),
           });
         }
-        if (r.events.length < PAGE_SIZE || (total !== null && seen >= total)) {
+        // A page can hold fewer than PAGE_SIZE events without being the last (text-only items are
+        // left out), so stop on the last page by total, an empty page, or everything seen.
+        if (r.events.length === 0 || firstIndex + i >= lastPage || (total !== null && seen >= total)) {
           complete = true;
           break;
         }
