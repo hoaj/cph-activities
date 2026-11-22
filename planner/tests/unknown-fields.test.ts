@@ -1,7 +1,7 @@
 // hoaj/cph-activities#53 in plan_outing: a missing category, price, age, time or place is not a reason to drop an event.
 import { describe, expect, test } from "bun:test";
 import { planOuting } from "../plan";
-import { brief, days, item, ok, suggestions, titles } from "./helpers";
+import { brief, days, forecast, item, ok, suggestions, titles } from "./helpers";
 
 const all = (r: ReturnType<typeof ok>) => suggestions(r).flatMap((s) => s.items);
 const said = (r: ReturnType<typeof ok>) => r.assumptions.join(" | ");
@@ -130,5 +130,66 @@ describe("the deliberate rules on positive evidence stay", () => {
     expect(ok(planOuting(brief(), days([item({ source: "billetto", title: "Udsolgt", categories: ["Musik"], extra: { onSale: false } })]))).stats.dropped["ikke til salg"]).toBe(1);
     const r = ok(planOuting(brief(), days([item({ title: "Uden tid", time: null, categories: ["Musik"] })])));
     expect(r.best).toBeNull();
+  });
+});
+
+// hoaj/cph-activities#55: indoorOnly keeps an item with no indoor/outdoor value as unknown.
+describe("indoorOnly: an item with no indoor value is kept after the known-indoor ones", () => {
+  const court = (name: string, indoor: boolean | null, times = ["10:00", "11:00"]) =>
+    item({ source: "wannasport", kind: "slots", title: `Padel – ${name}`, venue: name, indoor, times, priceMin: 200, priceMax: 200, extra: { sport: "padel" } });
+  const b = () => brief({ mood: ["active"], indoorOnly: true });
+
+  test("an unknown court is kept and ranked after a known-indoor one; a known-outdoor one is dropped", () => {
+    const r = ok(planOuting(b(), days([court("Ukendt", null), court("Inde", true), court("Ude", false)])));
+    expect(titles(r)).toEqual(["Padel – Inde", "Padel – Ukendt"]);
+    expect(r.best!.items[0]!.title).toBe("Padel – Inde");
+    expect(r.stats.dropped["kun indendørs"]).toBe(1);
+    const unknown = suggestions(r).find((s) => s.items[0]!.title === "Padel – Ukendt")!;
+    expect(unknown.why.join(" ")).toContain("inde/ude ikke oplyst");
+    expect(suggestions(r).find((s) => s.items[0]!.title === "Padel – Inde")!.why.join(" ")).not.toContain("inde/ude ikke oplyst");
+  });
+  test("the sure-indoor item wins best even when the unknown one scores higher otherwise", () => {
+    const r = ok(planOuting(b(), days([court("Ukendt", null, ["10:00", "11:00", "12:00", "13:00"]), court("Inde", true, ["10:00"])])));
+    expect(r.best!.items[0]!.title).toBe("Padel – Inde");
+  });
+  test("an outdoor-ish event with no indoor value stays dropped, a neutral one is kept as unknown", () => {
+    const r = ok(planOuting(brief({ mood: ["culture", "social"], indoorOnly: true }), days([
+      item({ title: "Julemarked på pladsen", categories: ["Marked"], time: "12:00" }),
+      item({ title: "Foredrag om bøger", categories: ["Foredrag"], time: "15:00" }),
+      item({ title: "Teaterstykke", categories: ["Teater"], time: "19:00", indoor: true }),
+    ])));
+    expect(titles(r)).toEqual(["Teaterstykke", "Foredrag om bøger"]);
+    expect(r.stats.dropped["kun indendørs"]).toBe(1);
+  });
+  test("the assumption counts the unknown ones", () => {
+    const r = ok(planOuting(b(), days([court("A", null), court("B", null), court("Inde", true)])));
+    expect(said(r)).toContain("2 ting har ingen oplysning om inde/ude og er med (kun indendørs: tjek at de er indendørs)");
+    expect(said(r)).not.toContain("som ikke ser udendørs ud");
+  });
+  test("no indoorOnly: no unknown marker and no sentence", () => {
+    const r = ok(planOuting(brief({ mood: ["active"] }), days([court("A", null)])));
+    expect(said(r)).not.toContain("inde/ude");
+    expect(all(r)).toHaveLength(1);
+  });
+  test("wet: an unknown court is kept as an alternative, never the best bet or in the plan, and the assumption says to check", () => {
+    const only = ok(planOuting(b(), days([court("Ukendt", null)], forecast("wet"))));
+    expect(only.best).toBeNull();
+    expect(titles(only)).toEqual(["Padel – Ukendt"]);
+    expect(only.plan).toBeUndefined();
+    expect(said(only)).toContain("hvis det regner, så tjek at banen er indendørs");
+    const both = ok(planOuting(brief({ mood: ["active", "culture"], indoorOnly: true }), days([court("Ukendt", null), court("Inde", true, ["13:00"]), item({ title: "Teaterstykke", categories: ["Teater"], time: "17:00", indoor: true })], forecast("wet"))));
+    expect(both.best!.items[0]!.title).toBe("Padel – Inde");
+    expect(titles(both)).toContain("Padel – Ukendt");
+    expect((both.plan ?? []).join(" ")).not.toContain("Ukendt");
+    expect((both.plan ?? []).join(" ")).toContain("Padel – Inde");
+  });
+  test("dry: the unknown court may be in the plan and the sentence has no rain advice", () => {
+    const r = ok(planOuting(b(), days([court("Ukendt", null)])));
+    expect(r.best!.items[0]!.title).toBe("Padel – Ukendt");
+    expect(said(r)).not.toContain("hvis det regner");
+  });
+  test("the follow-up that switches indoorOnly off still patches it away", () => {
+    const r = ok(planOuting(brief({ mood: ["active"], indoorOnly: true, budgetPerPerson: 1 }), days([court("Ukendt", null)])));
+    expect(r.next.map((n) => n.patch)).toContainEqual({ budgetPerPerson: null, indoorOnly: null });
   });
 });
