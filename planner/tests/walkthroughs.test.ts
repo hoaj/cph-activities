@@ -72,8 +72,11 @@ describe("3 free family Sunday", () => {
   test("only kids' and family things, only free, nothing late; an unpriced brugbyen row says so", () => {
     const r = ok(planOuting({ ...first, mood: ["culture", "social"] }, data));
     expect(r.best).not.toBeNull();
-    expect(all(r).every((i) => i.price === "gratis" || i.price.startsWith("gratis?"))).toBe(true);
-    expect(all(r).some((i) => i.price.startsWith("gratis?"))).toBe(true);
+    // nothing with a known price; an unknown price is kept and says so, ranked after the sure ones
+    expect(all(r).every((i) => i.price === "gratis" || i.price.startsWith("gratis?") || i.price === "pris ikke oplyst")).toBe(true);
+    // the sure free ones come first: the unpriced brugbyen rows ("gratis?") follow and are counted
+    expect(all(r).some((i) => i.price === "gratis")).toBe(true);
+    expect(r.assumptions.join(" ")).toMatch(/har ingen pris oplyst og er med/);
     expect(all(r).every((i) => i.time === "tid: se siden" || (i.time >= "10:00" && i.time < "16:00"))).toBe(true);
     expect(r.assumptions.join(" ")).toContain("Gratis-brief");
     expect(r.best!.why.join(" ")).toContain("for børn");

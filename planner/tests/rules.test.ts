@@ -62,10 +62,10 @@ describe("events without a start time", () => {
     expect(r.alternatives).toHaveLength(1);
     expect(r.assumptions.join(" ")).toContain("ingen tid");
   });
-  test("left out for small children and for an evening brief", () => {
+  test("kept for small children and for an evening brief, as alternatives (see unknown-fields.test.ts)", () => {
     const kids = item({ title: "Børneteater", time: null, categories: ["Børn"] });
-    expect(ok(planOuting(brief({ people: [{ age: 30 }, { age: 4 }] }), days([kids]))).stats.dropped["uden tid"]).toBe(1);
-    expect(ok(planOuting(brief({ from: "18:00" }), days([untimed()]))).stats.dropped["uden tid"]).toBe(1);
+    expect(ok(planOuting(brief({ people: [{ age: 30 }, { age: 4 }], wishes: "børneteater" }), days([kids]))).alternatives).toHaveLength(1);
+    expect(ok(planOuting(brief({ from: "18:00" }), days([untimed()]))).alternatives).toHaveLength(1);
   });
   test("may be part of a thread", () => {
     const rows = [
@@ -202,7 +202,7 @@ describe("budget", () => {
     const r = ok(planOuting(brief({ budgetPerPerson: 100 }), days([item({ title: "Koncert uden pris", categories: ["Musik"] })])));
     expect(r.best!.items[0]!.price).toBe("pris ikke oplyst");
   });
-  test("budget 0: only free, plus unpriced brugbyen rows marked as a guess", () => {
+  test("budget 0: free first, then unpriced rows (brugbyen marked as a guess); a known price is dropped", () => {
     const rows = [
       item({ title: "Gratis foredrag", categories: ["Foredrag"], free: true, priceMin: 0 }),
       item({ title: "Foredrag for kendte", categories: ["Foredrag"], priceMin: 50 }),
@@ -210,9 +210,9 @@ describe("budget", () => {
       item({ title: "Foredrag fra kultunaut", categories: ["Foredrag"] }),
     ];
     const r = ok(planOuting(brief({ budgetPerPerson: 0 }), days(rows)));
-    expect(titles(r).sort()).toEqual(["Foredrag i biblioteket", "Gratis foredrag"]);
+    expect(titles(r)).toEqual(["Gratis foredrag", "Foredrag i biblioteket", "Foredrag fra kultunaut"]);
     expect(suggestions(r).find((s) => s.items[0]!.title === "Foredrag i biblioteket")!.items[0]!.price).toBe("gratis? (pris ikke oplyst)");
-    expect(r.stats.dropped["koster penge"]).toBe(2);
+    expect(r.stats.dropped["koster penge"]).toBe(1);
   });
 });
 
@@ -310,9 +310,9 @@ describe("age limits", () => {
     const r = ok(planOuting(brief({ people: [{ age: 30 }, { age: 15 }] }), days([item({ title: "Børneteater: Prinsessen", time: "11:00", categories: ["Teater"] }), item({ title: "Rockkoncert", time: "20:00", categories: ["Musik"] })])));
     expect(titles(r)).toEqual(["Rockkoncert"]);
   });
-  test("small children get only what is made for them, and nothing late", () => {
+  test("small children get what is made for them first, what says nothing about age after, and nothing late", () => {
     const rows = [item({ title: "Børneteater: Prinsessen", time: "11:00", categories: ["Teater"], audience: ["børn"] }), item({ title: "Rockkoncert", time: "11:00", categories: ["Musik"] }), item({ title: "Børnekoncert sent", time: "19:30", categories: ["Musik"], audience: ["børn"] })];
     const r = ok(planOuting(brief({ people: [{ age: 30 }, { age: 5 }] }), days(rows)));
-    expect(titles(r)).toEqual(["Børneteater: Prinsessen"]);
+    expect(titles(r)).toEqual(["Børneteater: Prinsessen", "Rockkoncert"]);
   });
 });

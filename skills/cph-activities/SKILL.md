@@ -2,7 +2,7 @@
 name: cph-activities
 description: Use when the user asks what to do in Copenhagen (a date, an evening out, the weekend, plans with a friend, a sibling or kids, "what's on Wednesday"). Finds the few activities that fit the user's need across this plugin's sources (kulturkbh, billetto, kultunaut, brugbyen, teaterbilletter, kglteater, absalon, wannasport, visitorservice, culturebox, hangaren) and the weather (dmi), asks first when the need is unclear, and merges events several sources list.
 ---
-<!-- version: 0.17.4 -->
+<!-- version: 0.17.5 -->
 
 # cph-activities: the right plan, not a list
 
@@ -50,10 +50,11 @@ Done when every source the brief needs has answered, or failed with an `error.ki
 
 Merge the duplicates (see *Merging* below), then cut everything that does not fit the brief:
 
-- **Age:** nothing 18+ (club nights, bars, natfest, wine tastings) when someone is under 18; nothing for small children when the youngest is a teenager or older (`ageFrom` far below the youngest's age, "For børn", baby and family events, and in sources without an age, such as Billetto, a title or text that addresses children); for small children, only events made for them.
+- **Age:** nothing 18+ (club nights, bars, natfest, wine tastings) when someone is under 18; nothing for small children when the youngest is a teenager or older (`ageFrom` far below the youngest's age, "For børn", baby and family events, and in sources without an age, such as Billetto, a title or text that addresses children); for small children, events made for them first, and cut what is adult, 18+ or has an age limit above the child; an event that says nothing about age is *unknown*, not a no (see *Missing information* below).
 - **Fit:** judge each event from its `description`, `categories`, audience and `ageFrom`, not from its title, and cut those whose description shows they do not fit the brief (a course when the user wants a one-off evening, an event for professionals, a children's activity for adults). Without a description (brugbyen's list has none; teaterbilletter and kglteater give none today), say you do not know what it is: read its page through the link, or keep it out of the main suggestions. For brugbyen, read the description of the 2-3 events you are about to suggest with `brugbyen event show --url <the event's url>` (never for a whole day's list: it is one request per event).
 - **Time:** inside the window, and with time to get from one stop to the next.
 - **Budget:** inside it; free first for a free brief. wannasport prices are per court per booking: divide by the players. Where a source gives no price (KultuNaut, brugbyen, most of Absalon), keep the item only if it fits otherwise, and write "pris ikke oplyst".
+- **Missing information:** a filter never removes an event only because the field it looks at is missing. With no category, price, start time or age, the event is *unknown*: keep it, rank it after the ones that surely fit, say what is missing ("pris ikke oplyst", "tid: se siden") and judge it from its description. Cut an event only when the data contradicts the brief (a known price above the budget, 18+ for a minor, a start outside the window).
 - **Weather:** outdoor items only when `verdict.outdoor` allows them.
 - **Mood:** what matches the mood; drop courses, season passes and Billetto rows with `ongoing: true` unless asked.
 
