@@ -4,7 +4,7 @@ import { Failure } from "../src/runtime/envelope";
 import genreList from "../src/commands/genre-list";
 import showList from "../src/commands/show-list";
 import stageList from "../src/commands/stage-list";
-import { areaOf, availability, fitsAge, isRealDate, isSchoolOnly, parseAge, parsePriceRange, priceMin, resolveNames, safeLink, showPathParts, splitNames, toRow, withDetails, type Item } from "../src/lib/shows";
+import { areaOf, availability, leadText, fitsAge, isRealDate, isSchoolOnly, parseAge, parsePriceRange, priceMin, resolveNames, safeLink, showPathParts, splitNames, toRow, withDetails, type Item } from "../src/lib/shows";
 import site from "../src/site";
 import { fakeFetch, makeDeps, tempHome, type Recorded } from "./helpers";
 
@@ -64,6 +64,22 @@ describe("rows", () => {
     expect(r).toMatchObject({ title: "Planted show", date: "2030-03-05", time: "19:30", venue: "Det Kongelige Teater", area: "cph", priceMinDKK: 111, priceMaxDKK: null, ageFrom: null, premiere: true, forChildren: true, url: SHOW, bookingUrl: "https://seller.example.test/x" });
     expect(toRow(item()).bookingUrl).toBe("https://tickets.example.test/planted");
     expect(toRow(item({ isTour: true, location: null })).venue).toBeNull();
+  });
+  test("leadText: empty is null, entities decoded, tags dropped, long text cut at a word", () => {
+    expect(leadText(null)).toBeNull();
+    expect(leadText("  <p> </p> ")).toBeNull();
+    expect(leadText("Tr&aelig;f os &amp; spis&nbsp;<b>kage</b> &#8211;\n  nu")).toBe("Træf os & spis kage – nu");
+    const long = Array.from({ length: 200 }, (_, i) => `ord${i}`).join(" ");
+    const d = leadText(long)!;
+    expect(d.length).toBeLessThanOrEqual(500);
+    expect(d.length).toBeGreaterThan(450);
+    expect(d.endsWith("…")).toBe(true);
+    expect(long[d.length - 1]).toBe(" ");
+    expect(leadText("x".repeat(500))).toBe("x".repeat(500));
+  });
+  test("toRow carries the lead as description, null without one", () => {
+    expect(toRow(item({ showLead: "A short lead" })).description).toBe("A short lead");
+    expect(toRow(item()).description).toBeNull();
   });
   test("safeLink takes http(s) only", () => {
     expect(safeLink("javascript:alert(1)")).toBeNull();
@@ -205,6 +221,14 @@ describe("commands", () => {
     expect(urls.filter((u) => u.pathname === "/ballet/1111/planted-show/")).toHaveLength(1);
     expect(out.shows[1]).toMatchObject({ priceMinDKK: 111, priceMaxDKK: 500, ageFrom: 9 });
     expect(out.showsWithoutDetails).toBe(0);
+  });
+
+  test("description reaches rows with and without --details, the same on every date", async () => {
+    const two = [item({ showLead: "Planted lead" }), item({ startDate: "2030-03-06T19:30:00", showLead: "Planted lead" })];
+    const plain = await run([two], showList, { ...days });
+    expect(plain.out.shows.map((s: any) => s.description)).toEqual(["Planted lead", "Planted lead"]);
+    const det = await run([two], showList, { ...days, details: true });
+    expect(det.out.shows.map((s: any) => s.description)).toEqual(["Planted lead", "Planted lead"]);
   });
 
   test("reads at most 10 show pages a run and counts the rest", async () => {

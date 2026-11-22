@@ -42,6 +42,7 @@ export default defineOperation({
         showName: z.string().min(1),
         showUrl: z.string().min(1),
         showId: z.number(),
+        showLead: text,
         category: text,
         canceled: z.boolean(),
         isFree: z.boolean(),
