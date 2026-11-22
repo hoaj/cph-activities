@@ -8,7 +8,7 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "hangaren",
   repo: "hoaj/cph-activities",
-  version: "0.17.4",
+  version: "0.17.5",
   generatedWith: "0.12.1",
   origin: "https://www.hangaren.dk",
   graphqlPath: "/graphql",
