@@ -6,7 +6,7 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "brugbyen",
   repo: "hoaj/cph-activities",
-  version: "0.17.3",
+  version: "0.17.4",
   generatedWith: "0.16.0",
   origin: "https://brugbyen.kk.dk",
   graphqlPath: "/graphql",
