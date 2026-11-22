@@ -1,6 +1,6 @@
 {
   "name": "cph-activities-dmi-cli",
-  "version": "0.17.5",
+  "version": "0.17.6",
   "private": true,
   "type": "module",
   "scripts": {
