@@ -18,6 +18,7 @@ const UNKNOWN_SENTENCE: Record<string, (n: number) => string> = {
   time: (n) => `${n} begivenheder har ingen starttid og er med (aldrig eneste bud, ikke i planen).`,
   category: (n) => `${n} begivenheder har ingen kategori og er med: vurdér dem ud fra beskrivelsen.`,
   place: (n) => `${n} begivenheder har intet sted oplyst og er med.`,
+  indoor: (n) => `${n} ting har ingen oplysning om inde/ude og er med (kun indendørs: tjek at de er indendørs).`,
 };
 
 const WISH_MOOD: [RegExp, Mood][] = [
@@ -169,7 +170,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
       if (wet) { drop("udendørs i regn"); continue; }
       if (coldish) { drop("udendørs i kulde/blæst"); continue; }
       if (brief.indoorOnly) { drop("kun indendørs"); continue; }
-    } else if (brief.indoorOnly && it.indoor == null && it.kind === "slots") { drop("kun indendørs"); continue; }
+    } else if (brief.indoorOnly && it.indoor == null) unk.add("indoor"); // no indoor/outdoor value and not outdoor-ish: kept, ranked after the known-indoor ones
 
     // budget: per person, a court's price is split between the players (at least two)
     let pp = it.priceMin;
@@ -260,6 +261,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
     else if (budget != null && c.pp != null) w.push(`under ${budget} kr. pr. person (ca. ${c.pp} kr.)`);
     else if (c.priceMin == null && c.kind !== "slots") w.push("pris ikke oplyst");
     if (c.indoor === true) w.push(wet ? "regn: indendørs" : "indendørs");
+    else if (c.unk.includes("indoor")) w.push("inde/ude ikke oplyst");
     else if (c.indoor === false || f.outdoorish) w.push("udendørs, tørvejr");
     for (const m of c.hit.slice(0, 2)) w.push(MOOD_DA[m] ?? m);
     if (c.wishHits[0]) w.push(`matcher "${c.wishHits[0]}"`);
@@ -351,7 +353,9 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
     return true;
   };
   // an event without a start time is never the best bet alone
-  const bestPick = pending.find((s) => s.timed);
+  // and in rain or showers never one whose indoor/outdoor is unknown (it stays an alternative)
+  const wetUnknown = (s: Pending) => (wet || showers) && s.members.every((m) => m.unk.includes("indoor"));
+  const bestPick = pending.find((s) => s.timed && !wetUnknown(s));
   if (bestPick) tryAdd(bestPick, false);
   for (const s of pending) { if (chosen.length >= 5) break; tryAdd(s, true); }
   for (const s of pending) { if (chosen.length >= 3) break; tryAdd(s, false); }
@@ -360,6 +364,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
 
   const unknownSentences = Object.keys(UNKNOWN_SENTENCE).flatMap((k) => {
     const n = kept.filter((c) => c.unk.includes(k)).length;
+    if (k === "indoor") return n ? [UNKNOWN_SENTENCE.indoor!(n) + (wet || showers ? " Regn eller byger: hvis det regner, så tjek at banen er indendørs; de er hverken bedste bud eller i planen." : "")] : [];
     return n ? [UNKNOWN_SENTENCE[k]!(n)] : [];
   });
 
@@ -371,7 +376,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
       assumptions: [
         ...assumptions,
         ...unknownSentences,
-        untimed ? "Intet med fast starttid passede jeres brief; det der er med, har ingen tid: tjek siden." : "Intet passede jeres brief.",
+        untimed && pending.some((s) => s.timed && wetUnknown(s)) ? "Intet med kendt indendørs passede jeres brief; det der er med, har ikke oplyst inde/ude." : untimed ? "Intet med fast starttid passede jeres brief; det der er med, har ingen tid: tjek siden." : "Intet passede jeres brief.",
         ...reasons,
       ],
       more: {}, next: relaxNext(brief), stats: { candidates: kept.length, dropped, mergedAway },
@@ -379,7 +384,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
   }
 
   // 5. plan: the chosen first, then the next best
-  const planPool = [...chosen, ...pending.filter((s) => !chosen.includes(s)).slice(0, 8)];
+  const planPool = [...chosen, ...pending.filter((s) => !chosen.includes(s)).slice(0, 8)].filter((s) => !wetUnknown(s));
   const plan = buildItinerary(planPool, fromM, toM);
 
   // 6. more and next
@@ -404,7 +409,6 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
   if (dropped["ikke for små børn"]) A.push(`${dropped["ikke for små børn"]} ting er fjernet, fordi de ikke er lavet til børn på ${youngest} år.`);
   A.push(...unknownSentences);
   if (mergedAway > 0) A.push(`${mergedAway} dubletter på tværs af kilder er slået sammen.`);
-  if (brief.indoorOnly) A.push("Kun indendørs: ting uden oplyst indoor/outdoor, som ikke ser udendørs ud, er med.");
   chosen.flatMap((s) => s.members.flatMap((m) => m.notes)).filter((n) => !n.startsWith("tider afviger")).slice(0, 2).forEach((n) => A.push("Samme begivenhed: " + n));
 
   return {
