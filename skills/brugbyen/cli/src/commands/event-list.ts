@@ -15,7 +15,7 @@ const list = (o: Option[]) => o.map((x) => x.name).join(", ");
 export default defineCommand({
   name: "event list",
   summary:
-    "What is on at Københavns Kommune's own culture houses, libraries and halls (brugbyen.kk.dk) on a day or period, optionally only free, for an audience, category or district, with a link to each event's page; no prices. `date` is the day the event occurs within the search (on a one-day search always the searched day, by brugbyen's own filter; in a period `shownDate` when it lies in it, else null). A recurring event (`recurring`, `otherDates` > 0) shows its first upcoming date as `shownDate` and that date's time: `timeMayDiffer` says the time may be another day's",
+    "What is on at Københavns Kommune's own culture houses, libraries and halls (brugbyen.kk.dk) on a day or period, optionally only free, for an audience, category or district, with a link to each event's page; no prices and no descriptions (`event show --url <url>` reads one event's description). `date` is the day the event occurs within the search (on a one-day search always the searched day, by brugbyen's own filter; in a period `shownDate` when it lies in it, else null). A recurring event (`recurring`, `otherDates` > 0) shows its first upcoming date as `shownDate` and that date's time: `timeMayDiffer` says the time may be another day's",
   args: z.object({
     from: isoDate.optional().describe("first date, YYYY-MM-DD (default: today)"),
     to: isoDate.optional().describe("last date, YYYY-MM-DD (default: --from)"),

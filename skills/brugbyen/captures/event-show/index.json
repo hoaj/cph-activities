@@ -1,0 +1,23 @@
+{
+  "task": "event-show",
+  "startPath": "/det-sker/:slug",
+  "write": false,
+  "operations": [
+    {
+      "operation": "GET /det-sker/:slug",
+      "kind": "rest",
+      "effect": "read",
+      "navigation": true,
+      "html": true,
+      "method": "GET",
+      "host": "brugbyen.kk.dk",
+      "path": "/det-sker/:slug",
+      "file": "GET-det-sker-slug.shape.json",
+      "pages": [
+        "/det-sker/:slug"
+      ],
+      "seen": 1,
+      "aborted": 0
+    }
+  ]
+}

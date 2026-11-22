@@ -1,0 +1,2022 @@
+{
+  "operation": "GET /det-sker/:slug",
+  "kind": "rest",
+  "effect": "read",
+  "navigation": true,
+  "resourceType": "document",
+  "host": "brugbyen.kk.dk",
+  "method": "GET",
+  "path": "/det-sker/:slug",
+  "request": {
+    "headers": {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "sec-ch-ua": null,
+      "sec-ch-ua-mobile": null,
+      "sec-ch-ua-platform": null,
+      "upgrade-insecure-requests": null,
+      "user-agent": null
+    }
+  },
+  "responses": [
+    {
+      "status": 200,
+      "contentType": "text/html",
+      "headers": {
+        "accept-ranges": null,
+        "access-control-allow-headers": null,
+        "age": null,
+        "alt-svc": null,
+        "cache-control": null,
+        "content-encoding": null,
+        "content-language": null,
+        "content-security-policy": null,
+        "content-type": "text/html",
+        "date": null,
+        "etag": null,
+        "expires": null,
+        "last-modified": null,
+        "permissions-policy": null,
+        "referrer-policy": null,
+        "server": null,
+        "strict-transport-security": null,
+        "vary": null,
+        "x-content-type-options": null,
+        "x-drupal-dynamic-cache": null,
+        "x-frame-options": null,
+        "x-generator": null,
+        "x-request-id": null,
+        "x-robots-tag": null,
+        "x-varnish": null,
+        "x-vc-cache": null
+      },
+      "body": {
+        "kind": "html",
+        "outline": [
+          {
+            "tag": "script",
+            "attrs": [
+              "type"
+            ],
+            "type": "application/ld+json",
+            "json": {
+              "type": "record",
+              "values": {
+                "type": "union",
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "record",
+                      "values": {
+                        "type": "union",
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "record",
+                            "values": {
+                              "type": "union",
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "record",
+                                  "values": {
+                                    "type": "string"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "record",
+                              "values": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "tag": "body",
+            "classes": [
+              "color-scheme-:id",
+              "page-node-type-event",
+              "path-node"
+            ],
+            "children": [
+              {
+                "tag": "a",
+                "classes": [
+                  "focusable",
+                  "skip-link",
+                  "visually-hidden"
+                ],
+                "attrs": [
+                  "href"
+                ],
+                "text": true
+              },
+              {
+                "tag": "div",
+                "attrs": [
+                  "data-off-canvas-main-canvas"
+                ],
+                "children": [
+                  {
+                    "tag": "div",
+                    "classes": [
+                      "layout-container"
+                    ],
+                    "children": [
+                      {
+                        "tag": "div",
+                        "classes": [
+                          "page-content"
+                        ],
+                        "children": [
+                          {
+                            "tag": "header",
+                            "attrs": [
+                              "role"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "region"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "region-header__inner"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "region-header__menu"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "id": "block-kkevent-branding",
+                                            "classes": [
+                                              "block",
+                                              "block-system"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "site-name"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "a",
+                                                    "attrs": [
+                                                      "href",
+                                                      "rel"
+                                                    ],
+                                                    "text": true
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "button",
+                                            "classes": [
+                                              "btn--menu",
+                                              "js-menu-toggle",
+                                              "menu-toggle"
+                                            ],
+                                            "attrs": [
+                                              "aria-controls",
+                                              "aria-expanded"
+                                            ],
+                                            "text": true
+                                          },
+                                          {
+                                            "tag": "nav",
+                                            "id": ":id",
+                                            "classes": [
+                                              "block",
+                                              "block-menu",
+                                              "menu--main",
+                                              "mobile-hidden",
+                                              "navigation"
+                                            ],
+                                            "attrs": [
+                                              "aria-labelledby"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "main-menu-wrapper"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "h1",
+                                                    "id": ":id",
+                                                    "classes": [
+                                                      "visually-hidden"
+                                                    ],
+                                                    "text": true
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "top"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "h2",
+                                                        "text": true
+                                                      },
+                                                      {
+                                                        "tag": "button",
+                                                        "classes": [
+                                                          "js-menu-toggle"
+                                                        ],
+                                                        "attrs": [
+                                                          "aria-controls"
+                                                        ],
+                                                        "text": true,
+                                                        "many": true
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "ul",
+                                                    "classes": [
+                                                      "menu"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "li",
+                                                        "classes": [
+                                                          "menu-item",
+                                                          "menu-item--collapsed"
+                                                        ],
+                                                        "many": true,
+                                                        "children": [
+                                                          {
+                                                            "tag": "a",
+                                                            "classes": [
+                                                              "link-animate-on-hover"
+                                                            ],
+                                                            "attrs": [
+                                                              "data-drupal-link-system-path",
+                                                              "data-link-text",
+                                                              "href",
+                                                              "title"
+                                                            ],
+                                                            "text": true
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "id": ":id",
+                                            "classes": [
+                                              "block",
+                                              "block-views",
+                                              "search-form-block",
+                                              "views-exposed-form"
+                                            ],
+                                            "attrs": [
+                                              "data-drupal-selector"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "button",
+                                                "id": "search-section-button",
+                                                "classes": [
+                                                  "search-form-button"
+                                                ],
+                                                "attrs": [
+                                                  "aria-controls",
+                                                  "aria-expanded",
+                                                  "aria-haspopup"
+                                                ],
+                                                "text": true
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "id": ":id",
+                                                "classes": [
+                                                  "js-search-form",
+                                                  "search-form"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "form",
+                                                    "id": ":id",
+                                                    "attrs": [
+                                                      "accept-charset",
+                                                      "action",
+                                                      "method"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "clearfix",
+                                                          "form--inline"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "form-item",
+                                                              "form-item-soeg",
+                                                              "js-form-item",
+                                                              "js-form-item-soeg"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "label",
+                                                                "attrs": [
+                                                                  "for"
+                                                                ],
+                                                                "text": true
+                                                              },
+                                                              {
+                                                                "tag": "input",
+                                                                "id": "edit-soeg",
+                                                                "classes": [
+                                                                  "form-autocomplete",
+                                                                  "form-text"
+                                                                ],
+                                                                "attrs": [
+                                                                  "data-autocomplete-path",
+                                                                  "data-drupal-selector",
+                                                                  "data-search-api-autocomplete-search",
+                                                                  "maxlength",
+                                                                  "name",
+                                                                  "placeholder",
+                                                                  "size",
+                                                                  "type",
+                                                                  "value"
+                                                                ],
+                                                                "type": "text"
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "div",
+                                                            "id": "edit-actions",
+                                                            "classes": [
+                                                              "form-actions",
+                                                              "form-wrapper",
+                                                              "js-form-wrapper"
+                                                            ],
+                                                            "attrs": [
+                                                              "data-drupal-selector"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "input",
+                                                                "id": "edit-submit-search",
+                                                                "classes": [
+                                                                  "button",
+                                                                  "form-submit",
+                                                                  "js-form-submit"
+                                                                ],
+                                                                "attrs": [
+                                                                  "data-drupal-selector",
+                                                                  "type",
+                                                                  "value"
+                                                                ],
+                                                                "type": "submit"
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "button",
+                                                    "classes": [
+                                                      "btn--close"
+                                                    ],
+                                                    "attrs": [
+                                                      "aria-controls"
+                                                    ],
+                                                    "text": true
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "id": ":id",
+                                    "classes": [
+                                      "block",
+                                      "block-views",
+                                      "views-element-container"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "view",
+                                              "view-crisis-banner",
+                                              "view-id-crisis_banner"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "id": ":id",
+                                    "classes": [
+                                      "block",
+                                      "block-system"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "nav",
+                                        "classes": [
+                                          "breadcrumb"
+                                        ],
+                                        "attrs": [
+                                          "aria-labelledby",
+                                          "role"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "h1",
+                                            "id": "system-breadcrumb",
+                                            "classes": [
+                                              "visually-hidden"
+                                            ],
+                                            "text": true
+                                          },
+                                          {
+                                            "tag": "ol",
+                                            "classes": [
+                                              "breadcrumb__list"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "li",
+                                                "classes": [
+                                                  "breadcrumb__item"
+                                                ],
+                                                "many": true,
+                                                "children": [
+                                                  {
+                                                    "tag": "a",
+                                                    "classes": [
+                                                      "breadcrumb__link",
+                                                      "link-animate-on-hover"
+                                                    ],
+                                                    "attrs": [
+                                                      "data-link-text",
+                                                      "href"
+                                                    ],
+                                                    "text": true
+                                                  },
+                                                  {
+                                                    "tag": "span",
+                                                    "text": true
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "hidden"
+                                    ],
+                                    "attrs": [
+                                      "data-drupal-messages-fallback"
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "id": "block-kkevent-banner",
+                                    "classes": [
+                                      "block",
+                                      "block-kk-base",
+                                      "block-kk-base-banner"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "article",
+                                        "classes": [
+                                          "node",
+                                          "node--promoted",
+                                          "node--type-event",
+                                          "node--view-mode-banner"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "field",
+                                              "field--label-hidden",
+                                              "field--name-image",
+                                              "field__item"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "article",
+                                                "classes": [
+                                                  "media",
+                                                  "media--type-image"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "field",
+                                                      "field--type-image",
+                                                      "field__item"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "picture"
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ],
+                                "many": true
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "main",
+                            "attrs": [
+                              "role"
+                            ],
+                            "children": [
+                              {
+                                "tag": "a",
+                                "id": "main-content",
+                                "attrs": [
+                                  "tabindex"
+                                ]
+                              },
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "region",
+                                  "region-content"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "id": ":id",
+                                    "classes": [
+                                      "block"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "kk-base-cph-brand"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "classes": [
+                                              "kk-base-cph-brand-inner"
+                                            ],
+                                            "attrs": [
+                                              "role"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "svg",
+                                                "classes": [
+                                                  "svg",
+                                                  "svg-cph-brand"
+                                                ],
+                                                "attrs": [
+                                                  "fill",
+                                                  "height",
+                                                  "role",
+                                                  "viewbox",
+                                                  "width",
+                                                  "xmlns"
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ],
+                                    "many": true
+                                  },
+                                  {
+                                    "tag": "article",
+                                    "classes": [
+                                      "layout-content",
+                                      "node",
+                                      "node--promoted",
+                                      "node--type-event",
+                                      "node--view-mode-full"
+                                    ],
+                                    "attrs": [
+                                      "data-node-id"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "classes": [
+                                          "node__content"
+                                        ],
+                                        "children": [
+                                          {
+                                            "tag": "header",
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "tags"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "field",
+                                                      "field--label-hidden"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "field__item"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "a",
+                                                            "attrs": [
+                                                              "href",
+                                                              "hreflang"
+                                                            ],
+                                                            "text": true
+                                                          }
+                                                        ],
+                                                        "many": true
+                                                      },
+                                                      {
+                                                        "tag": "a",
+                                                        "attrs": [
+                                                          "href",
+                                                          "hreflang"
+                                                        ],
+                                                        "text": true
+                                                      }
+                                                    ],
+                                                    "many": true
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "h1",
+                                                "classes": [
+                                                  "page-title"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "span",
+                                                    "classes": [
+                                                      "field",
+                                                      "field--label-hidden",
+                                                      "field--name-title",
+                                                      "field--type-string"
+                                                    ],
+                                                    "text": true
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "aside",
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "event-info"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "button",
+                                                    "classes": [
+                                                      "btn--close"
+                                                    ],
+                                                    "attrs": [
+                                                      "title"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "field"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "field__label"
+                                                        ],
+                                                        "text": true,
+                                                        "children": [
+                                                          {
+                                                            "tag": "a",
+                                                            "attrs": [
+                                                              "href"
+                                                            ],
+                                                            "text": true
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "field__item"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "appearance--dark",
+                                                              "paragraph"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "paragraph"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "field",
+                                                                      "field--label-hidden",
+                                                                      "field--name-contact",
+                                                                      "field--type-kk-contact",
+                                                                      "field__item"
+                                                                    ],
+                                                                    "text": true
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "paragraph",
+                                                              "paragraph--type--price"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "field",
+                                                                  "field--label-hidden"
+                                                                ],
+                                                                "text": true,
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "field__item"
+                                                                    ]
+                                                                  }
+                                                                ],
+                                                                "many": true
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "field__items"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "field__item"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "date-text"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "span",
+                                                                    "classes": [
+                                                                      "date"
+                                                                    ],
+                                                                    "text": true
+                                                                  },
+                                                                  {
+                                                                    "tag": "span",
+                                                                    "classes": [
+                                                                      "time"
+                                                                    ],
+                                                                    "text": true
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "tag": "details",
+                                                                "classes": [
+                                                                  "date-selector",
+                                                                  "field"
+                                                                ],
+                                                                "attrs": [
+                                                                  "open"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "summary",
+                                                                    "attrs": [
+                                                                      "data-text-closed",
+                                                                      "data-text-open"
+                                                                    ],
+                                                                    "text": true
+                                                                  },
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "content"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "div",
+                                                                        "classes": [
+                                                                          "calendar"
+                                                                        ]
+                                                                      },
+                                                                      {
+                                                                        "tag": "div",
+                                                                        "classes": [
+                                                                          "times"
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "paragraph",
+                                                          "paragraph--type--price"
+                                                        ]
+                                                      }
+                                                    ],
+                                                    "many": true
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "tag": "main",
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "field",
+                                                  "field--label-hidden",
+                                                  "field--name-teaser",
+                                                  "field--type-string",
+                                                  "field__item"
+                                                ],
+                                                "text": true
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "clearfix",
+                                                  "field",
+                                                  "field--label-hidden",
+                                                  "field--name-body",
+                                                  "field__item",
+                                                  "text-formatted"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "p",
+                                                    "text": true,
+                                                    "many": true
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "field",
+                                                  "field--label-hidden",
+                                                  "field--name-paragraphs",
+                                                  "field__items"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "field__item"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "appearance--dark",
+                                                          "paragraph"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "h2",
+                                                            "classes": [
+                                                              "field",
+                                                              "field--label-hidden",
+                                                              "field--name-title",
+                                                              "field--type-string",
+                                                              "field__item"
+                                                            ],
+                                                            "text": true
+                                                          },
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "field",
+                                                              "field--label-hidden",
+                                                              "field--name-link-multi",
+                                                              "field--type-link",
+                                                              "field__items"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "field__item"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "kk-link",
+                                                                      "kk-link--external"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "span",
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "a",
+                                                                            "classes": [
+                                                                              "kk-link-wrapper"
+                                                                            ],
+                                                                            "attrs": [
+                                                                              "data-link-text",
+                                                                              "href",
+                                                                              "target"
+                                                                            ],
+                                                                            "text": true
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ],
+                                                                "many": true
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "field",
+                                                  "field--label-hidden",
+                                                  "field--type-link",
+                                                  "field__item"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "icon-link",
+                                                      "icon-link--external"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "a",
+                                                        "attrs": [
+                                                          "href",
+                                                          "target"
+                                                        ],
+                                                        "text": true
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "id": "places",
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "field",
+                                                      "field--label-hidden",
+                                                      "field__item"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "div",
+                                                        "classes": [
+                                                          "appearance--dark",
+                                                          "paragraph"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "h2",
+                                                            "classes": [
+                                                              "field",
+                                                              "field--label-hidden",
+                                                              "field--name-title",
+                                                              "field--type-string",
+                                                              "field__item"
+                                                            ],
+                                                            "text": true
+                                                          },
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "paragraph"
+                                                            ],
+                                                            "children": [
+                                                              {
+                                                                "tag": "div",
+                                                                "classes": [
+                                                                  "field",
+                                                                  "field--label-hidden",
+                                                                  "field--name-contact",
+                                                                  "field--type-kk-contact",
+                                                                  "field__item"
+                                                                ],
+                                                                "children": [
+                                                                  {
+                                                                    "tag": "div",
+                                                                    "classes": [
+                                                                      "kk-contact"
+                                                                    ],
+                                                                    "children": [
+                                                                      {
+                                                                        "tag": "div",
+                                                                        "classes": [
+                                                                          "kk-contact__wrapper"
+                                                                        ],
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "div",
+                                                                            "classes": [
+                                                                              "kk-contact__info"
+                                                                            ],
+                                                                            "children": [
+                                                                              {
+                                                                                "tag": "h2",
+                                                                                "classes": [
+                                                                                  "kk-contact__name"
+                                                                                ],
+                                                                                "text": true
+                                                                              },
+                                                                              {
+                                                                                "tag": "p",
+                                                                                "text": true
+                                                                              },
+                                                                              {
+                                                                                "tag": "div",
+                                                                                "classes": [
+                                                                                  "kontact__postal-city"
+                                                                                ],
+                                                                                "children": [
+                                                                                  {
+                                                                                    "tag": "span",
+                                                                                    "classes": [
+                                                                                      "kk-contact__postal"
+                                                                                    ],
+                                                                                    "text": true
+                                                                                  },
+                                                                                  {
+                                                                                    "tag": "span",
+                                                                                    "classes": [
+                                                                                      "kk-contact__city"
+                                                                                    ],
+                                                                                    "text": true
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          },
+                                                                          {
+                                                                            "tag": "div",
+                                                                            "classes": [
+                                                                              "kk-contact__contact"
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      },
+                                                                      {
+                                                                        "tag": "div",
+                                                                        "classes": [
+                                                                          "kk-contact__free-text"
+                                                                        ],
+                                                                        "children": [
+                                                                          {
+                                                                            "tag": "div",
+                                                                            "classes": [
+                                                                              "kk-contact__text"
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "children": [
+                                                  {
+                                                    "tag": "svg",
+                                                    "attrs": [
+                                                      "aria-hidden",
+                                                      "version",
+                                                      "xlink",
+                                                      "xmlns"
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "kkevent-share"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "kkevent-share__trigger"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "span",
+                                                        "text": true
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "tag": "div",
+                                                    "classes": [
+                                                      "kkevent-share__elements"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "button",
+                                                        "classes": [
+                                                          "btn-copy",
+                                                          "kkevent-share__button"
+                                                        ],
+                                                        "attrs": [
+                                                          "name",
+                                                          "title"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "svg",
+                                                            "attrs": [
+                                                              "height",
+                                                              "width"
+                                                            ]
+                                                          },
+                                                          {
+                                                            "tag": "div",
+                                                            "classes": [
+                                                              "kkevent-share__popup"
+                                                            ],
+                                                            "text": true
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "tag": "a",
+                                                        "classes": [
+                                                          "kkevent-share__button"
+                                                        ],
+                                                        "attrs": [
+                                                          "aria-label",
+                                                          "href",
+                                                          "rel",
+                                                          "target",
+                                                          "title"
+                                                        ],
+                                                        "children": [
+                                                          {
+                                                            "tag": "svg",
+                                                            "attrs": [
+                                                              "height",
+                                                              "width"
+                                                            ]
+                                                          }
+                                                        ],
+                                                        "many": true
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "footer",
+                        "attrs": [
+                          "role"
+                        ],
+                        "children": [
+                          {
+                            "tag": "div",
+                            "classes": [
+                              "region",
+                              "region-footer"
+                            ],
+                            "children": [
+                              {
+                                "tag": "div",
+                                "classes": [
+                                  "kk-site-footer"
+                                ],
+                                "children": [
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "appearance--dark",
+                                      "kk-site-footer-text"
+                                    ],
+                                    "attrs": [
+                                      "data-kk-animate"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "text": true,
+                                        "children": [
+                                          {
+                                            "tag": "h2",
+                                            "text": true
+                                          },
+                                          {
+                                            "tag": "h3",
+                                            "text": true
+                                          },
+                                          {
+                                            "tag": "div",
+                                            "children": [
+                                              {
+                                                "tag": "svg",
+                                                "id": "Layer_1",
+                                                "classes": [
+                                                  "svg",
+                                                  "svg-address-pin"
+                                                ],
+                                                "attrs": [
+                                                  "aria-hidden",
+                                                  "height",
+                                                  "role",
+                                                  "viewbox",
+                                                  "width",
+                                                  "xmlns"
+                                                ]
+                                              },
+                                              {
+                                                "tag": "p",
+                                                "text": true,
+                                                "children": [
+                                                  {
+                                                    "tag": "a",
+                                                    "classes": [
+                                                      "link-animate-on-hover"
+                                                    ],
+                                                    "attrs": [
+                                                      "data-link-text",
+                                                      "href",
+                                                      "target"
+                                                    ],
+                                                    "text": true
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "tag": "svg",
+                                                "attrs": [
+                                                  "fill",
+                                                  "height",
+                                                  "viewbox",
+                                                  "width",
+                                                  "xmlns"
+                                                ]
+                                              }
+                                            ],
+                                            "many": true
+                                          },
+                                          {
+                                            "tag": "ul",
+                                            "classes": [
+                                              "kk-footer-menu",
+                                              "menu"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "li",
+                                                "classes": [
+                                                  "menu-item"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "a",
+                                                    "attrs": [
+                                                      "href"
+                                                    ],
+                                                    "children": [
+                                                      {
+                                                        "tag": "span",
+                                                        "text": true
+                                                      }
+                                                    ]
+                                                  }
+                                                ],
+                                                "many": true
+                                              }
+                                            ]
+                                          }
+                                        ],
+                                        "many": true
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "div",
+                                    "classes": [
+                                      "kk-site-footer-gfx"
+                                    ],
+                                    "attrs": [
+                                      "data-kk-animate"
+                                    ],
+                                    "children": [
+                                      {
+                                        "tag": "div",
+                                        "children": [
+                                          {
+                                            "tag": "div",
+                                            "id": ":id",
+                                            "classes": [
+                                              "kk-base-cph-brand"
+                                            ],
+                                            "children": [
+                                              {
+                                                "tag": "div",
+                                                "classes": [
+                                                  "kk-base-cph-brand-inner"
+                                                ],
+                                                "attrs": [
+                                                  "role"
+                                                ],
+                                                "children": [
+                                                  {
+                                                    "tag": "svg",
+                                                    "classes": [
+                                                      "svg",
+                                                      "svg-cph-brand"
+                                                    ],
+                                                    "attrs": [
+                                                      "fill",
+                                                      "height",
+                                                      "role",
+                                                      "viewbox",
+                                                      "width",
+                                                      "xmlns"
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ],
+                                        "many": true
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "script",
+                "attrs": [
+                  "data-drupal-selector",
+                  "type"
+                ],
+                "type": "application/json",
+                "json": {
+                  "type": "object",
+                  "fields": {
+                    "path": {
+                      "type": "object",
+                      "fields": {
+                        "baseUrl": {
+                          "type": "string"
+                        },
+                        "pathPrefix": {
+                          "type": "string"
+                        },
+                        "currentPath": {
+                          "type": "string"
+                        },
+                        "currentPathIsAdmin": {
+                          "type": "boolean"
+                        },
+                        "isFront": {
+                          "type": "boolean"
+                        },
+                        "currentLanguage": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "pluralDelimiter": {
+                      "type": "string"
+                    },
+                    "suppressDeprecationErrors": {
+                      "type": "boolean"
+                    },
+                    "ajaxPageState": {
+                      "type": "object",
+                      "fields": {
+                        "libraries": {
+                          "type": "string"
+                        },
+                        "theme": {
+                          "type": "string"
+                        },
+                        "theme_token": {
+                          "type": "null"
+                        }
+                      }
+                    },
+                    "ajaxTrustedUrl": {
+                      "type": "record",
+                      "values": {
+                        "type": "boolean"
+                      }
+                    },
+                    "eu_cookie_compliance": {
+                      "type": "object",
+                      "fields": {
+                        "cookie_policy_version": {
+                          "type": "string",
+                          "format": "numeric"
+                        },
+                        "popup_enabled": {
+                          "type": "boolean"
+                        },
+                        "popup_agreed_enabled": {
+                          "type": "boolean"
+                        },
+                        "popup_hide_agreed": {
+                          "type": "boolean"
+                        },
+                        "popup_clicking_confirmation": {
+                          "type": "boolean"
+                        },
+                        "popup_scrolling_confirmation": {
+                          "type": "boolean"
+                        },
+                        "popup_html_info": {
+                          "type": "string"
+                        },
+                        "use_mobile_message": {
+                          "type": "boolean"
+                        },
+                        "mobile_popup_html_info": {
+                          "type": "string"
+                        },
+                        "mobile_breakpoint": {
+                          "type": "number"
+                        },
+                        "popup_html_agreed": {
+                          "type": "boolean"
+                        },
+                        "popup_use_bare_css": {
+                          "type": "boolean"
+                        },
+                        "popup_height": {
+                          "type": "string"
+                        },
+                        "popup_width": {
+                          "type": "string"
+                        },
+                        "popup_delay": {
+                          "type": "number"
+                        },
+                        "popup_link": {
+                          "type": "string"
+                        },
+                        "popup_link_new_window": {
+                          "type": "boolean"
+                        },
+                        "popup_position": {
+                          "type": "boolean"
+                        },
+                        "fixed_top_position": {
+                          "type": "boolean"
+                        },
+                        "popup_language": {
+                          "type": "string"
+                        },
+                        "consent_storage_method": {
+                          "type": "string"
+                        },
+                        "store_consent": {
+                          "type": "boolean"
+                        },
+                        "better_support_for_screen_readers": {
+                          "type": "boolean"
+                        },
+                        "cookie_name": {
+                          "type": "string"
+                        },
+                        "reload_page": {
+                          "type": "boolean"
+                        },
+                        "domain": {
+                          "type": "string"
+                        },
+                        "domain_all_sites": {
+                          "type": "boolean"
+                        },
+                        "popup_eu_only": {
+                          "type": "boolean"
+                        },
+                        "popup_eu_only_js": {
+                          "type": "boolean"
+                        },
+                        "cookie_lifetime": {
+                          "type": "number"
+                        },
+                        "cookie_session": {
+                          "type": "number"
+                        },
+                        "set_cookie_session_zero_on_disagree": {
+                          "type": "number"
+                        },
+                        "disagree_do_not_show_popup": {
+                          "type": "boolean"
+                        },
+                        "method": {
+                          "type": "string"
+                        },
+                        "automatic_cookies_removal": {
+                          "type": "boolean"
+                        },
+                        "allowed_cookies": {
+                          "type": "string"
+                        },
+                        "withdraw_markup": {
+                          "type": "string"
+                        },
+                        "withdraw_enabled": {
+                          "type": "boolean"
+                        },
+                        "reload_options": {
+                          "type": "number"
+                        },
+                        "reload_routes_list": {
+                          "type": "string"
+                        },
+                        "withdraw_button_on_info_popup": {
+                          "type": "boolean"
+                        },
+                        "cookie_categories": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "cookie_categories_details": {
+                          "type": "object",
+                          "fields": {
+                            "necessary": {
+                              "type": "object",
+                              "fields": {
+                                "uuid": {
+                                  "type": "string"
+                                },
+                                "langcode": {
+                                  "type": "string"
+                                },
+                                "status": {
+                                  "type": "boolean"
+                                },
+                                "dependencies": {
+                                  "type": "array"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "label": {
+                                  "type": "string"
+                                },
+                                "description": {
+                                  "type": "record",
+                                  "values": {
+                                    "type": "string"
+                                  }
+                                },
+                                "checkbox_default_state": {
+                                  "type": "string"
+                                },
+                                "weight": {
+                                  "type": "number"
+                                }
+                              }
+                            },
+                            "functional": {
+                              "type": "object",
+                              "fields": {
+                                "uuid": {
+                                  "type": "string"
+                                },
+                                "langcode": {
+                                  "type": "string"
+                                },
+                                "status": {
+                                  "type": "boolean"
+                                },
+                                "dependencies": {
+                                  "type": "array"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "label": {
+                                  "type": "string"
+                                },
+                                "description": {
+                                  "type": "record",
+                                  "values": {
+                                    "type": "string"
+                                  }
+                                },
+                                "checkbox_default_state": {
+                                  "type": "string"
+                                },
+                                "weight": {
+                                  "type": "number"
+                                }
+                              }
+                            },
+                            "statistics": {
+                              "type": "object",
+                              "fields": {
+                                "uuid": {
+                                  "type": "string"
+                                },
+                                "langcode": {
+                                  "type": "string"
+                                },
+                                "status": {
+                                  "type": "boolean"
+                                },
+                                "dependencies": {
+                                  "type": "array"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "label": {
+                                  "type": "string"
+                                },
+                                "description": {
+                                  "type": "record",
+                                  "values": {
+                                    "type": "string"
+                                  }
+                                },
+                                "checkbox_default_state": {
+                                  "type": "string"
+                                },
+                                "weight": {
+                                  "type": "number"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "enable_save_preferences_button": {
+                          "type": "boolean"
+                        },
+                        "cookie_value_disagreed": {
+                          "type": "string",
+                          "format": "numeric"
+                        },
+                        "cookie_value_agreed_show_thank_you": {
+                          "type": "string",
+                          "format": "numeric"
+                        },
+                        "cookie_value_agreed": {
+                          "type": "string",
+                          "format": "numeric"
+                        },
+                        "containing_element": {
+                          "type": "string"
+                        },
+                        "settings_tab_enabled": {
+                          "type": "boolean"
+                        },
+                        "olivero_primary_button_classes": {
+                          "type": "string"
+                        },
+                        "olivero_secondary_button_classes": {
+                          "type": "string"
+                        },
+                        "close_button_action": {
+                          "type": "string"
+                        },
+                        "open_by_default": {
+                          "type": "boolean"
+                        },
+                        "modules_allow_popup": {
+                          "type": "boolean"
+                        },
+                        "hide_the_banner": {
+                          "type": "boolean"
+                        },
+                        "geoip_match": {
+                          "type": "boolean"
+                        },
+                        "unverified_scripts": {
+                          "type": "array"
+                        }
+                      }
+                    },
+                    "field_group": {
+                      "type": "object",
+                      "fields": {
+                        "html_element": {
+                          "type": "object",
+                          "fields": {
+                            "mode": {
+                              "type": "string"
+                            },
+                            "context": {
+                              "type": "string"
+                            },
+                            "settings": {
+                              "type": "object",
+                              "fields": {
+                                "classes": {
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "element": {
+                                  "type": "string"
+                                },
+                                "show_label": {
+                                  "type": "boolean"
+                                },
+                                "label_element": {
+                                  "type": "string"
+                                },
+                                "label_element_classes": {
+                                  "type": "string"
+                                },
+                                "attributes": {
+                                  "type": "string"
+                                },
+                                "effect": {
+                                  "type": "string"
+                                },
+                                "speed": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "cph_brand_scroll": {
+                      "type": "boolean"
+                    },
+                    "eventCalendar": {
+                      "type": "record",
+                      "values": {
+                        "type": "object",
+                        "fields": {
+                          "event_defaults": {
+                            "type": "object",
+                            "fields": {
+                              "ticket_link": {
+                                "type": "string"
+                              },
+                              "place": {
+                                "type": "string"
+                              },
+                              "place_get_content": {
+                                "type": "string"
+                              },
+                              "schedule_type": {
+                                "type": "string"
+                              },
+                              "status_key": {
+                                "type": "string"
+                              },
+                              "status_name": {
+                                "type": "string"
+                              },
+                              "status_button_text": {
+                                "type": "string"
+                              },
+                              "price_value": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "event_occurrences": {
+                            "type": "record",
+                            "values": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "fields": {
+                                  "date": {
+                                    "type": "object",
+                                    "fields": {
+                                      "day": {
+                                        "type": "string",
+                                        "format": "numeric"
+                                      },
+                                      "month": {
+                                        "type": "string",
+                                        "format": "numeric"
+                                      },
+                                      "year": {
+                                        "type": "string",
+                                        "format": "numeric"
+                                      },
+                                      "hour_start": {
+                                        "type": "string"
+                                      },
+                                      "hour_end": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  },
+                                  "date_formatted": {
+                                    "type": "string"
+                                  },
+                                  "time_formatted": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "search_api_autocomplete": {
+                      "type": "object",
+                      "fields": {
+                        "search": {
+                          "type": "object",
+                          "fields": {
+                            "auto_submit": {
+                              "type": "boolean"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "user": {
+                      "type": "object",
+                      "fields": {
+                        "uid": {
+                          "type": "number"
+                        },
+                        "permissionsHash": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "seen": 1,
+  "aborted": 0,
+  "html": true
+}
