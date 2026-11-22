@@ -23,7 +23,7 @@ Seven tools. Six are `readOnlyHint` and `openWorldHint`; `send_feedback` writes 
 | Tool | Input | Answers |
 |---|---|---|
 | `plan_outing` | `brief`: `people[{label?, age?}]`, `date?`, `from?`, `to?`, `mood?[]`, `wishes?`, `budgetPerPerson?`, `indoorOnly?`, `area?`, `excludeIds?` ([#24](https://github.com/hoaj/cph-activities/issues/24)) | The planner's `needs_input` (nothing is fetched; with a date the weather is warmed in the background) or a shortlist: `weather` (only when it matters, else null), `best`, `alternatives`, `plan`, `assumptions`, `more`, `next` as `{label, patch}`. |
-| `find_events` | `from`, `to?` (at most 7 days), `query?`, `categories?`, `free?`, `maxPricePerPerson?`, `fromTime?`, `toTime?`, `audienceAge?`, `excludeKids?`, `limit` (10, max 50), `cursor?` | Merged, deduplicated compact rows (`id`, title, date, time, `description` (up to 300 characters, null when no source gives one), `categories`, `audience`, `ageFrom`, venue, price, `free`, sources, url; a note counts the rows with no description; brugbyen's lists carry none, `get_details` fetches it), `total`, `nextCursor`, and `facets` by source, category, time of day and price band. Filters run in server code on the cached whole days. |
+| `find_events` | `from`, `to?` (at most 7 days), `query?`, `categories?`, `free?`, `maxPricePerPerson?`, `fromTime?`, `toTime?`, `audienceAge?`, `excludeKids?`, `strict?`, `limit` (10, max 50), `cursor?` | Merged, deduplicated compact rows (`id`, title, date, time, `description` (up to 300 characters, null when no source gives one), `categories`, `audience`, `ageFrom`, venue, price, `free`, `fit`, `unknown`, sources, url; a note counts the rows with no description; brugbyen's lists carry none, `get_details` fetches it), `total`, `nextCursor`, and `facets` by source, category, time of day, price band, `byFit` and `unknownBy`. Filters run in server code on the cached whole days. |
 | `find_activity_slots` | `sport`, `date`, `from?`, `to?`, `players?` (2), `limit` | wannasport courts with free start times, price per court and per person, booking link. |
 | `get_weather` | `date`, `from?`, `to?` | The dmi verdict (`dry`/`showers`/`wet`, cold, windy, snow), temperatures, DMI's text, warnings, and the hours of the window. |
 | `get_details` | `id` | One item: the description (stored; for a brugbyen event with none, read now from its page with `brugbyen event show`, through the per-source cap, kept 24 hours by id and a failure 10 minutes, up to 500 characters; a note says when the page could not be read), categories, audience, age, every source's link, all start or court times, address, price. Ids come from the other tools and are remembered in memory for two hours (the id of any merged source works). |
@@ -60,6 +60,22 @@ The model drafts the report, shows it to the user and calls the tool only after 
 | `CACHE_MAX_ENTRIES`, `CACHE_MAX_AGE_S` | Days kept, least recently used first out (default 500); nothing older than this is ever served (default 86400). |
 | `SITE_CLI_CHROME` | Path to Chrome for the Billetto and wannasport skills. The image sets `/opt/google/chrome/chrome`. |
 | `CPH_STATE_ROOT` | Parent of each skill's state folder (`<root>/<skill>`, the skill's `SITE_CLI_HOME`). Default `/tmp/cph-state`; must be writable. |
+
+## Missing fields are not a no
+
+A filter never removes an event just because the information it looks at is missing (hoaj/cph-activities#53). For each filter an event **fits**, **does not fit** (the data contradicts the filter: dropped) or is **unknown** (the field is missing: kept). Unknown events are ranked after the ones that surely fit (within a day by time, the fitting group first), carry `fit: "unknown"` and `unknown: ["category" | "price" | "age" | "time"]` (`fit: "yes"`, `unknown: []` otherwise), are counted in `notes` over all matching events and in the facets `byFit` (`{ yes, unknown }`) and `unknownBy` (`{ category, price, age, time }`). `strict: true` drops the unknown ones instead and a note says how many; the cursor belongs to `strict`.
+
+| `find_events` filter | Fits | Does not fit (dropped) | Unknown (kept) |
+|---|---|---|---|
+| `categories` | a category matches | categories, none matching | no categories (all of brugbyen) |
+| `free: true` | `free` true or price 0 | a price above 0 or `free: false` | no price information (kultunaut, brugbyen, most of absalon) |
+| `maxPricePerPerson` | cheapest price within | cheapest price above | no price |
+| `fromTime`, `toTime` | start (or a market's opening hours) in the window | known start outside | no start time |
+| `audienceAge` under 10 | recognised as a children's event | 18+, nightlife, door age, an age limit above the child, an audience without children | no age signal |
+| `audienceAge` 10 and over, `excludeKids` | not recognised as too young or too old | 18+ for a minor, door age, children's events for 13+ and `excludeKids` | (none: nothing is dropped for lack of a signal, so none is marked) |
+| `query` | the words are in title, category or description | a word is missing | (strict on purpose: the user asked for words) |
+
+`plan_outing` follows the same rule: a missing price (`budgetPerPerson`, also 0), age (under 10), start time, category (a requested mood, no wish words) or place (`area`) keeps the event, ranks it after the sure matches, and `assumptions` has one sentence per kind with the count. Kept on positive evidence: 18+ and nightlife for a minor, a club's door age, sold-out events, a known price over budget, a known start outside the window, courts for under 10, outdoor in rain or cold, wish words, time-less events never being the best bet alone.
 
 ## The logo
 

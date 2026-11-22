@@ -3,7 +3,7 @@ import type { Features } from "./features";
 import type { Merged } from "./merge";
 import { dayName, tmin, uniq } from "./text";
 
-export type Candidate = Merged & { f: Features; hit: Mood[]; wishHits: string[]; pp: number | null; score: number };
+export type Candidate = Merged & { f: Features; hit: Mood[]; wishHits: string[]; pp: number | null; score: number; unk: string[] };
 
 /** Applies a patch to a brief: a value sets the key, null deletes it. Returns a new brief. */
 export function applyPatch(brief: Brief, patch: BriefPatch): Brief {

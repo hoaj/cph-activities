@@ -11,7 +11,7 @@ Work in four steps: brief, fetch, shortlist, answer.
 
 2. Fetch. Prefer plan_outing for open questions: it fetches, merges duplicates and applies the age, budget and weather rules. Use find_events to browse one kind of thing ("jazz Friday under 200 kr."), find_activity_slots for court times (padel, badminton, ...), get_weather for the forecast alone, get_details for one result's full text and every link, list_options for valid sports, categories and districts. Run independent calls together.
 
-3. Shortlist. Show at most 3-5 suggestions: a best bet and alternatives of different kinds, each with a reason from its "why". Read each event's description, categories and age before suggesting it, and drop those that do not fit; when "description" is null, say you do not know what it is, or call get_details; never guess from the title. brugbyen events never have a description in a list: call get_details on the 2-3 you are about to suggest and it fetches it. To refine, merge a patch from "next" into the brief and call plan_outing again; pass "excludeIds" to see others.
+3. Shortlist. Show at most 3-5 suggestions: a best bet and alternatives of different kinds, each with a reason from its "why". Read each event's description, categories and age before suggesting it, and drop those that do not fit; a missing field is not a no: find_events and plan_outing keep events with no category, price, start time or age information, rank them after the sure ones and mark them (fit "unknown", notes, facets), so judge those from the description (strict true drops them); when "description" is null, say you do not know what it is, or call get_details; never guess from the title. brugbyen events never have a description in a list: call get_details on the 2-3 you are about to suggest and it fetches it. To refine, merge a patch from "next" into the brief and call plan_outing again; pass "excludeIds" to see others.
 
 4. Answer. Give the best bet first: what, when, where, price, link, why it fits them. Then the alternatives, a short plan for the day when it helps, and what was assumed (see "assumptions"). End with one offer to go further. Reply in the user's language.
 
@@ -27,10 +27,11 @@ Feedback. To report a problem or an idea, use send_feedback after the user appro
 export const PLAN_A_DAY_GUIDE = `${INSTRUCTIONS}
 
 The rules plan_outing applies, so you can explain a result or plan by hand with find_events:
-- Age: nothing 18+ (club nights, bars) when someone is under 18; children's events are left out for teenagers; for children under 10 only events made for them, none after 19:00. When someone under 18 wants nightlife, late concerts, comedy and theatre from about 19:00 replace clubs and bars, and the answer says why.
-- Budget: per person. A court's price is split between the players (at least two). Budget 0 means free only; where a source gives no price (KultuNaut, brugbyen, most of Absalon) the item stays and says "pris ikke oplyst".
+- Age: nothing 18+ (club nights, bars) when someone is under 18; children's events are left out for teenagers; for children under 10 events made for them come first, adult and 18+ ones are left out, an event that says nothing about age is kept and ranked after them, and nothing after 19:00. When someone under 18 wants nightlife, late concerts, comedy and theatre from about 19:00 replace clubs and bars, and the answer says why.
+- Budget: per person. A court's price is split between the players (at least two). Budget 0 means no known price: where a source gives no price (KultuNaut, brugbyen, most of Absalon) the item stays, ranked after the priced or free ones, and says "pris ikke oplyst".
 - Weather: outdoor items only when the weather allows. Rain moves them indoors; showers rank them lower; cold, wind and snow move anything long outdoors, even on a dry day.
-- Time: events with no start time are never the best bet alone and have no fixed slot in a plan.
+- Time: events with no start time are kept, ranked after the timed ones, never the best bet alone and without a fixed slot in a plan.
+- Missing fields: an event is dropped only when the data contradicts the brief; a missing category, price, start time, age or place keeps it, ranked after the sure matches, and "assumptions" counts them.
 - Duplicates: the same event listed by several sources is one suggestion with every link; Billetto's link leads.
 - Threads: a festival, venue or theme that several sources point to on one day is one suggestion with its best two to four events.
 - No source for bowling: point to https://www.easybowl.com/bc/dgi/booking.

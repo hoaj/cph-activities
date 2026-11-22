@@ -11,6 +11,14 @@ import type { PlanSuggestion } from "./itinerary";
 
 const AGE_OPTIONS = ["under 6", "6-12", "13-17", "18+"];
 const ADULT_DROP = "18+ / natteliv for voksne";
+/** What a filter could not check because the field is missing: the event is kept, ranked after the sure matches, and counted here. */
+const UNKNOWN_SENTENCE: Record<string, (n: number) => string> = {
+  price: (n) => `${n} begivenheder har ingen pris oplyst og er med (pris ukendt, ikke 0).`,
+  age: (n) => `${n} begivenheder har ingen aldersoplysning og er med: tjek beskrivelsen.`,
+  time: (n) => `${n} begivenheder har ingen starttid og er med (aldrig eneste bud, ikke i planen).`,
+  category: (n) => `${n} begivenheder har ingen kategori og er med: vurdér dem ud fra beskrivelsen.`,
+  place: (n) => `${n} begivenheder har intet sted oplyst og er med.`,
+};
 
 const WISH_MOOD: [RegExp, Mood][] = [
   [/aktiv|padel|sport|løb|motion|bevæg|tennis|badminton|squash/i, "active"],
@@ -118,6 +126,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
   for (const it of merged) {
     const f = annotate(it);
     const t = tmin(it.time);
+    const unk = new Set<string>(); // fields a filter could not check: kept, ranked after the sure matches
     if (it.ids.some((id) => excluded.has(id))) { drop("allerede vist"); continue; }
     if (it.kind === "slots") {
       const times = (it.times ?? []).filter((x) => tmin(x)! >= fromM && tmin(x)! + 60 <= toM);
@@ -126,8 +135,8 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
       if (it.indoor == null && ["badminton", "squash", "tabletennis"].includes(it.extra.sport ?? "")) it.indoor = true;
       f.outdoorish = it.indoor === false;
     } else if (t == null) {
-      // no start time: kept for an alternative or a thread, but not for small children or an evening
-      if (small || evening) { drop("uden tid"); continue; }
+      // no start time: kept as an alternative or in a thread, ranked after the timed ones, never the best bet alone
+      unk.add("time");
     } else if (t < fromM || t >= toM) {
       // a market is open for hours: it fits when those hours overlap the window
       const closes = it.source === "visitorservice" ? tmin(it.endTime) : null;
@@ -141,12 +150,19 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
     if (belowDoorAge(it, youngest)) { drop("under klubbens aldersgrænse"); continue; }
     if (youngest >= 13 && (f.kids || (it.ageFrom != null && it.ageFrom <= youngest - 8 && f.audKids))) { drop("for børn"); continue; }
     if (small) {
-      if (!(f.kids || f.audKids) || it.kind === "slots") { drop("ikke for små børn"); continue; }
+      // dropped on positive evidence (a court, nightlife, an age limit above the child, an audience without children); no age signal at all is unknown
+      const grownUpsOnly = it.audience.length > 0 && !it.audience.some((x) => x === "børn" || x === "familie");
+      if (it.kind === "slots" || f.nightlife || grownUpsOnly) { drop("ikke for små børn"); continue; }
       if (f.minAge != null && f.minAge > youngest) { drop("ikke for små børn"); continue; }
+      if (!(f.kids || f.audKids)) unk.add("age");
       if (t != null && t >= 19 * 60) { drop("for sent for små børn"); continue; }
     } else if (youngest < 13 && f.maxAge != null && f.maxAge < youngest) { drop("for små børn"); continue; }
     else if (youngest < 13 && f.minAge != null && f.minAge > youngest + 1 && it.kind === "show") { drop("for ældre"); continue; }
-    if (brief.area && brief.area !== "cph" && !norm([it.venue, it.address].join(" ")).includes(norm(brief.area))) { drop("andet område"); continue; }
+    if (brief.area && brief.area !== "cph") {
+      const where = norm([it.venue, it.address].join(" "));
+      if (!where) unk.add("place");
+      else if (!where.includes(norm(brief.area))) { drop("andet område"); continue; }
+    }
 
     // weather
     if (f.outdoorish) {
@@ -160,10 +176,14 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
     if (it.kind === "slots" && pp != null) pp = Math.round(pp / players);
     if (budget != null) {
       if (budget === 0) {
-        const likelyFree = it.priceMin == null && it.source === "brugbyen"; // municipal houses: usually free
-        if (!(it.free === true || it.priceMin === 0 || likelyFree)) { drop("koster penge"); continue; }
-        it.freeGuess = likelyFree;
-      } else if (pp != null && pp > budget) { drop("over budget"); continue; }
+        if (it.free === true || it.priceMin === 0) { /* free */ }
+        else if (it.free === false || (it.priceMin ?? 0) > 0) { drop("koster penge"); continue; }
+        else {
+          unk.add("price");
+          it.freeGuess = it.source === "brugbyen"; // municipal houses: usually free
+        }
+      } else if (pp == null) unk.add("price");
+      else if (pp > budget) { drop("over budget"); continue; }
     }
 
     // mood and wishes
@@ -177,9 +197,14 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
         const late = t != null && t >= 19 * 60 && (f.moods.has("culture") || f.moods.has("social") || f.moods.has("gaming") || it.kind === "show");
         if (late && !hit.includes("nightlife")) hit.push("nightlife");
       }
-      if (!hit.length && !wishHits.length) { drop("andet humør"); continue; }
+      if (!hit.length && !wishHits.length) {
+        // asked for a mood, no wish words, and nothing to read a mood from (no category, nothing in the title): unknown;
+        // a known category of another kind is a no, and wish words stay strict like a search query
+        if (f.moods.size === 0 && !it.categories.length && moodIn.length && !wWords.length) unk.add("category");
+        else { drop("andet humør"); continue; }
+      }
     } else if (wWords.length && !wishHits.length) { drop("matcher ikke ønsket"); continue; }
-    kept.push({ ...it, f, hit, wishHits, pp, score: 0 });
+    kept.push({ ...it, f, hit, wishHits, pp, score: 0, unk: [...unk] });
   }
 
   // 2. score: fit first, then appeal (sources agreeing, premiere, value, a start time)
@@ -202,7 +227,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
     if (f.moods.size === 0) s -= 1;
     c.score = s;
   }
-  kept.sort((a, b) => b.score - a.score);
+  kept.sort((a, b) => +(a.unk.length > 0) - +(b.unk.length > 0) || b.score - a.score);
 
   // 3. suggestions
   const price = (c: Candidate): string => {
@@ -229,7 +254,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
     const w: string[] = [];
     const f = c.f;
     if (minors && youngest >= 13) w.push(`passer til ${youngest} år`);
-    else if (small) w.push(`for børn, passer til ${youngest} år`);
+    else if (small) w.push(c.unk.includes("age") ? "alder ikke oplyst: tjek beskrivelsen" : `for børn, passer til ${youngest} år`);
     else if (people.length > 1 && !minors) w.push(`for ${people.length} voksne`);
     if (c.free || c.priceMin === 0) w.push(c.freeGuess ? "formentlig gratis (pris ikke oplyst)" : "gratis");
     else if (budget != null && c.pp != null) w.push(`under ${budget} kr. pr. person (ca. ${c.pp} kr.)`);
@@ -255,6 +280,8 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
   interface Pending extends PlanSuggestion {
     out: Suggestion;
     score: number;
+    /** Every candidate in it is unknown on a field a filter looks at: ranked after the sure matches. */
+    unsure: boolean;
     /** A start time somewhere: required for the best bet. */
     timed: boolean;
   }
@@ -285,6 +312,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
       lead: pick[0]!,
       members: pick,
       timed: pick.some(timedOf),
+      unsure: members.every((c) => c.unk.length > 0),
       score: top + 3 + members.length * 0.3,
       out: {
         kind: "tråd",
@@ -307,9 +335,9 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
       perSport[sport] = (perSport[sport] ?? 0) + 1;
       if (perSport[sport]! > 2) continue;
     }
-    pending.push({ isThread: false, lead: c, members: [c], timed: timedOf(c), score: c.score, out: { kind: kindOf(c), title: c.title, why: why(c), items: [toItem(c)] } });
+    pending.push({ isThread: false, lead: c, members: [c], timed: timedOf(c), unsure: c.unk.length > 0, score: c.score, out: { kind: kindOf(c), title: c.title, why: why(c), items: [toItem(c)] } });
   }
-  pending.sort((a, b) => b.score - a.score);
+  pending.sort((a, b) => +a.unsure - +b.unsure || b.score - a.score);
 
   // 4. best bet, then alternatives of different kinds
   const chosen: Pending[] = [];
@@ -330,6 +358,11 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
   const best = bestPick ? chosen[0]! : null;
   const alternatives = chosen.slice(best ? 1 : 0, 5);
 
+  const unknownSentences = Object.keys(UNKNOWN_SENTENCE).flatMap((k) => {
+    const n = kept.filter((c) => c.unk.includes(k)).length;
+    return n ? [UNKNOWN_SENTENCE[k]!(n)] : [];
+  });
+
   if (!best) {
     const reasons = Object.entries(dropped).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([k, v]) => `${v} fjernet: ${k}`);
     const untimed = alternatives.length > 0;
@@ -337,6 +370,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
       status: "ok", weather, best: null, alternatives: alternatives.map((s) => s.out), plan: undefined,
       assumptions: [
         ...assumptions,
+        ...unknownSentences,
         untimed ? "Intet med fast starttid passede jeres brief; det der er med, har ingen tid: tjek siden." : "Intet passede jeres brief.",
         ...reasons,
       ],
@@ -357,7 +391,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
   // 7. assumptions
   const A = assumptions;
   if (budget == null) A.push("Budget ikke oplyst: ingen grænse, men god pris vægtes.");
-  else if (budget === 0) A.push("Gratis-brief: jeg medregner brugbyen-rækker uden pris som formentlig gratis (kommunale huse).");
+  else if (budget === 0 && kept.some((c) => c.freeGuess)) A.push("Gratis-brief: jeg medregner brugbyen-rækker uden pris som formentlig gratis (kommunale huse).");
   if (chosen.some((s) => s.members.some((m) => m.kind === "slots"))) A.push(`Banepris delt på ${players} personer.`);
   if (chosen.some((s) => s.out.items.some((i) => i.price === "pris ikke oplyst"))) A.push('Hvor en kilde ikke giver en pris står "pris ikke oplyst".');
   if (chosen.some((s) => s.out.items.some((i) => i.time === "tid: se siden"))) A.push('Hvor en kilde ikke giver et starttidspunkt står "tid: se siden"; de er ikke med i planen.');
@@ -368,6 +402,7 @@ export function planOuting(brief: Brief, days: PlannerDays): PlanResult {
   else if (dropped[ADULT_DROP]) A.push(`${dropped[ADULT_DROP]} klubaftener, barer og 18+-ting er fjernet, fordi en af jer er ${youngest >= 10 ? youngest + " år" : "under 18"}.`);
   if (dropped["for børn"]) A.push(`${dropped["for børn"]} børnebegivenheder er fjernet: yngste er ${youngest} år.`);
   if (dropped["ikke for små børn"]) A.push(`${dropped["ikke for små børn"]} ting er fjernet, fordi de ikke er lavet til børn på ${youngest} år.`);
+  A.push(...unknownSentences);
   if (mergedAway > 0) A.push(`${mergedAway} dubletter på tværs af kilder er slået sammen.`);
   if (brief.indoorOnly) A.push("Kun indendørs: ting uden oplyst indoor/outdoor, som ikke ser udendørs ud, er med.");
   chosen.flatMap((s) => s.members.flatMap((m) => m.notes)).filter((n) => !n.startsWith("tider afviger")).slice(0, 2).forEach((n) => A.push("Samme begivenhed: " + n));

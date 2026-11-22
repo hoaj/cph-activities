@@ -130,18 +130,20 @@ describe("find_events", () => {
     const titles = async (a: Record<string, unknown>) => (await call("find_events", { from: DATE, ...a })).data.events.map((e: any) => e.title);
     expect(await titles({ query: "jazz" })).toEqual(["Jazzkoncert i Huset"]);
     expect(await titles({ categories: ["FOREDRAG"] })).toEqual(["Gratis foredrag om byen"]);
-    expect(await titles({ free: true })).toEqual(["Gratis foredrag om byen"]);
+    expect(await titles({ free: true })).toEqual(["Gratis foredrag om byen", "Standup aften"]); // the price of the standup is unknown: kept, after the free one
     expect((await titles({ maxPricePerPerson: 100 })).sort()).toEqual(["Fællesspisning", "Gratis foredrag om byen", "Standup aften"].sort());
-    expect(await titles({ fromTime: "18:00", toTime: "19:00" })).toEqual(["Fællesspisning"]);
+    expect(await titles({ fromTime: "18:00", toTime: "19:00" })).toEqual(["Fællesspisning", "Standup aften"]);
     const r = await call("find_events", { from: DATE, fromTime: "00:00" });
-    expect(r.data.notes.join(" ")).toContain("without a start time");
+    expect(r.data.notes.join(" ")).toContain("have no start time and are kept");
   });
 
   test("audienceAge hands brugbyen's group to the cache; excludeKids drops children's events", async () => {
     const deps = fakeDeps({ items: [...events(), item({ source: "kultunaut", title: "Børneteater", audience: ["børn"], categories: ["Børn"] })] });
     const { call } = await connectTools(deps);
     const kids = await call("find_events", { from: DATE, audienceAge: 7 });
-    expect(kids.data.events.map((e: any) => e.title)).toEqual(["Børneteater"]);
+    expect(kids.data.events[0].title).toBe("Børneteater"); // recognised children's events first; the rest have no age information and follow
+    expect(kids.data.events[0].fit).toBe("yes");
+    expect(kids.data.events.slice(1).every((e: any) => e.fit === "unknown" && e.unknown.includes("age"))).toBe(true);
     expect(deps.calls[0]!.audience).toBe("børn");
     const adults = await call("find_events", { from: DATE, excludeKids: true });
     expect(adults.data.events.map((e: any) => e.title)).not.toContain("Børneteater");
