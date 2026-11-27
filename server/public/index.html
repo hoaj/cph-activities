@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hvad sker der i København</title>
+<meta name="description" content="Fortæl hvem, hvornår og hvad, og få et par gode bud på ting at lave i København. Kan også bruges i din egen AI-agent.">
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+  :root { --ground: #f6f7fb; --card: #ffffff; --line: #e3e6ee; --line-strong: #cfd6e4; --ink: #0f172a; --text: #334155; --soft: #475569; --muted: #64748b; --blue: #1d4ed8; --blue-dark: #1e3a8a; --blue-tint: #f5f8ff; --blue-line: #c7d6fb; --chip: #eef2f7; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--text); font: 16px/1.55 Inter, system-ui, sans-serif; }
+  a { color: var(--blue); } a:hover { color: var(--blue-dark); }
+  h1, h2, h3 { font-family: "Space Grotesk", Inter, sans-serif; color: var(--ink); margin: 0; letter-spacing: -0.02em; }
+  code { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  header.top { background: var(--card); border-bottom: 1px solid var(--line); }
+  header.top .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 14px; padding-bottom: 14px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-family: "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: 19px; }
+  nav a { display: inline-block; padding: 10px 14px; border-radius: 999px; text-decoration: none; color: var(--text); font-weight: 500; }
+  nav a:hover { background: var(--chip); color: var(--ink); }
+  main { display: flex; flex-direction: column; gap: 88px; padding: 56px 0 72px; }
+  .hero { text-align: center; max-width: 720px; margin: 0 auto 28px; display: flex; flex-direction: column; gap: 14px; }
+  .hero h1 { font-weight: 700; font-size: clamp(36px, 6vw, 52px); line-height: 1.05; letter-spacing: -0.03em; }
+  .hero p { margin: 0; font-size: 19px; color: var(--soft); }
+  .chat { max-width: 820px; margin: 0 auto; background: var(--card); border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 12px 32px rgba(15,23,42,.06); overflow: hidden; }
+  .log { padding: 24px 24px 8px; display: flex; flex-direction: column; gap: 16px; min-height: 160px; max-height: 70vh; overflow-y: auto; }
+  .empty { color: var(--muted); display: flex; flex-direction: column; gap: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { min-height: 40px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--blue-line); background: var(--card); color: var(--blue); font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; }
+  .chip:hover { background: var(--blue-tint); }
+  .me { align-self: flex-end; max-width: 80%; background: var(--blue); color: #fff; padding: 12px 16px; border-radius: 18px 18px 4px 18px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .bot { align-self: flex-start; max-width: 92%; display: flex; gap: 12px; align-items: flex-start; }
+  .bot svg { flex: none; }
+  .bubble { min-width: 0; overflow-wrap: anywhere; }
+  .bubble p { margin: 0 0 8px; } .bubble p:last-child { margin-bottom: 0; }
+  .bubble ul { margin: 0 0 8px; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .bubble.err { color: #9a3412; background: #fff7ed; border: 1px solid #fed7aa; padding: 10px 14px; border-radius: 12px; }
+  .typing { color: var(--muted); font-size: 15px; }
+  .typing::after { content: ""; display: inline-block; width: 1.2em; text-align: left; animation: dots 1.2s steps(4) infinite; }
+  @keyframes dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
+  @media (prefers-reduced-motion: reduce) { .typing::after { animation: none; content: "..."; } }
+  form.ask { margin: 16px 20px 20px; display: flex; gap: 8px; align-items: center; border: 1px solid var(--line-strong); border-radius: 999px; padding: 6px 6px 6px 20px; background: var(--card); }
+  form.ask:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(29,78,216,.15); }
+  form.ask input { flex: 1; min-width: 0; border: 0; outline: none; font: inherit; font-size: 16px; color: var(--ink); background: transparent; padding: 10px 0; }
+  .send { flex: none; width: 44px; height: 44px; border-radius: 999px; border: 0; background: var(--blue); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .send:disabled { opacity: .5; cursor: default; }
+  .note { margin: 14px 0 0; text-align: center; font-size: 14px; color: var(--muted); }
+  .agent { max-width: 760px; display: flex; flex-direction: column; gap: 18px; }
+  .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--blue); }
+  .agent h2 { font-weight: 700; font-size: 36px; line-height: 1.1; }
+  .agent > p { margin: 0; font-size: 17px; color: var(--soft); }
+  .primary { align-self: flex-start; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 0; background: var(--blue); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+  .primary:disabled { opacity: .6; cursor: default; }
+  .urlbox { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--ink); border-radius: 14px; padding: 8px 8px 8px 18px; }
+  .urlbox code { flex: 1; min-width: 0; font-size: 15px; color: #e2e8f0; overflow-wrap: anywhere; }
+  .urlbox button { min-height: 44px; padding: 0 16px; border-radius: 10px; border: 0; background: #fff; color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .small { margin: 0; font-size: 14px; color: var(--muted); }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tab { min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--card); color: var(--text); font: inherit; font-size: 15px; font-weight: 500; cursor: pointer; }
+  .tab[aria-selected="true"] { border-color: var(--blue); background: var(--blue); color: #fff; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; font-size: 15px; }
+  .panel ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .panel pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 14px/1.5 ui-monospace, "SF Mono", Menlo, monospace; background: #f1f4f9; border-radius: 10px; padding: 12px 14px; color: var(--ink); }
+  .local { display: flex; gap: 14px; align-items: flex-start; border: 1px dashed var(--line-strong); border-radius: 16px; padding: 16px 18px; font-size: 15px; }
+  .sources h2 { font-weight: 700; font-size: 28px; margin-bottom: 16px; }
+  .sources ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+  .sources li { padding: 8px 14px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); font-size: 14px; }
+  footer { border-top: 1px solid var(--line); background: var(--card); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; padding-top: 24px; padding-bottom: 24px; font-size: 14px; }
+  @media (max-width: 640px) {
+    main { gap: 64px; padding-top: 32px; }
+    .wrap { padding: 0 16px; }
+    .log { padding: 16px 16px 8px; }
+    form.ask { margin: 12px; }
+    .agent h2 { font-size: 30px; }
+    .me, .bot { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <svg width="34" height="34" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="112" fill="#1d4ed8"/><circle cx="256" cy="256" r="172" fill="none" stroke="#fff" stroke-width="22"/><g stroke="#fff" stroke-width="18" stroke-linecap="round"><line x1="256" y1="58" x2="256" y2="92"/><line x1="256" y1="420" x2="256" y2="454"/><line x1="58" y1="256" x2="92" y2="256"/><line x1="420" y1="256" x2="454" y2="256"/></g><g transform="rotate(38 256 256)"><polygon points="256,112 296,256 216,256" fill="#fff"/><polygon points="256,400 296,256 216,256" fill="#93c5fd"/></g><circle cx="256" cy="256" r="18" fill="#1d4ed8" stroke="#fff" stroke-width="9"/></svg>
+      cph-activities
+    </a>
+    <nav aria-label="Hovedmenu">
+      <a href="#chat">Chat</a>
+      <a href="#mcp">Til din egen agent</a>
+      <a href="https://github.com/hoaj/cph-activities">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top" class="wrap">
+  <section id="chat" aria-labelledby="title">
+    <div class="hero">
+      <h1 id="title">Hvad sker der i København</h1>
+      <p>Skriv hvem, hvornår og hvad. Få et par gode bud.</p>
+    </div>
+    <div class="chat">
+      <div class="log" id="log" aria-live="polite">
+        <div class="empty" id="empty">
+          <span>Prøv fx:</span>
+          <div class="chips">
+            <button type="button" class="chip">Hvad kan jeg lave søndag med min datter på 7?</button>
+            <button type="button" class="chip">Fredag aften for to, under 200 kr. hver</button>
+            <button type="button" class="chip">Padel lørdag formiddag for fire</button>
+          </div>
+        </div>
+      </div>
+      <form class="ask" id="ask">
+        <label for="msg" class="sr">Din besked</label>
+        <input id="msg" type="text" autocomplete="off" maxlength="2000" placeholder="Fx fredag aften for to">
+        <button type="submit" class="send" id="send" aria-label="Send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+      </form>
+    </div>
+    <p class="note">Du booker selv via linket.</p>
+  </section>
+
+  <section id="mcp" class="agent" aria-labelledby="mcp-title">
+    <div class="eyebrow">Til din egen agent</div>
+    <h2 id="mcp-title">Brug den i din egen agent</h2>
+    <p>Tilføj MCP-serveren. Uden login.</p>
+    <button type="button" class="primary" id="getkey">Få din egen adresse</button>
+    <div class="urlbox" id="urlbox" hidden>
+      <code id="url"></code>
+      <button type="button" id="copy">Kopiér</button>
+    </div>
+    <p class="small" id="keynote">Adressen er personlig: del den ikke. Den kan bruges 60 gange i timen og 300 gange om dagen.</p>
+    <div class="tabs" role="tablist" aria-label="Vælg din assistent">
+      <button type="button" class="tab" role="tab" aria-selected="true" aria-controls="p-claude" id="t-claude">Claude</button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="p-chatgpt" id="t-chatgpt">ChatGPT</button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="p-code" id="t-code">Claude Code</button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="p-cursor" id="t-cursor">Cursor</button>
+    </div>
+    <div class="panel" role="tabpanel" id="p-claude" aria-labelledby="t-claude">
+      <ol><li>Indstillinger → Connectors</li><li>Tilføj custom connector, indsæt adressen</li></ol>
+    </div>
+    <div class="panel" role="tabpanel" id="p-chatgpt" aria-labelledby="t-chatgpt" hidden>
+      <ol><li>Indstillinger → Connectors (udviklertilstand)</li><li>Opret, indsæt adressen, ingen godkendelse</li></ol>
+    </div>
+    <div class="panel" role="tabpanel" id="p-code" aria-labelledby="t-code" hidden>
+      <pre>claude mcp add --transport http cph-activities <span class="mcp-url">&lt;din adresse&gt;</span></pre>
+    </div>
+    <div class="panel" role="tabpanel" id="p-cursor" aria-labelledby="t-cursor" hidden>
+      <div style="margin-bottom: 8px"><code>~/.cursor/mcp.json</code></div>
+      <pre>{ "mcpServers": { "cph-activities": { "url": "<span class="mcp-url">&lt;din adresse&gt;</span>" } } }</pre>
+    </div>
+    <div class="local">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>
+      <div><strong style="color: var(--ink)">Lokalt?</strong> <code>/plugin marketplace add hoaj/cph-activities</code></div>
+    </div>
+  </section>
+
+  <section class="sources" aria-labelledby="src-title">
+    <h2 id="src-title">Kilderne</h2>
+    <ul>
+      <li>kulturKBH</li><li>Billetto</li><li>KultuNaut</li><li>brugbyen</li><li>teaterbilletter</li><li>Det Kgl. Teater</li>
+      <li>Folkehuset Absalon</li><li>wannasport</li><li>Visitor Service</li><li>Culture Box</li><li>Hangaren</li><li>DMI (vejret)</li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a href="https://github.com/hoaj/cph-activities">GitHub</a>
+    <a href="https://github.com/hoaj/cph-activities/issues">Feedback</a>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const BOT_ICON = '<svg width="32" height="32" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="112" fill="#1d4ed8"/><circle cx="256" cy="256" r="172" fill="none" stroke="#fff" stroke-width="22"/><g transform="rotate(38 256 256)"><polygon points="256,112 296,256 216,256" fill="#fff"/><polygon points="256,400 296,256 216,256" fill="#93c5fd"/></g></svg>';
+  const log = document.getElementById("log");
+  const form = document.getElementById("ask");
+  const input = document.getElementById("msg");
+  const sendBtn = document.getElementById("send");
+  const history = [];
+  let busy = false;
+
+  const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  // Escapes everything first; only [text](https://...) links and **bold** become markup.
+  const inline = (s) => s
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  function render(text) {
+    let html = "", list = false;
+    for (const raw of esc(text).split("\n")) {
+      const line = raw.trim().replace(/^#+\s*/, "");
+      const item = /^(?:[-*•]|\d+[.)])\s+(.*)$/.exec(line);
+      if (item) { if (!list) { html += "<ul>"; list = true; } html += "<li>" + inline(item[1]) + "</li>"; continue; }
+      if (list) { html += "</ul>"; list = false; }
+      if (line) html += "<p>" + inline(line) + "</p>";
+    }
+    return html + (list ? "</ul>" : "");
+  }
+
+  function add(kind, content) {
+    document.getElementById("empty")?.remove();
+    const el = document.createElement("div");
+    if (kind === "me") { el.className = "me"; el.textContent = content; }
+    else {
+      el.className = "bot";
+      el.innerHTML = BOT_ICON + '<div class="bubble' + (kind === "err" ? " err" : kind === "typing" ? " typing" : "") + '"></div>';
+      const b = el.querySelector(".bubble");
+      if (kind === "bot") b.innerHTML = render(content); else b.textContent = content;
+    }
+    log.appendChild(el);
+    log.scrollTop = log.scrollHeight;
+    return el;
+  }
+
+  async function send(text) {
+    text = text.trim();
+    if (!text || busy) return;
+    busy = true; sendBtn.disabled = true; input.value = "";
+    history.push({ role: "user", content: text });
+    add("me", text);
+    const typing = add("typing", "Leder i kalenderne");
+    try {
+      const r = await fetch("/api/chat", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ messages: history }) });
+      const data = await r.json().catch(() => ({}));
+      typing.remove();
+      if (r.ok && data.reply) { history.push({ role: "assistant", content: data.reply }); add("bot", data.reply); }
+      else { history.pop(); add("err", data.error || "Noget gik galt. Prøv igen om lidt."); }
+    } catch {
+      typing.remove(); history.pop(); add("err", "Ingen forbindelse. Prøv igen om lidt.");
+    } finally {
+      busy = false; sendBtn.disabled = false; input.focus();
+    }
+  }
+
+  form.addEventListener("submit", (e) => { e.preventDefault(); send(input.value); });
+  for (const chip of document.querySelectorAll(".chip")) chip.addEventListener("click", () => send(chip.textContent));
+
+  // Personal MCP address.
+  const getKey = document.getElementById("getkey");
+  const urlBox = document.getElementById("urlbox");
+  const urlEl = document.getElementById("url");
+  const copy = document.getElementById("copy");
+  const keyNote = document.getElementById("keynote");
+  getKey.addEventListener("click", async () => {
+    getKey.disabled = true;
+    try {
+      const r = await fetch("/api/keys", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok || !data.url) throw new Error(data.error || "Kunne ikke lave en adresse. Prøv igen om lidt.");
+      urlEl.textContent = data.url;
+      for (const s of document.querySelectorAll(".mcp-url")) s.textContent = data.url;
+      urlBox.hidden = false;
+      getKey.textContent = "Lav en ny adresse";
+    } catch (e) {
+      keyNote.textContent = e.message;
+    } finally {
+      getKey.disabled = false;
+    }
+  });
+  copy.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(urlEl.textContent); copy.textContent = "Kopieret"; setTimeout(() => (copy.textContent = "Kopiér"), 2000); } catch {}
+  });
+
+  // Client tabs.
+  const tabs = [...document.querySelectorAll(".tab")];
+  for (const tab of tabs) tab.addEventListener("click", () => {
+    for (const t of tabs) {
+      const on = t === tab;
+      t.setAttribute("aria-selected", String(on));
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+    }
+  });
+})();
+</script>
+</body>
+</html>

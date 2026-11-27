@@ -1,15 +1,18 @@
-// The HTTP side: /healthz, and /mcp/<secret> (or /mcp with a bearer header) as stateless
-// Streamable HTTP, one MCP server and transport per request.
+// The HTTP side: /healthz, the website (site.ts), and /mcp/<secret> (or /mcp with a bearer header) as
+// stateless Streamable HTTP, one MCP server and transport per request. A secret is a personal link from
+// LINKS or a self-service key signed with KEY_SECRET (keys.ts).
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import pkg from "../package.json";
 import type { ToolDeps } from "./common";
 import type { Feedback } from "./feedback";
+import type { Signer } from "./keys";
 import { ICON_ROUTES, serverIcons } from "./icons";
 import { INSTRUCTIONS, registerPrompts } from "./instructions";
 import type { LinkTable } from "./links";
 import type { Limiter } from "./limits";
 import type { Log } from "./log";
+import type { SiteHandler } from "./site";
 import { registerTools } from "./tools";
 
 export type AppConfig = {
@@ -18,6 +21,10 @@ export type AppConfig = {
   /** send_feedback's state and GitHub client: one for the whole process. Without it the tool says feedback is not set up. */
   feedback?: Feedback;
   links: LinkTable;
+  /** Checks self-service personal keys (/mcp/<key>) from the website. Absent: only LINKS work. */
+  signer?: Signer;
+  /** The website: /, /api/keys, /api/chat. */
+  site?: SiteHandler;
   limiter: Limiter;
   log: Log;
   /** Misses (unknown links) one address may make per window before it gets 429. */
@@ -101,8 +108,13 @@ export function createApp(cfg: AppConfig): Handler {
       return done(new Response(req.method === "HEAD" ? null : icon.body, { status: 200, headers: { "content-type": icon.type, "content-length": String(icon.body.length), "cache-control": "public, max-age=86400" } }));
     }
 
+    if (cfg.site) {
+      const page = await cfg.site(req, path, ip);
+      if (page) return done(page);
+    }
+
     const secret = secretOf(req, path);
-    const link = secret ? cfg.links.find(secret) : null;
+    const link = secret ? (cfg.links.find(secret) ?? cfg.signer?.keyName(secret) ?? null) : null;
     if (secret === undefined || !link) {
       if (secret === undefined) return done(bare(404));
       const m = misses.miss(ip);

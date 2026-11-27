@@ -19,6 +19,8 @@ export function slidingLimiter(o: { perHour?: number; perDay?: number; now?: () 
   return {
     take(link) {
       const t = now();
+      // Public keys and browser ids make the names unbounded: drop those with no call in the last day.
+      if (calls.size > 10_000) for (const [k, v] of calls) if (!v.length || v[v.length - 1]! <= t - DAY) calls.delete(k);
       const all = (calls.get(link) ?? []).filter((c) => c > t - DAY);
       const hour = all.filter((c) => c > t - HOUR);
       // With n calls in a window of limit L, call n-L+1 (from the oldest) must leave before the next fits.
