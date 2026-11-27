@@ -1,20 +1,31 @@
 # cph-activities server
 
-A remote MCP server for the plugin's sources, for the maintainer and a few friends, behind personal secret links. Built under the map [hoaj/cph-activities#19](https://github.com/hoaj/cph-activities/issues/19). Stateless Streamable HTTP, personal links, per-link limits, a health check, the read-through cache and six read-only tools on the cache and the planner, and `send_feedback`, which files chat feedback as GitHub issues.
+A remote MCP server for the plugin's sources, and the public website «Hvad sker der i København» with a chat on the same tools. Built under the map [hoaj/cph-activities#19](https://github.com/hoaj/cph-activities/issues/19); opened to the public with the website. Anyone gets a personal address from the website (no login); the maintainer's personal links from `LINKS` keep working. Stateless Streamable HTTP, personal links, per-link limits, a health check, the read-through cache and six read-only tools on the cache and the planner, and `send_feedback`, which files chat feedback as GitHub issues.
 
 ## What it serves
 
 | Route | What |
 |---|---|
-| `POST /mcp/<secret>` | MCP (stateless Streamable HTTP). `GET` and `DELETE` answer 405. |
+| `GET`/`HEAD /` | The website (`server/public/index.html`): the chat, «Få din egen adresse» and how to add it to Claude, ChatGPT, Claude Code or Cursor. |
+| `POST /api/keys` | A new personal MCP address, `{ "url": "<PUBLIC_URL>/mcp/<key>" }`. JSON body required (`415` otherwise). At most 5 a day per client address (`429`). `503` without `KEY_SECRET`. |
+| `POST /api/chat` | `{ "messages": [{ "role": "user"\|"assistant", "content": "…" }] }` → `{ "reply" }` or `{ "error" }` (Danish). See *The website's chat*. |
+| `POST /mcp/<secret>` | MCP (stateless Streamable HTTP). `<secret>` is a personal link from `LINKS` or a self-service key from `/api/keys`. `GET` and `DELETE` answer 405. |
 | `POST /mcp` with `Authorization: Bearer <secret>` | The same, for clients that can set headers. |
 | `GET /healthz` | `200 ok`. Outside the links; starts no Chrome and calls no source. |
 | `GET`/`HEAD /icon.svg`, `/icon.png` (512x512), `/icon-192.png`, `/favicon.ico` | The compass logo from `server/public/`, read once at start. Public, no link, `Cache-Control: public, max-age=86400`, `405` for other methods. Not counted as misses. |
 | anything else, or an unknown or revoked secret | a bare `404` (no body, so clients do not start OAuth discovery). After 10 such misses in 10 minutes from one address, that address gets a bare `429` with `Retry-After` for further misses; a valid link is never blocked. |
 
-Each link may make 60 tool calls an hour and 300 a day (sliding windows, in memory, so a restart resets them). Over the limit, the tool call returns an error result saying when the limit resets (not an HTTP error, which clients may retry badly).
+Each link and each self-service key may make 60 tool calls an hour and 300 a day (sliding windows, in memory, so a restart resets them). Over the limit, the tool call returns an error result saying when the limit resets (not an HTTP error, which clients may retry badly).
 
 Logs are JSON lines on stderr. The secret is never logged: every line passes through a redactor that turns `/mcp/<anything>` into `/mcp/<redacted>` and hides bearer tokens. The only identity in a log line or a limit is the link's name.
+
+## Personal addresses and the website's chat
+
+**Keys.** A self-service key is 32 hex characters of random id plus 32 of HMAC-SHA256 over it under `KEY_SECRET` (`src/keys.ts`), so the server checks a key without storing it; its limit name is `k-<id>`, which is also all the logs show. Calls from claude.ai and ChatGPT come from their servers, not the user's address, so a key, not an IP, is what tells users apart; the address ceiling applies only to making keys. Changing `KEY_SECRET` revokes every key (and resets every chat cookie).
+
+**The website's chat** (`src/chat.ts`, `src/site.ts`) calls an OpenAI-compatible chat completions endpoint (`LLM_BASE_URL`, default DeepInfra; `LLM_MODEL`, default `deepseek-ai/DeepSeek-V4-Flash`) and runs its tool calls through an in-memory MCP client on the same tools as `/mcp`, minus `send_feedback`. The server instructions (without the feedback part) plus a short website section open the first user turn, since DeepInfra advises against system messages with tool calling. At most six tool rounds a message, then one answer without tools; tool results are cut at 12,000 characters; the last 12 turns of at most 2,000 characters each are sent. The browser keeps the conversation; the server stores nothing.
+
+Chat limits, in memory: 15 messages an hour and 50 a day per browser (the signed `cph_uid` cookie: HttpOnly, Secure, SameSite=Lax, a year), 100 a day per client address, and 2,000 a day in total, which caps the LLM bill. Over a limit: `429` with a Danish message and `Retry-After`. The page sends a strict Content-Security-Policy; the answer's markdown is escaped before links (`https` only) and bold become markup.
 
 ## Tools
 
@@ -49,11 +60,14 @@ The model drafts the report, shows it to the user and calls the tool only after 
 
 | Variable | Meaning |
 |---|---|
-| `LINKS` | Secret. Comma-separated `name:<sha256 hex of the secret>` entries, e.g. `anna:9f86...,peter:2c26...`. Names are `[a-z0-9-]`, 1-32 characters. A malformed entry stops the server at start. Empty means every `/mcp` request gets 404. |
+| `LINKS` | Secret. Comma-separated `name:<sha256 hex of the secret>` entries, e.g. `anna:9f86...,peter:2c26...`. Names are `[a-z0-9-]`, 1-32 characters. A malformed entry stops the server at start. Empty means only self-service keys reach `/mcp`. |
 | `PUBLIC_URL` | The server's public address, e.g. `https://cph.example.com`. `links.ts` reads it to print finished links; `send_feedback` refuses text that contains it. It also sets the `icons` of `serverInfo` (`<PUBLIC_URL>/icon.png`, 512x512, and `<PUBLIC_URL>/icon.svg`); without it `serverInfo` carries no icons. Clients decide whether to show them. |
 | `PORT` | Port to listen on. Default 8080 (Railway sets it). |
 | `TRUST_PROXY` | Default on: the client address for the miss throttle is the last entry of `X-Forwarded-For` (what Railway's proxy appends). Set `0` to use the socket address. |
 | `SOURCE_CAP_PER_HOUR` | Upstream requests one source may make in a sliding hour. Defaults per source: kultunaut 150, wannasport 60, every other source 30. This variable sets the default for sources without their own entry; `SOURCE_CAP_PER_HOUR_<SOURCE>` (e.g. `SOURCE_CAP_PER_HOUR_KULTUNAUT=300`) overrides any one source. Counted by a wrapper around each skill's `fetch`, retries and pages included. |
+| `KEY_SECRET` | Secret, at least 32 characters (`openssl rand -hex 32`). Signs the self-service MCP keys and the chat cookie. Without it the website hands out no addresses and has no chat. Changing it revokes every key. |
+| `LLM_API_KEY` | Secret. The key for the chat's LLM endpoint (a DeepInfra API key by default). Without it the chat answers that it is not set up. |
+| `LLM_BASE_URL`, `LLM_MODEL` | The chat's OpenAI-compatible endpoint and model. Defaults `https://api.deepinfra.com/v1/openai` and `deepseek-ai/DeepSeek-V4-Flash` ($0.09 / $0.18 per million tokens, November 2026). |
 | `GITHUB_TOKEN` | Secret. A fine-grained personal access token for the repository `hoaj/cph-activities` only, with the single permission **Issues: read and write** (and nothing else). It files Drift issues and `send_feedback` issues and comments. Without it the server logs the Drift issue it would file (`drift_issue_would_file`) and `send_feedback` answers that feedback is not set up. |
 | `GITHUB_REPO` | The repository for those issues. Default `hoaj/cph-activities`. |
 | `CACHE_TTL_EVENTS_S`, `CACHE_TTL_SLOTS_S`, `CACHE_TTL_WEATHER_S` | Seconds a day stays fresh: event sources (default 3600), court slots from wannasport (600), weather from dmi (3600). |

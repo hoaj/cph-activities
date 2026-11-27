@@ -44,6 +44,10 @@ copilot plugin install cph-activities@cph-activities
 
 There is no setup step. The first time your agent uses a CLI skill, it runs that skill's `install.sh`, which downloads the binary matching the skill's version into the skill's `bin/` folder. Skills that need a login open Chrome once for you to sign in.
 
+### The hosted server (claude.ai, ChatGPT, the phone)
+
+The website https://cph-activities-production.up.railway.app has a chat on all the sources and gives you a personal MCP address (no login): add it as a custom connector in claude.ai or ChatGPT, or with `claude mcp add --transport http cph-activities <address>`. It may make 60 tool calls an hour and 300 a day.
+
 ### Any MCP client (Claude Desktop, Cursor, …)
 
 Every CLI skill's binary is also an MCP server: `skills/<skill>/bin/<skill> mcp` serves the same Tasks as tools over stdio, with the same login, Drift checks and dry runs for writes. Clone this repo, get the binary once with `bash skills/<skill>/install.sh`, then add it to your client:
