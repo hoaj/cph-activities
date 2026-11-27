@@ -1,6 +1,6 @@
 # planner
 
-The shared planner behind `plan_outing`: one typed Bun/TypeScript package that fetches each source's day and decides what to suggest. The server's `plan_outing` tool and a later plugin command call the same code, so the rules live in one place. Decisions: [#23](https://github.com/hoaj/cph-activities/issues/23) (in-process fetch) and [#24](https://github.com/hoaj/cph-activities/issues/24) (the contract), validated on `prototype/plan-outing`.
+The shared planner behind `plan_outing`: one typed Bun/TypeScript package that fetches each source's day and decides what to suggest. Only the server's `plan_outing` tool uses it: the plugin's guide skill keeps its own prose procedure, and the two are kept in step by hand ([#31](https://github.com/hoaj/cph-activities/issues/31)). `cli.ts` runs a brief by hand, for testing. Decisions: [#23](https://github.com/hoaj/cph-activities/issues/23) (in-process fetch) and [#24](https://github.com/hoaj/cph-activities/issues/24) (the contract), validated on `prototype/plan-outing`.
 
 Two halves, joined only by data:
 
