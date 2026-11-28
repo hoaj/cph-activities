@@ -2,14 +2,14 @@
 name: wannasport
 description: Use when the user wants to play a sport in Copenhagen and asks where a court, lane or slot is free on a day (padel, tennis, badminton, squash, football, volleyball, swimming, table tennis and 30-odd more). Searches wannasport (https://www.wannasport.com) for free times at venues in Københavns and Frederiksberg Kommune, nearest first, with price and a link to each venue's page where the user books themselves.
 ---
-<!-- version: 0.18.0 -->
+<!-- version: 0.19.0 -->
 
 # wannasport
 
 - `bin/wannasport` (`bin/wannasport.exe` on Windows) in this skill's folder is a CLI for https://www.wannasport.com; below, `wannasport` means that path. Every command prints exactly one JSON document on stdout; progress goes to stderr.
 - Write commands (marked in the table) print a dry run without `--confirm`. Show the user the dry run and get an explicit yes before rerunning with `--confirm`.
 - A Task that spans several logins or sites is never one command: chain commands from each CLI skill.
-- Session, network and input failures are handled here. Only Drift, bugs and missing Tasks go to the `cph-activities-feedback` skill.
+- Session, network and input failures are handled here. Only Drift, bugs (a bot block that keeps happening is one), and missing Tasks go to the `cph-activities-feedback` skill.
 
 ## Commands
 
@@ -37,6 +37,7 @@ A failure is `{"error": {"kind", "message", "next", ...}}` with a fixed exit cod
 | 3 | drift | Stop. Offer to file it with `cph-activities-feedback`, passing the envelope. File only on a yes |
 | 4 | session | Run `wannasport login`; the user signs in in the Chrome window; rerun the command (only skills with `login` exit 4) |
 | 5 | network | Tell the user the site isn't responding, and stop |
+| 5, error has `blocked` | network | Tell the user the site refused the request as automated traffic, and stop; do not retry to find out. Ask the user whether it happens every time; if so, offer a bug report with `cph-activities-feedback` (the site blocks the CLI). File only on a yes |
 | The CLI can't do what the user asked | | Offer a feature request with `cph-activities-feedback` |
 | The user asks whether it works, or a failure looks odd | | Run `wannasport check` and report what it prints |
 
@@ -44,6 +45,12 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 
 ## When NOT to use
 
+- Booking or paying: the CLI never does it. Give the user the court's `url` so they book themselves.
+- Venues that do not sell through wannasport (some clubs book only through MATCHi or their own site): say so rather than guessing.
+- Events, concerts and talks: that is `kulturkbh` and `billetto`.
+- Anything the Commands table does not list: offer a feature request instead of improvising, except what the lines at the end of this list name, which the user always does on the site.
+- `area` comes from the venue's coordinates and the districts of Københavns Kommune plus Frederiksberg Kommune; `unknown` means within 300 m of the border (a beach, a quay).
+- Bulk scraping or automated polling of the site.
 <!-- never:start -->
 - Buying or booking a court is the user's own, on wannasport.com. The CLI never sends `/api/public/Purchases/*`; the user does it on the site.
 - The user's profile and sign-in are not this CLI's. The CLI never sends `/api/public/Profile/*`; the user does it on the site.
@@ -52,9 +59,3 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 - The CLI only reads free times; it never sends a write. The CLI never sends `PATCH /*`; the user does it on the site.
 - The CLI only reads free times; it never sends a write. The CLI never sends `DELETE /*`; the user does it on the site.
 <!-- never:end -->
-- Booking or paying: the CLI never does it. Give the user the court's `url` so they book themselves.
-- Venues that do not sell through wannasport (some clubs book only through MATCHi or their own site): say so rather than guessing.
-- Events, concerts and talks: that is `kulturkbh` and `billetto`.
-- Anything the Commands table does not list: offer a feature request instead of improvising.
-- `area` comes from the venue's coordinates and the districts of Københavns Kommune plus Frederiksberg Kommune; `unknown` means within 300 m of the border (a beach, a quay).
-- Bulk scraping or automated polling of the site.

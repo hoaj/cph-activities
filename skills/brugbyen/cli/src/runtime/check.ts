@@ -9,12 +9,12 @@ import type { Client } from "./call";
 import { ContractError, Failure, type DriftEntry } from "./envelope";
 import { driftFingerprint, errorName, operationSegment, zodDiff } from "./fingerprint";
 import { stripNoise, topLevelDefinitions, type GraphqlType } from "./graphql";
-import { closeContext, launch, launchInMemory, profileState } from "./login";
+import { closeContext, launch, launchInMemory, mountsForm, profileState } from "./login";
 import { isConstantNeed, isPickNeed, isSessionNeed, neverCheckable, neverCheckedWarning } from "./needs";
 import { forbiddenRequest, neverProblems, neverRuleLabel, NeverSent } from "./never";
 import type { Operation } from "./operation";
 import { ensureProfileDir } from "./session";
-import { effectiveOrigin, isLoginHost, tokenMatches, type NeverRule, type Site } from "./site";
+import { effectiveOrigin, isLoginHost, isLoginPath, tokenMatches, type NeverRule, type Site } from "./site";
 
 export type CheckRow = { operation: string; effect: "read" | "write"; status: "ok" | "skipped" | "failed"; reason?: string };
 /**
@@ -83,6 +83,9 @@ export function withChain(ops: Operation[], name: string): Operation[] {
   return ops.filter((o) => keep.has(o.name));
 }
 
+/** A failure after which check sends nothing more: signed out for good, or a bot wall (never sent more, SPEC §10). */
+const halts = (f: Failure | undefined) => f?.kind === "session" || f?.details.blocked !== undefined;
+
 export async function check(client: Client, operations: Operation[], options: CheckOptions, checkWrites?: WriteChecker): Promise<CheckResult> {
   // A Contract for a request the CLI never sends is a bug in the plugin, whatever --op selects.
   const forbidden = neverProblems(client.site, operations);
@@ -108,9 +111,10 @@ export async function check(client: Client, operations: Operation[], options: Ch
       rows.push({ operation: op.name, effect: op.effect, status: "skipped", reason: "never" });
       continue;
     }
-    if (stopped?.kind === "session") {
-      // Signed out and the sign-in did not complete: no other Operation can be reached.
-      rows.push({ operation: op.name, effect: op.effect, status: "skipped", reason: "session" });
+    if (halts(stopped)) {
+      // Signed out and the sign-in did not complete, or a bot wall: no other Operation can be reached,
+      // and a wall is never sent more requests (SPEC §10).
+      rows.push({ operation: op.name, effect: op.effect, status: "skipped", reason: stopped!.details.blocked ? "blocked" : "session" });
       continue;
     }
     if (op.effect === "write") {
@@ -181,7 +185,7 @@ export async function check(client: Client, operations: Operation[], options: Ch
 
   const withTrigger = writes.filter((op) => op.trigger);
   for (const op of writes) if (!op.trigger) rows.push({ operation: op.name, effect: "write", status: "skipped", reason: "no trigger" });
-  if (withTrigger.length > 0 && stopped?.kind !== "session" && !hookRefused) {
+  if (withTrigger.length > 0 && !halts(stopped) && !hookRefused) {
     const reads = operations.filter((op) => op.effect === "read");
     const declaredWrites = operations.filter((op) => op.effect === "write");
     try {
@@ -504,6 +508,8 @@ async function checkOne(
 ): Promise<DriftEntry | null> {
   let captured: Captured | undefined;
   let signedOut = false;
+  /** Whether the top frame is on a login.paths page now: a later navigation off it clears this (a pass-through is not signed out). */
+  let onLoginPath = false;
   /** Labels of the site.never rules this trigger's requests broke, each reported once. */
   const forbidden = new Map<string, string>();
   const handler = async (route: Route) => {
@@ -519,7 +525,13 @@ async function checkOne(
   await context.route("**/*", handler);
   const page = await context.newPage();
   page.on("framenavigated", (frame) => {
-    if (!frame.parentFrame() && site.auth === "login" && isLoginHost(site, frame.url())) signedOut = true;
+    if (frame.parentFrame() || site.auth !== "login") return;
+    if (isLoginHost(site, frame.url())) signedOut = true;
+    try {
+      onLoginPath = isLoginPath(site, new URL(frame.url()), origin);
+    } catch {
+      onLoginPath = false;
+    }
   });
   let triggerError: unknown;
   try {
@@ -528,12 +540,17 @@ async function checkOne(
     triggerError = e;
   }
   for (let waited = 0; !captured && triggerError === undefined && waited < REQUEST_WAIT_MS; waited += 100) await Bun.sleep(100);
+  // login.signedOutSelector: a sign-in form rendered in place, with no navigation to tell it by.
+  const selector = site.auth === "login" ? site.login?.signedOutSelector : undefined;
+  if (!captured && !signedOut && !onLoginPath && selector) {
+    signedOut = await mountsForm(() => page.content(), selector);
+  }
   await page.close().catch(() => {});
   await context.unroute("**/*", handler);
   for (const [label, why] of forbidden) {
     warn(`${op.name}'s trigger sent a request site.never forbids (${label}: ${why}); it was aborted. Change the trigger so it stops before that request.`);
   }
-  if (!captured && signedOut) {
+  if (!captured && (signedOut || onLoginPath)) {
     throw new Failure("session", `${signIn[0]!.toUpperCase()}${signIn.slice(1)} is signed out of ${site.origin}, so ${op.name} could not be checked.`);
   }
   return compareWrite(site, op, captured, triggerError, [...forbidden.keys()]);

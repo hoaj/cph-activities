@@ -1,6 +1,7 @@
 // The site config every CLI skill declares in src/site.ts.
 import type { Call } from "./command";
 import type { Account } from "./envelope";
+import { selectorProblem } from "./html";
 import { neverListProblems } from "./never";
 import type { Method } from "./operation";
 
@@ -20,6 +21,12 @@ export type SiteCtx = {
   ids: Record<string, string>;
   /** What login.refresh.keep kept (a refresh token, a client id); {} when nothing was. */
   refresh: Record<string, string>;
+  /**
+   * The cookies the site has set for this hook, by name: those ctx.fetch's answers set, and with
+   * transport "browser" every cookie Chrome holds for the origin (its tab's page load may have taken
+   * one already, so no answer sets it again). Read a CSRF cookie here, not from Set-Cookie.
+   */
+  cookies(): Promise<Record<string, string>>;
   decodeJwt(token: string): Record<string, unknown>;
   /** Performs one Operation with classification, like a command's ctx.call. */
   call: Call;
@@ -44,6 +51,20 @@ export type LoginConfig = {
    * answer other than 2xx (5xx and 429 aside) means "signed out", so it signs in again.
    */
   sessionProbe?: string;
+  /**
+   * Paths on the origin of the site's own sign-in page (`["/login"]`), for a site that answers an
+   * expired session with a redirect to its own host instead of a login host. A redirect hop to one
+   * of them (exact pathname, one trailing slash and any query or fragment ignored) means "signed
+   * out", like a redirect to a host in `hosts`; so does a sessionProbe redirected there.
+   */
+  paths?: string[];
+  /**
+   * CSS selector of an element only a signed-out page has (the sign-in form, `form#login`), for a
+   * site that answers an expired session with 200 and its sign-in form in place. Checked on an HTML
+   * answer before `html.fields`, and on an HTML sessionProbe answer; a match means "signed out".
+   * Never applied to a JSON answer.
+   */
+  signedOutSelector?: string;
   timeoutMs?: number;
   /** Derives chain-root ids after login. Returns ids to store, never personal data. */
   postLogin?: (ctx: SiteCtx) => Promise<Record<string, string>>;
@@ -96,6 +117,12 @@ export type SiteConfig = {
   auth: Auth;
   needsChrome: boolean;
   /**
+   * Whether the plugin repo's daily drift check (scripts/drift-check.ts, SPEC §10) runs this skill's read-only
+   * `check`. add-skill asks and writes it; absent (a skill made before generator 0.18.0) counts as true. The CLI
+   * itself never reads it.
+   */
+  dailyCheck?: boolean;
+  /**
    * "browser" sends every Operation from a tab of Chrome open on the origin, so the site sees
    * Chrome's own TLS, headers and cookies, including those its scripts set (a bot wall's). Slower:
    * Chrome starts once per run. Leave it out (or "fetch") unless plain fetch is refused.
@@ -106,6 +133,13 @@ export type SiteConfig = {
    * refuses headless Chrome. The window opens on every run.
    */
   browserWindow?: boolean;
+  /**
+   * Headers sent with every request to the origin, under the session's and the Operation's own
+   * (which win): what the page's own requests carry that plain fetch lacks (`x-requested-with`,
+   * `sec-fetch-*`, `referer`, client hints). Never `cookie` or `authorization`: the session holds
+   * those. Plain fetch already sends the user's Chrome's `user-agent` and an `accept-language`.
+   */
+  headers?: Record<string, string>;
   /** auth "login" only. */
   login?: LoginConfig;
   /** auth "none" only: fetches a cookie or CSRF token a public API needs; returns headers to send. */
@@ -170,6 +204,18 @@ export function siteProblems(site: Site): string[] {
   if (probe !== undefined && !(typeof probe === "string" && /^\/(?![/\\])/.test(probe))) {
     out.push("login.sessionProbe must be a path on the origin, starting with a single /");
   }
+  const paths = site.login?.paths;
+  if (paths !== undefined && !(Array.isArray(paths) && paths.every((p) => typeof p === "string" && /^\/(?![/\\])/.test(p)))) {
+    out.push("login.paths must be a list of paths on the origin, each starting with a single /");
+  }
+  const sel = site.login?.signedOutSelector;
+  if (sel !== undefined) {
+    if (typeof sel !== "string" || sel.trim() === "") out.push("login.signedOutSelector must be a non-empty CSS selector");
+    else {
+      const bad = selectorProblem(sel);
+      if (bad !== undefined) out.push(`login.signedOutSelector is not a CSS selector the parser reads (${bad})`);
+    }
+  }
   const refresh = site.login?.refresh;
   if (refresh !== undefined) {
     if (typeof refresh?.renew !== "function") out.push("login.refresh needs a renew function");
@@ -179,6 +225,23 @@ export function siteProblems(site: Site): string[] {
     } else if (from instanceof RegExp && (from.global || from.sticky)) {
       out.push("login.refresh.from must be a RegExp without the g or y flag (its test() would skip matches)");
     } else if (from !== undefined && typeof refresh.keep !== "function") out.push("login.refresh.from needs a keep function");
+  }
+  const h = site.headers;
+  if (h !== undefined) {
+    if (typeof h !== "object" || h === null || Object.getPrototypeOf(h) !== Object.prototype || Object.entries(h).some(([k, v]) => !/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(k) || typeof v !== "string")) {
+      out.push("headers must be a map of header names to string values");
+    } else {
+      const seen = new Set<string>();
+      for (const [name, value] of Object.entries(h)) {
+        const key = name.toLowerCase();
+        if (key === "cookie" || key === "authorization") out.push(`headers must not set ${key}: the session holds it`);
+        else if (/^(content-type|content-length|content-encoding|content-language|content-location|host|connection|keep-alive|transfer-encoding|te|upgrade|proxy-.*)$/.test(key)) out.push(`headers must not set ${key}: the request or fetch sets it`);
+        if (seen.has(key)) out.push(`headers names ${key} twice (header names are not case-sensitive)`);
+        seen.add(key);
+        // The Fetch standard's header value: no NUL, CR or LF, and Latin-1 only (Bun strips or passes some of these silently).
+        if (/[\0\r\n]|[^\x00-\xff]/.test(value)) out.push(`headers.${name} is not a value fetch can send (no line breaks, no characters beyond Latin-1)`);
+      }
+    }
   }
   const ro = site.readOnlyRequests;
   if (ro !== undefined && (!Array.isArray(ro) || ro.some((p) => !(typeof p === "string" && p !== "") && !(p instanceof RegExp)))) {
@@ -229,4 +292,39 @@ export function isLoginHost(site: Site, url: string): boolean {
   } catch {
     return false;
   }
+}
+
+/**
+ * A path as login.paths compares it: without its query or fragment, without a `;parameter` on the last segment
+ * (`/login;jsessionid=A1`), without one trailing slash (`/login/` is `/login`; `/` stays), percent-escapes in capitals.
+ */
+function plainPath(path: string): string {
+  const trim = (p: string) => (p.length > 1 && p.endsWith("/") ? p.slice(0, -1) : p);
+  const p = trim(path.replace(/[?#].*$/s, "").replace(/%[0-9a-f]{2}/gi, (m) => m.toUpperCase()));
+  return trim(p.replace(/;[^/]*$/, "") || "/");
+}
+
+/**
+ * Whether `url` (already resolved, so a relative Location works) is on `origin` and its pathname is
+ * one of login.paths: the exact path, so `/login` is not `/login-help`.
+ */
+export function isLoginPath(site: Site, url: URL, origin: string): boolean {
+  const paths = site.login?.paths;
+  if (!Array.isArray(paths) || paths.length === 0) return false;
+  let on: string;
+  try {
+    on = new URL(origin).origin;
+  } catch {
+    return false;
+  }
+  if (url.origin !== on) return false;
+  const here = plainPath(url.pathname);
+  // An entry is compared as the URL parser writes it, so `/log-på` and a space match what a Location carries (`%C3%A5`, `%20`).
+  return paths.some((p) => {
+    try {
+      return typeof p === "string" && plainPath(new URL(p, on).pathname) === here;
+    } catch {
+      return false;
+    }
+  });
 }

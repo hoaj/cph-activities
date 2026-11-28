@@ -6,6 +6,8 @@
 // | transport error, 5xx, 429 (after retries)              | network                              |
 // | GraphQL data null + server error code (after retries)  | network (INTERNAL*, SERVICE_UNAVAILABLE) |
 // | login: 401/403/redirect to a login host                | renew (login.refresh), else sign in again; retry; still → drift auth |
+// | login: redirect to a login.paths entry, or a 2xx HTML answer showing login.signedOutSelector | as a login-host redirect; still after the sign-in → session |
+// | login: a write answered with any of the redirects or pages above                | session, not sent again               |
 // | login: sessionProbe not 2xx (5xx/429 aside), once a run before the first call | sign in again before sending |
 // | login: sign-in doesn't complete                        | session                              |
 // | none: 401/403                                          | rerun bootstrap, retry; still → drift auth |
@@ -21,14 +23,14 @@
 // the table holds as it is.
 import { existsSync } from "node:fs";
 import type { Call } from "./command";
-import { ContractError, DryRun, Failure, ProfileUnavailable, type Account, type DiffEntry, type Surface } from "./envelope";
-import { extractHtml, type HtmlContract } from "./html";
+import { ContractError, DryRun, Failure, ProfileUnavailable, notResentNext, type Account, type DiffEntry, type Surface } from "./envelope";
+import { extractHtml, htmlMatches, isHtmlType, type HtmlContract } from "./html";
 import { driftFingerprint, errorName, fieldPath, rejectedFields, zodDiff, type BreakType } from "./fingerprint";
 import { withSiteHeaders } from "./browser-headers";
 import { forbiddenOperation, forbiddenRequest, guardFetch, NeverSent } from "./never";
 import type { Operation } from "./operation";
 import { loadSession, saveSession, stateDir, withRenewLock, type Session } from "./session";
-import { decodeJwt, effectiveOrigin, isLoginHost, nonInteractive, onSiteDomain, siteDomain, type Env, type Fetch, type NeverRule, type RefreshConfig, type Site, type SiteCtx } from "./site";
+import { decodeJwt, effectiveOrigin, isLoginHost, isLoginPath, nonInteractive, onSiteDomain, siteDomain, type Env, type Fetch, type NeverRule, type RefreshConfig, type Site, type SiteCtx } from "./site";
 
 /** `fromProfile`: seed the sign-in from another Chrome profile's cookies (`login --from-profile`). */
 export type SignInOptions = {
@@ -101,7 +103,10 @@ export type Request = { method: string; url: string; headers: Record<string, str
  * (`decodeBody`) and reads an HTML text that happens to parse as JSON as HTML.
  * `blocked`: the bot protection that refused the request (blockSignal), when one did.
  */
-type Response_ = { status: number; body: unknown; bytes?: Uint8Array; contentType?: string; loginRedirect?: boolean; offsite?: boolean; blocked?: string };
+type Response_ = { status: number; body: unknown; bytes?: Uint8Array; contentType?: string; loginRedirect?: boolean; signedOut?: "path" | "selector"; offsite?: boolean; blocked?: string };
+
+/** A `loginRedirect` answer, as a message names it. */
+const signInAnswer = (r: Response_) => (r.signedOut === "path" ? "a redirect to its sign-in page" : r.signedOut === "selector" ? "its sign-in form" : "a redirect to a login host");
 
 /** What a browser asks for when it loads a page. */
 const HTML_ACCEPT = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
@@ -178,7 +183,7 @@ function formBody(name: string, value: unknown): string {
 }
 
 /** An answer's text as JSON when it parses, else the text; undefined when empty. */
-function parsedBody(text: string): unknown {
+export function parsedBody(text: string): unknown {
   if (!text.trim()) return undefined;
   try {
     return JSON.parse(text);
@@ -324,6 +329,12 @@ const VALIDATION_CODES = new Set(["GRAPHQL_VALIDATION_FAILED", "GRAPHQL_PARSE_FA
 const VALIDATION_MESSAGE = /^(Cannot query field|Unknown argument|Unknown type|Unknown fragment|Unknown operation|Unknown directive|Syntax Error|Variable "\$\w+" of (required )?type|Field "[^"]+" argument "[^"]+" of type|Field "[^"]+" of type "[^"]+" must have a selection|Field "[^"]+" must not have a selection|Argument "[^"]+" has invalid value)/;
 const INPUT_CODES = new Set(["BAD_USER_INPUT", "BAD_REQUEST"]);
 
+/** A GraphQL answer whose `data` is an object with at least one non-null root field: part of it may have taken effect. */
+function hasRootData(body: unknown): boolean {
+  const data = (body as { data?: unknown } | null | undefined)?.data;
+  return typeof data === "object" && data !== null && !Array.isArray(data) && Object.values(data).some((v) => v !== null && v !== undefined);
+}
+
 function gqlErrors(body: unknown): GqlError[] {
   const errors = (body as { errors?: unknown } | null | undefined)?.errors;
   return Array.isArray(errors) ? errors.filter((e) => e && typeof e === "object") : [];
@@ -331,6 +342,7 @@ function gqlErrors(body: unknown): GqlError[] {
 
 const gqlCode = (e: GqlError) => (typeof e.extensions?.code === "string" ? e.extensions.code : "");
 const gqlMessage = (e: GqlError) => (typeof e.message === "string" ? e.message : "");
+const unauthenticated = (body: unknown) => gqlErrors(body).some((e) => gqlCode(e) === "UNAUTHENTICATED");
 
 /** Schema coordinates named by a validation message ("Type.field"), never values. */
 function gqlPath(message: string): string {
@@ -807,10 +819,29 @@ export class Client {
     if (op.effect === "write" && !this.confirm) throw new DryRun(op.name, v.data);
     await this.ensureSession();
     await this.probeSession();
-    let res = await this.send(op, v.data, built?.req);
+    // A write answered with a sign-in page (a redirect to a login host or a login.paths entry, or a login.signedOutSelector
+    // match) is never sent again, whichever answer it is (the first, or the resend after a renew): a POST's redirect to a
+    // sign-in page or a 200 form cannot be told from a success that landed there, so it may have taken effect. So is a
+    // GraphQL write whose root field answered (it ran) with an UNAUTHENTICATED error below it.
+    const neverResend = async (r: Response_): Promise<Response_> => {
+      if (op.effect === "read") return r;
+      const ran = op.graphql !== undefined && hasRootData(r.body) && unauthenticated(r.body);
+      if (r.loginRedirect || ran) {
+        const how = ran ? "a sign-in error (UNAUTHENTICATED) after the write ran" : signInAnswer(r);
+        // The write is not sent again, but the sign-in is still renewed where reauthenticate() would (login.refresh, plain
+        // fetch, no Chrome), so the next run is signed in. Nothing proves the renewal took, so `next` keeps the login step
+        // for a run that ends this way again. A site.never refusal of renew's own request is the bug it is everywhere.
+        const renewed = !this.fresh && (this.reauthAllowed || this.renewOnly) && (await this.renew());
+        // Its own `next`: the generic session one ("run login, then rerun the command") could duplicate the write.
+        const login = this.surface === "mcp" ? "call the login tool" : `run \`${this.site.skill} login\``;
+        throw new Failure("session", `${op.name}: the site answered with ${how}. The write may have taken effect, and it was not sent again: check on the site before running it again.`, { next: notResentNext(renewed, login) });
+      }
+      return r;
+    };
+    let res = await neverResend(await this.send(op, v.data, built?.req));
     // Renew, then sign in (or rerun bootstrap): each at most once a run, so this ends. A bot wall
     // is no sign-out: no sign-in gets past it, so none is spent on it.
-    while (!res.blocked && this.isAuthFailure(op, res) && (await this.reauthenticate())) res = await this.send(op, v.data, built?.req);
+    while (!res.blocked && this.isAuthFailure(op, res) && (await this.reauthenticate())) res = await neverResend(await this.send(op, v.data, built?.req));
     if (res.blocked) throw this.blockedFailure(op, res.blocked);
     if (this.isAuthFailure(op, res)) {
       // Renew met a bot wall and no Chrome sign-in followed (the Setup page's check): the wall, not Drift.
@@ -818,14 +849,27 @@ export class Client {
         const wall = this.renewWall();
         if (wall) throw wall;
       }
+      // The site's own sign-in page (login.paths, login.signedOutSelector) after the one sign-in a run is allowed: the
+      // sign-in did not take, which is a session failure, not a change of the site away from a Contract.
+      if (res.signedOut) {
+        const how = signInAnswer(res);
+        const after = this.signedInHere ? "a fresh sign-in" : this.renewed ? "renewing the sign-in" : "a check of the saved sign-in";
+        throw new Failure("session", `${op.name}: the site still answers with ${how} after ${after}.`);
+      }
       const after =
         this.site.auth === "login"
           ? this.signedInHere ? "a fresh sign-in" : this.renewed ? "renewing the sign-in" : "a check of the saved sign-in"
           : this.site.bootstrap ? "rerunning bootstrap" : "a call without login";
       throw this.drift(op, "auth", "", res.loginRedirect ? "redirect" : String(res.status), `the site refused the request (HTTP ${res.status}) after ${after}`);
     }
+    // Answered with success: 2xx, and for GraphQL no errors or a data object with a non-null root field (partial success).
+    // Set before classify, whose Contract check may still fail. A 2xx may also be a page that is no answer to the write.
+    if (op.effect === "write" && res.status >= 200 && res.status < 300 && (op.graphql === undefined || gqlErrors(res.body).length === 0 || hasRootData(res.body))) this.writeSent = true;
     return this.classify(op, res);
   }) as Call;
+
+  /** A write Operation was sent and the site answered with success (main.ts: any failure after it must say so). */
+  writeSent = false;
 
   /**
    * With a never list: the request this Operation sends with these variables (built once, the
@@ -891,7 +935,7 @@ export class Client {
 
   private isAuthFailure(op: Operation, res: Response_): boolean {
     if (res.status === 401 || res.status === 403 || res.loginRedirect) return true;
-    return op.graphql !== undefined && gqlErrors(res.body).some((e) => gqlCode(e) === "UNAUTHENTICATED");
+    return op.graphql !== undefined && unauthenticated(res.body);
   }
 
   private async send(op: Operation, vars: unknown, prebuilt?: Request): Promise<Response_> {
@@ -926,6 +970,10 @@ export class Client {
   /** fetch with redirects followed by hand: a login-host redirect means logged out, an off-site one is reported. */
   private async fetchFollowing(req: Request): Promise<Response_> {
     let { url, method, body } = req;
+    // A read may pass through the site's own sign-in page on its way to the page (a valid session forwarded on): only an
+    // answer that ends on a login.paths page is signed out. Any other method stops at the first hop onto one.
+    const read = req.method === "GET" || req.method === "HEAD";
+    const onLoginPath = (u: string) => this.site.auth === "login" && isLoginPath(this.site, new URL(u), this.origin);
     for (let hop = 0; hop < 6; hop++) {
       // deps.fetch is site.never's guard: every hop is checked, a redirect may lead to a forbidden path.
       const r = await this.deps.fetch(url, { method, headers: req.headers, body, redirect: "manual" });
@@ -933,12 +981,19 @@ export class Client {
       if (r.status < 300 || r.status >= 400 || !location) {
         const { body, bytes } = await readBody(r);
         const blocked = blockSignal(r.status, r.headers, body);
-        return { status: r.status, body, bytes, contentType: r.headers.get("content-type") ?? undefined, ...(blocked && { blocked }) };
+        const contentType = r.headers.get("content-type") ?? undefined;
+        // The answer's own page is the site's sign-in page: signed out, whatever it holds (a read that was sent there).
+        if (!blocked && hop > 0 && onLoginPath(url)) return { status: r.status, body, bytes, contentType, loginRedirect: true, signedOut: "path" };
+        // login.signedOutSelector: a 2xx that renders the sign-in form in place. An HTML answer only, never a JSON one.
+        if (!blocked && this.signedOutPage(r.status, contentType, bytes)) return { status: r.status, body, bytes, contentType, loginRedirect: true, signedOut: "selector" };
+        return { status: r.status, body, bytes, contentType, ...(blocked && { blocked }) };
       }
       const next = new URL(location, url);
       const blocked = blockHost(next);
       if (blocked) return { status: r.status, body: undefined, blocked };
       if (this.site.auth === "login" && isLoginHost(this.site, next.toString())) return { status: r.status, body: undefined, loginRedirect: true };
+      // login.paths: the site's own sign-in page. `next` is resolved, so a relative Location counts too.
+      if (!read && this.site.auth === "login" && isLoginPath(this.site, next, this.origin)) return { status: r.status, body: undefined, loginRedirect: true, signedOut: "path" };
       if (next.origin !== new URL(url).origin) return { status: r.status, body: undefined, offsite: true };
       if (r.status === 303 || ((r.status === 301 || r.status === 302) && method !== "GET" && method !== "HEAD")) {
         method = "GET";
@@ -946,7 +1001,15 @@ export class Client {
       }
       url = next.toString();
     }
+    if (onLoginPath(url)) return { status: 310, body: undefined, loginRedirect: true, signedOut: "path" };
     return { status: 310, body: undefined, offsite: true };
+  }
+
+  /** Whether a 2xx HTML answer shows login.signedOutSelector's element. */
+  private signedOutPage(status: number, contentType: string | undefined, bytes: Uint8Array): boolean {
+    const selector = this.site.auth === "login" ? this.site.login?.signedOutSelector : undefined;
+    if (!selector || status < 200 || status >= 300 || !isHtmlType(contentType)) return false;
+    return htmlMatches(decodeBody(bytes, contentType), selector);
   }
 
   private classify(op: Operation, res: Response_): unknown {

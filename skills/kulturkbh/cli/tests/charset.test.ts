@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { decodeBody } from "../src/runtime/charset";
+import { decodeBody } from "../src/runtime/call";
 
 const latin1 = (s: string) => Uint8Array.from(Array.from(s, (c) => c.charCodeAt(0)));
 const utf8 = (s: string) => new TextEncoder().encode(s);

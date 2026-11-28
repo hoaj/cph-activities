@@ -21,6 +21,11 @@ export type FailureDetails = {
    * that did it (a vendor name such as "cloudflare", or "captcha"). Never a value the site sent.
    */
   blocked?: string;
+  /**
+   * Any kind, from a command that had already sent a write the site answered with success: the failure came
+   * after it (a later call, a mapping, a bug in run), so the write must not be run again.
+   */
+  writeSent?: boolean;
   /** Replaces the kind's fixed `next`, when that sentence would be wrong here (the MCP login tool's own failures). */
   next?: string;
 };
@@ -70,6 +75,21 @@ export type EnvelopeSite = { plugin: string; skill: string; version: string; rep
 
 /** Who reads the envelope: an agent running the CLI, or an MCP client calling the `mcp` server's tools. */
 export type Surface = "cli" | "mcp";
+
+/**
+ * How `next` starts for a write that got a sign-in page and was not sent again (call.ts), on every surface: remote.ts keeps
+ * it in front of the Owner's step. SIGN_IN_RENEWED follows it when the run renewed the sign-in there.
+ */
+export const WRITE_NOT_RESENT = "Tell the user the write may already have taken effect and was not sent again, and ask them to check on the site. Do not run it again until they confirm it did not take effect.";
+export const SIGN_IN_RENEWED = "If it did not, run it again: the sign-in has been renewed.";
+
+/** That `next`, with `signIn` the surface's step to sign in again (run login, call the login tool, ask the Owner). */
+export function notResentNext(renewed: boolean, signIn: string): string {
+  return `${WRITE_NOT_RESENT} ${renewed ? `${SIGN_IN_RENEWED} If it ends this way again, ${signIn} before running it again.` : `If it did not, ${signIn}, then run it again.`}`;
+}
+
+/** First in `next` of any failure after a write the site answered with success (details.writeSent), on both surfaces. */
+export const WRITE_SENT = "The write was sent and the site answered with success, so it may have taken effect. Check on the site before running it again.";
 
 export function nextStep(kind: Kind, site: EnvelopeSite, hasAccounts = false, surface: Surface = "cli", blocked = false): string {
   const feedback = `${site.plugin}-feedback`;
@@ -147,9 +167,10 @@ export function errorEnvelope(f: Failure, site: EnvelopeSite, surface: Surface =
       ...(d.stack !== undefined && { stack: d.stack }),
       ...(d.accounts !== undefined && { accounts: d.accounts }),
       ...(d.blocked !== undefined && { blocked: d.blocked }),
+      ...(d.writeSent && { writeSent: true }),
       version: site.version,
       os: osName(),
-      next: d.next ?? nextStep(f.kind, site, (d.accounts?.length ?? 0) > 0, surface, d.blocked !== undefined),
+      next: `${d.writeSent ? `${WRITE_SENT} ` : ""}${d.next ?? nextStep(f.kind, site, (d.accounts?.length ?? 0) > 0, surface, d.blocked !== undefined)}`,
     },
   };
 }

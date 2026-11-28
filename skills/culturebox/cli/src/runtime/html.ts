@@ -15,10 +15,11 @@ import { ContractError } from "./envelope";
  * - `"h2.title"`: the first match's text (whitespace collapsed, trimmed), or null when nothing matches;
  * - `{ css, attr }`: the first match's attribute instead (null when the element or the attribute is missing);
  * - `{ css, all: true }`: every match's text (or `attr`), as a list;
- * - `{ css, lines: true }`: the first match's text as a list of its visual lines (split at `<br>` and block
- *   boundaries, each collapsed and trimmed, empty ones left out); `[]` when nothing matches;
  * - `{ css, json: true }`: the first match's text parsed as JSON, for inline state
  *   (`<script type="application/ld+json">`, `<script id="__NEXT_DATA__">`); null when nothing matches;
+ * - `{ css, lines: true }`: the first match's text split at `<br>` and block boundaries (a newline in the
+ *   text, even in `<pre>`, is a space), each line collapsed and trimmed, empty lines left out, as a list;
+ *   `[]` when nothing matches;
  * - `{ each, in?, fields }`: a list, one object per element matching `each`, its `fields` picked inside
  *   that element. `in` names the list's container, which must be on the page even when the list is
  *   empty: without it a changed layout would read as an empty list instead of Drift.
@@ -27,7 +28,8 @@ import { ContractError } from "./envelope";
  */
 export type HtmlField =
   | string
-  | { css: string; attr?: string; all?: boolean; json?: boolean; lines?: boolean }
+  | { css: string; attr?: string; all?: boolean; json?: boolean; lines?: never }
+  | { css: string; lines: true; attr?: never; all?: never; json?: never }
   | { each: string; in?: string; fields: HtmlFields };
 
 export type HtmlFields = Record<string, HtmlField>;
@@ -102,6 +104,7 @@ function pick(scope: Doc | Element, fields: HtmlFields, prefix: string): Record<
     const path = prefix ? `${prefix}.${name}` : name;
     if (typeof field === "string") out[name] = textOf(first(scope, field));
     else if ("each" in field) out[name] = list(scope, field, path);
+    else if (field.lines) out[name] = linesOf(first(scope, field.css));
     else out[name] = value(scope, field, path);
   }
   return out;
@@ -117,8 +120,7 @@ function list(scope: Doc | Element, field: { each: string; in?: string; fields: 
   return all(within, field.each).map((item) => pick(item, field.fields, `${path}[]`));
 }
 
-function value(scope: Doc | Element, field: { css: string; attr?: string; all?: boolean; json?: boolean; lines?: boolean }, path: string): unknown {
-  if (field.lines) return linesOf(first(scope, field.css));
+function value(scope: Doc | Element, field: { css: string; attr?: string; all?: boolean; json?: boolean }, path: string): unknown {
   const read = (el: Element | null): unknown => {
     if (!el) return null;
     if (field.attr !== undefined) return DomUtils.getAttributeValue(el, field.attr) ?? null;
@@ -131,6 +133,27 @@ function value(scope: Doc | Element, field: { css: string; attr?: string; all?: 
   };
   if (field.all) return all(scope, field.css).map(read);
   return read(first(scope, field.css));
+}
+
+/** Whether a content-type header names HTML: `text/html` or `application/xhtml+xml` (parameters ignored). */
+export function isHtmlType(contentType: string | null | undefined): boolean {
+  const type = (contentType ?? "").split(";")[0]!.trim().toLowerCase();
+  return type === "text/html" || type === "application/xhtml+xml";
+}
+
+/** Whether `css` parses, as css-select reads it: undefined when it does, else the parser's message. */
+export function selectorProblem(css: string): string | undefined {
+  try {
+    selectOne(css, []);
+    return undefined;
+  } catch (e) {
+    return (e as Error).message;
+  }
+}
+
+/** Whether any element of `html` matches `css` (login.signedOutSelector, SPEC §7). A selector the parser refuses is a ContractError. */
+export function htmlMatches(html: string, css: string): boolean {
+  return compiled(css, () => selectOne<Node, Element>(css, parseHtml(html).children)) !== null;
 }
 
 function isScope(css: string): boolean {
@@ -166,31 +189,33 @@ const BREAKS = new Set([
 /** Never visible text: a <noscript> holds markup (parse5 parses it as text, as a browser with scripts on does). */
 const HIDDEN = new Set(["noscript", "template"]);
 
-/** An element's text with `separator` at each `<br>` and block boundary; scripts, styles and `<noscript>` inside it left out. */
-function rawText(el: Element, separator: string): string {
-  const parts: string[] = [];
+/** An element's text: whitespace collapsed, `<br>` and block boundaries a space, scripts, styles and `<noscript>` inside it left out. */
+function textOf(el: Element | null): string | null {
+  return el ? collapse(segmentsOf(el).join(" ")) : null;
+}
+
+/** An element's lines (`lines: true`): its text split at `<br>` and block boundaries, each collapsed, empty ones left out; `[]` without one. */
+function linesOf(el: Element | null): string[] {
+  return el ? segmentsOf(el).map(collapse).filter((line) => line !== "") : [];
+}
+
+function collapse(text: string): string {
+  return text.replace(/\s+/g, " ").trim();
+}
+
+/** An element's raw text, split at `<br>` and block boundaries; scripts, styles and `<noscript>` left out. */
+function segmentsOf(el: Element): string[] {
+  const segments = [""];
   const walk = (node: Node) => {
-    if (node.type === "text") parts.push((node as { data: string }).data);
+    if (node.type === "text") segments[segments.length - 1] += (node as { data: string }).data;
     else if (node.type === "tag") {
       const tag = (node as Element).name;
       if (HIDDEN.has(tag)) return;
-      if (BREAKS.has(tag)) parts.push(separator);
+      if (BREAKS.has(tag)) segments.push("");
       for (const child of (node as Element).children) walk(child as Node);
-      if (BREAKS.has(tag)) parts.push(separator);
+      if (BREAKS.has(tag)) segments.push("");
     }
   };
   for (const child of el.children) walk(child as Node);
-  return parts.join("");
-}
-
-/** An element's text: whitespace collapsed, `<br>` and block boundaries a space. */
-function textOf(el: Element | null): string | null {
-  if (!el) return null;
-  return rawText(el, " ").replace(/\s+/g, " ").trim();
-}
-
-/** An element's visual lines: split at `<br>` and block boundaries (never at a newline in the source), each collapsed. */
-function linesOf(el: Element | null): string[] {
-  if (!el) return [];
-  return rawText(el, "\u0000").split("\u0000").map((l) => l.replace(/\s+/g, " ").trim()).filter(Boolean);
+  return segments;
 }

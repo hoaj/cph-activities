@@ -8,9 +8,10 @@
 import type { BrowserContext, Page, Response as PlaywrightResponse } from "playwright-core";
 import { Failure } from "./envelope";
 import { closeContext, launchInMemory } from "./login";
-import { effectiveOrigin, isTest, type Env, type Fetch, type Site } from "./site";
+import { effectiveOrigin, isTest, onSiteDomain, siteDomain, type Env, type Fetch, type Site } from "./site";
 
-export type BrowserTransport = { fetch: Fetch; close(): Promise<void> };
+/** `cookies()`: what Chrome holds for the origin, by name, the tab opened first (SiteCtx.cookies). */
+export type BrowserTransport = { fetch: Fetch; cookies(cookieHeader?: string): Promise<Record<string, string>>; close(): Promise<void> };
 
 const PAGE_TIMEOUT_MS = 30_000;
 /** How long the front page may keep loading after `load` (a challenge that reloads, late scripts). */
@@ -24,6 +25,7 @@ const NAVIGATION_RETRIES = 2;
 const BROWSER_OWNED = /^(cookie2?|host|origin|referer|user-agent|content-length|connection|keep-alive|accept-encoding|accept-charset|te|trailer|transfer-encoding|upgrade|via|expect|date|dnt|proxy-.*|sec-.*)$/i;
 const NULL_BODY = new Set([101, 204, 205, 304]);
 
+/** `body` is the answer's bytes, base64: the page's Response.text() is always UTF-8, which breaks an ISO-8859-1 page (#108). */
 type PageAnswer = { redirect: true } | { status: number; url: string; headers: [string, string][]; body: string } | { error: string };
 
 /** A transport failure the Client reports as network after its retries, like a refused connection. */
@@ -102,7 +104,10 @@ export function browserTransport(site: Site, options: { env: Env; note(message: 
               if (r.type === "opaqueredirect") return { redirect: true as const };
               const pairs: [string, string][] = [];
               r.headers.forEach((v, k) => pairs.push([k, v]));
-              return { status: r.status, url: r.url, headers: pairs, body: await r.text() };
+              const bytes = new Uint8Array(await r.arrayBuffer());
+              let binary = "";
+              for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+              return { status: r.status, url: r.url, headers: pairs, body: btoa(binary) };
             } catch (e) {
               return { error: e instanceof Error ? e.name : "error" };
             }
@@ -139,11 +144,31 @@ export function browserTransport(site: Site, options: { env: Env; note(message: 
       const out = new Headers();
       if (reported) for (const h of await reported.headersArray()) out.append(h.name, h.value);
       else for (const [k, v] of answer.headers) out.append(k, v);
-      return new Response(NULL_BODY.has(answer.status) ? null : answer.body, { status: answer.status, headers: out });
+      // The bytes as Chrome got them: readBody decodes them by their charset, as for plain fetch.
+      return new Response(NULL_BODY.has(answer.status) ? null : Buffer.from(answer.body, "base64"), { status: answer.status, headers: out });
     }
   };
 
-  return { fetch, close };
+  const cookies = async (cookieHeader?: string): Promise<Record<string, string>> => {
+    try {
+      opening ??= open(cookieHeader); // with the session's cookies, as an Operation's first request would
+      await opening;
+    } catch (e) {
+      await close();
+      if (e instanceof Failure) throw e; // Chrome is missing
+      // The site did not load in Chrome: the hook cannot read its cookies, so it stops as a fetch would.
+      throw new Failure("network", `${origin} isn't responding (${transportError("page").message}).`);
+    }
+    if (!context) return {};
+    // Every cookie on the site's domain, whatever its Path (an XSRF cookie on /api) or host; on a
+    // name two share, the one the origin's root is sent wins.
+    const domain = siteDomain(origin);
+    const all = (await context.cookies().catch(() => [])).filter((c) => onSiteDomain(domain, c.domain.replace(/^\./, "")));
+    const root = await context.cookies(`${origin}/`).catch(() => []);
+    return Object.fromEntries([...all, ...root].map((c) => [c.name, c.value]));
+  };
+
+  return { fetch, cookies, close };
 }
 
 /** A body the page can send: text, or a form (URLSearchParams, typed as fetch would). */

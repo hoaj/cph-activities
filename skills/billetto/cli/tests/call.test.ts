@@ -3,11 +3,11 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { existsSync, readFileSync, utimesSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
-import { buildRequest, Client } from "../src/runtime/call";
+import { blockSignal, buildRequest, Client } from "../src/runtime/call";
 import { DryRun, Failure } from "../src/runtime/envelope";
 import { defineOperation } from "../src/runtime/operation";
 import { loadSession, saveSession } from "../src/runtime/session";
-import { client, fakeFetch, getCustomer, getOrder, json, listProducts, loginSite, makeDeps, makeSite, renameOrder, tempHome } from "./helpers";
+import { client, fakeFetch, getCustomer, getOrder, json, listProducts, loginSite, makeDeps, makeSite, ORIGIN, renameOrder, tempHome } from "./helpers";
 
 let home: ReturnType<typeof tempHome>;
 beforeEach(() => (home = tempHome()));
@@ -77,6 +77,38 @@ describe("request building", () => {
     await client(loginSite(), makeDeps(fetch, home.dir).deps).call(getCustomer, { customerId: "C-1" });
     expect(calls[0].headers.authorization).toBe("Bearer cached");
     expect(calls[0].headers.cookie).toBe("sid=1");
+  });
+});
+
+describe("site.headers (#111)", () => {
+  const ok = () => json({ data: { getCustomer: { id: "C-1", name: "n" } } });
+  const headers = { "x-requested-with": "XMLHttpRequest", "sec-fetch-site": "same-origin", referer: `${ORIGIN}/`, accept: "never-wins" };
+
+  test("a site's own headers go with every call to its origin; the session's and the call's own win", async () => {
+    saved({ authorization: "Bearer cached", "x-requested-with": "session" });
+    const { fetch, calls } = fakeFetch(ok);
+    await client(loginSite({ headers }), makeDeps(fetch, home.dir).deps).call(getCustomer, { customerId: "C-1" });
+    expect(calls[0].headers["sec-fetch-site"]).toBe("same-origin");
+    expect(calls[0].headers.referer).toBe(`${ORIGIN}/`);
+    expect(calls[0].headers["x-requested-with"]).toBe("session");
+    expect(calls[0].headers.accept).toBe("application/json");
+    expect(calls[0].headers.authorization).toBe("Bearer cached");
+  });
+
+  test("never to another host: a hook's request there carries none of them", async () => {
+    const { fetch, calls } = fakeFetch(() => json({}));
+    const site = makeSite({
+      headers,
+      bootstrap: async (ctx) => {
+        await ctx.fetch("https://other.example.test/x");
+        await ctx.fetch(`${ORIGIN}/csrf`);
+        return { headers: {} };
+      },
+    });
+    await client(site, makeDeps(fetch, home.dir).deps).call(getCustomer, { customerId: "C-1" }).catch(() => {});
+    expect(calls[0].url).toBe("https://other.example.test/x");
+    expect(calls[0].headers["x-requested-with"]).toBeUndefined();
+    expect(calls[1].headers["x-requested-with"]).toBe("XMLHttpRequest");
   });
 });
 
@@ -323,6 +355,127 @@ describe("auth login", () => {
     expect(loginCalls).toEqual([true]);
   });
 
+  describe("a write redirected to a login host is never sent again (#123)", () => {
+    const toLoginHost = (status: number) => new Response(null, { status, headers: { location: "https://login.example.test/authorize?x=1" } });
+    for (const status of [302, 303, 307]) {
+      test(`a PATCH answered ${status} to a login host: one request, kind session, no sign-in`, async () => {
+        saved();
+        const { fetch, calls } = fakeFetch((r) => (r.headers.authorization === "Bearer new" ? json({ ok: true }) : toLoginHost(status)));
+        const { deps, loginCalls } = makeDeps(fetch, home.dir, [{ authorization: "Bearer new" }]);
+        const f = await failure(client(loginSite(), deps, true).call(renameOrder, { orderId: "7", name: "N" }));
+        expect(f.kind).toBe("session");
+        expect(f.message).toContain("not sent again");
+        expect(f.details.next).toContain("check on the site");
+        expect(f.details.next).toContain("Do not run it again until they confirm");
+        expect(calls.map((c) => c.method)).toEqual(["PATCH"]);
+        expect(loginCalls).toEqual([]);
+      });
+    }
+
+    test("a PATCH whose 303 leads on the origin, then to a login host, is not sent again either", async () => {
+      saved();
+      const { fetch, calls } = fakeFetch((r) => (r.method === "PATCH" ? new Response(null, { status: 303, headers: { location: "/done" } }) : toLoginHost(302)));
+      const { deps, loginCalls } = makeDeps(fetch, home.dir, [{ authorization: "Bearer new" }]);
+      const f = await failure(client(loginSite(), deps, true).call(renameOrder, { orderId: "7", name: "N" }));
+      expect(f.kind).toBe("session");
+      expect(calls.map((c) => c.method)).toEqual(["PATCH", "GET"]);
+      expect(loginCalls).toEqual([]);
+    });
+
+    test("a PATCH answered 401, signed in again and resent, then redirected to a login host: two requests, no further sign-in", async () => {
+      saved();
+      const { fetch, calls } = fakeFetch((r) => (r.headers.authorization === "Bearer new" ? toLoginHost(303) : json({}, 401)));
+      const { deps, loginCalls } = makeDeps(fetch, home.dir, [{ authorization: "Bearer new" }, { authorization: "Bearer newer" }]);
+      const f = await failure(client(loginSite(), deps, true).call(renameOrder, { orderId: "7", name: "N" }));
+      expect(f.kind).toBe("session");
+      expect(f.message).toContain("may have taken effect");
+      expect(calls.map((c) => c.method)).toEqual(["PATCH", "PATCH"]);
+      expect(loginCalls).toEqual([true]);
+    });
+
+    const withRefresh = (renew: (ctx: any) => Promise<unknown>) => loginSite({ login: { ...loginSite().login!, refresh: { renew: renew as never } } });
+
+    test("with login.refresh the session is still renewed (the write is not resent), so the next run is signed in", async () => {
+      saveSession(home.dir, { headers: { authorization: "Bearer old" }, ids: { customerId: "C-1" }, refresh: { token: "r1" } });
+      const { fetch, calls } = fakeFetch(() => toLoginHost(302));
+      const { deps, loginCalls } = makeDeps(fetch, home.dir);
+      const s = withRefresh(async (ctx) => (ctx.refresh.token === "r1" ? { headers: { ...ctx.headers, authorization: "Bearer new" }, refresh: { token: "r2" } } : null));
+      const f = await failure(client(s, deps, true).call(renameOrder, { orderId: "7", name: "N" }));
+      expect(f.kind).toBe("session");
+      expect(f.details.next).toContain("check on the site");
+      expect(f.details.next).toContain("the sign-in has been renewed");
+      expect(f.details.next).toContain("If it ends this way again, run `shop login` before running it again.");
+      expect(calls.map((c) => c.method)).toEqual(["PATCH"]);
+      expect(loginCalls).toEqual([]);
+      expect(loadSession(home.dir)!.headers.authorization).toBe("Bearer new");
+      expect(loadSession(home.dir)!.refresh).toEqual({ token: "r2" });
+    });
+
+    test("a renew hook that answers null or throws there keeps the write's own failure, with login in next", async () => {
+      for (const renew of [async () => null, async () => Promise.reject(new Error("boom"))]) {
+        home.cleanup();
+        home = tempHome();
+        saveSession(home.dir, { headers: { authorization: "Bearer old" }, ids: { customerId: "C-1" }, refresh: { token: "r1" } });
+        const { fetch, calls } = fakeFetch(() => toLoginHost(303));
+        const { deps, loginCalls } = makeDeps(fetch, home.dir);
+        const f = await failure(client(withRefresh(renew), deps, true).call(renameOrder, { orderId: "7", name: "N" }));
+        expect(f.kind).toBe("session");
+        expect(f.message).toContain("not sent again");
+        expect(f.details.next).toContain("`shop login`");
+        expect(calls.filter((c) => c.method === "PATCH")).toHaveLength(1);
+        expect(loginCalls).toEqual([]);
+      }
+    });
+  });
+
+  describe("a GraphQL write whose root field answered is not sent again on UNAUTHENTICATED below it (#123, reviews 2 and 3)", () => {
+    const renameCustomer = defineOperation({
+      name: "renameCustomer",
+      effect: "write",
+      graphql: "mutation renameCustomer($id: String!) { renameCustomer(id: $id) { id owner { email } } }",
+      variables: z.object({ id: z.string() }),
+      response: z.any(),
+    });
+    const unauthenticated = { message: "not signed in", path: ["renameCustomer", "owner"], extensions: { code: "UNAUTHENTICATED" } };
+
+    const ranButUnauthenticated = () => json({ data: { renameCustomer: { id: "C-1", owner: null } }, errors: [unauthenticated] });
+
+    test("root data plus an UNAUTHENTICATED field error: one request, no sign-in, kind session saying it may have taken effect", async () => {
+      saved();
+      const { fetch, calls } = fakeFetch(ranButUnauthenticated);
+      const { deps, loginCalls } = makeDeps(fetch, home.dir, [{ authorization: "Bearer new" }]);
+      const f = await failure(client(loginSite(), deps, true).call(renameCustomer, { id: "C-1" }));
+      expect(f.kind).toBe("session");
+      expect(f.message).toContain("not sent again");
+      expect(f.details.next).toStartWith("Tell the user the write may already have taken effect and was not sent again");
+      expect(f.details.next).toContain("`shop login`");
+      expect(calls).toHaveLength(1);
+      expect(loginCalls).toEqual([]);
+    });
+
+    test("with login.refresh it is renewed there, still not sent again", async () => {
+      saveSession(home.dir, { headers: { authorization: "Bearer old" }, ids: { customerId: "C-1" }, refresh: { token: "r1" } });
+      const { fetch, calls } = fakeFetch(ranButUnauthenticated);
+      const { deps, loginCalls } = makeDeps(fetch, home.dir);
+      const s = loginSite({ login: { ...loginSite().login!, refresh: { renew: async (ctx: any) => ({ headers: { ...ctx.headers, authorization: "Bearer new" }, refresh: { token: "r2" } }) } } });
+      const f = await failure(client(s, deps, true).call(renameCustomer, { id: "C-1" }));
+      expect(f.kind).toBe("session");
+      expect(f.details.next).toContain("the sign-in has been renewed");
+      expect(calls).toHaveLength(1);
+      expect(loginCalls).toEqual([]);
+      expect(loadSession(home.dir)!.headers.authorization).toBe("Bearer new");
+    });
+
+    test("UNAUTHENTICATED with a null root (the mutation did not run) still signs in and sends it again", async () => {
+      saved();
+      const { fetch, calls } = fakeFetch((r) => (r.headers.authorization === "Bearer new" ? json({ data: { renameCustomer: { id: "C-1", owner: null } } }) : json({ data: { renameCustomer: null }, errors: [unauthenticated] })));
+      const { deps, loginCalls } = makeDeps(fetch, home.dir, [{ authorization: "Bearer new" }]);
+      await client(loginSite(), deps, true).call(renameCustomer, { id: "C-1" });
+      expect(calls).toHaveLength(2);
+      expect(loginCalls).toEqual([true]);
+    });
+  });
+
   test("GraphQL UNAUTHENTICATED counts as logged out", async () => {
     saved();
     const { fetch } = fakeFetch((r) =>
@@ -368,6 +521,53 @@ describe("auth none", () => {
     expect(boots).toBe(1);
     expect(loginCalls).toEqual([]);
     expect(loadSession(home.dir)!.headers).toEqual({ "x-csrf": "t1" });
+  });
+
+  test("ctx.cookies() in a hook: the cookies ctx.fetch's answers set, so a bootstrap needs no Set-Cookie parsing (#95, cold read)", async () => {
+    let seen: Record<string, string> = {};
+    const site = makeSite({
+      bootstrap: async (ctx) => {
+        await ctx.fetch(`${ctx.origin}/`);
+        seen = await ctx.cookies();
+        return { headers: { "x-csrf": seen.csrf ?? "" } };
+      },
+    });
+    const { fetch } = fakeFetch((r) =>
+      new URL(r.url).pathname === "/"
+        ? new Response("<html></html>", { headers: [["content-type", "text/html"], ["set-cookie", "csrf=t1; Path=/"], ["set-cookie", "other=x; Path=/; HttpOnly"]] })
+        : json({ data: { getCustomer: { id: "C", name: "n" } } }),
+    );
+    await client(site, makeDeps(fetch, home.dir).deps).call(getCustomer, { customerId: "C" });
+    expect(seen).toEqual({ csrf: "t1", other: "x" });
+  });
+
+  test("ctx.cookies() asks transport browser's Chrome with the session's cookie, and passes on a Failure (no Chrome) (review)", async () => {
+    // accounts runs with the saved session (bootstrap, by design, with an empty one).
+    saveSession(home.dir, { headers: { cookie: "sid=s1" }, ids: {} });
+    const asked: (string | undefined)[] = [];
+    const reads = loginSite({ accounts: async (ctx) => [(await ctx.cookies()).k ?? "none"] });
+    const { fetch } = fakeFetch(() => json({}));
+    const { deps } = makeDeps(fetch, home.dir);
+    deps.cookies = async (cookie) => (asked.push(cookie), { k: "v" });
+    expect(await client(reads, deps).listAccounts(true)).toEqual([{ id: "v" }]);
+    expect(asked).toEqual(["sid=s1"]);
+    deps.cookies = async () => {
+      throw new Failure("input", "Google Chrome was not found");
+    };
+    const e = await failure(client(reads, deps).listAccounts(true));
+    expect([e.kind, e.message]).toEqual(["input", "Google Chrome was not found"]);
+  });
+
+  test("a bootstrap rerun releases transport browser's Chrome first, so its ctx.cookies() is not the stale jar (review)", async () => {
+    let boots = 0;
+    const order: string[] = [];
+    const site = makeSite({ bootstrap: async () => (order.push("bootstrap"), { headers: { "x-csrf": `t${++boots}` } }) });
+    saveSession(home.dir, { headers: { "x-csrf": "stale" }, ids: {} });
+    const { fetch } = fakeFetch((r) => (r.headers["x-csrf"] === "t1" ? json({ data: { getCustomer: { id: "C", name: "n" } } }) : json({}, 401)));
+    const { deps } = makeDeps(fetch, home.dir);
+    deps.release = async () => void order.push("release");
+    await client(site, deps).call(getCustomer, { customerId: "C" });
+    expect(order).toEqual(["release", "bootstrap"]);
   });
 
   test("bootstrap runs before the first call and is cached", async () => {
@@ -437,6 +637,94 @@ describe("drift", () => {
       const f = await failure(client(makeSite(), makeDeps(fetch, home.dir).deps, true).call(renameOrder, { orderId: "1", name: "x" }));
       expect(f.fingerprint).toBe(`acme:shop:PATCH /api/orders/{orderId}:input-rejected::${status}`);
     }
+  });
+
+  describe("REST 400/422 that names the rejected fields", () => {
+    const reject = async (body: unknown, status = 400) => {
+      const { fetch } = fakeFetch(() => json(body, status));
+      return failure(client(makeSite(), makeDeps(fetch, home.dir).deps, true).call(renameOrder, { orderId: "1", name: "x" }));
+    };
+    const op = "acme:shop:PATCH /api/orders/{orderId}:input-rejected";
+
+    test("errors object: declared fields are named, other keys are {}, messages never leak", async () => {
+      const f = await reject({ errorMessages: [], errors: { name: 'Value "Kim Secret" is invalid', "kim@example.test": "x" } });
+      expect(f.fingerprint).toBe(`${op}:name:400`);
+      expect(f.diff).toEqual([
+        { path: "name", code: "rejected" },
+        { path: "{}", code: "rejected" },
+      ]);
+      expect(f.message).toContain("at name, {}");
+      const all = JSON.stringify({ m: f.message, d: f.details, diff: f.diff, fp: f.fingerprint });
+      expect(all).not.toContain("Kim Secret");
+      expect(all).not.toContain("kim@example.test");
+    });
+
+    test("a wrapped fieldErrors names the field; envelope keys, numbers and a route add nothing; no text leaks", async () => {
+      const f = await reject({ errors: { formErrors: ["Kim Secret"], fieldErrors: { name: ["Kim Secret is too short"] }, message: "Kim Secret", code: 7 } });
+      expect(f.fingerprint).toBe(`${op}:name:400`);
+      expect(f.diff).toEqual([{ path: "name", code: "rejected" }]);
+      expect(JSON.stringify({ m: f.message, d: f.details, diff: f.diff, fp: f.fingerprint })).not.toContain("Kim Secret");
+      for (const body of [{ errors: { message: "Kim Secret", code: "E1", status: 400 } }, { errors: { name: 5 } }, { errors: [{ path: "/api/orders/123" }] }]) {
+        const g = await reject(body);
+        expect(g.fingerprint).toBe(`${op}::400`);
+        expect(g.diff).toEqual([]);
+      }
+    });
+
+    test("a 422 works the same", async () => {
+      expect((await reject({ errors: { orderId: "no" } }, 422)).fingerprint).toBe(`${op}:orderId:422`);
+    });
+
+    test("errors array with field, path (string and array) and JSON:API pointer", async () => {
+      expect((await reject({ errors: [{ field: "name", message: "Kim Secret" }] })).fingerprint).toBe(`${op}:name:400`);
+      expect((await reject({ errors: [{ path: "name" }] })).fingerprint).toBe(`${op}:name:400`);
+      expect((await reject({ errors: [{ path: ["orderId", 0] }] })).fingerprint).toBe(`${op}:{}:400`);
+      expect((await reject({ errors: [{ source: { pointer: "/data/attributes/name" } }] })).fingerprint).toBe(`${op}:name:400`);
+      const mixed = await reject({ errors: [{ field: "name" }, { field: "name" }, { field: "nobody@example.test" }, { path: "name.first" }, 7, null] });
+      expect(mixed.diff).toEqual([
+        { path: "name", code: "rejected" },
+        { path: "{}", code: "rejected" },
+      ]);
+    });
+
+    test("fieldErrors object", async () => {
+      const f = await reject({ fieldErrors: { name: ["too short"], other: ["x"] } });
+      expect(f.fingerprint).toBe(`${op}:name:400`);
+    });
+
+    test("a nested path needs every segment declared; indices are []", async () => {
+      const nested = defineOperation({ ...renameOrder, variables: z.object({ orderId: z.string(), lines: z.array(z.object({ sku: z.string() })).optional() }) });
+      const { fetch } = fakeFetch(() => json({ errors: [{ path: ["lines", 3, "sku"] }, { field: "lines[2].sku" }, { field: "lines.nope" }] }, 400));
+      const f = await failure(client(makeSite(), makeDeps(fetch, home.dir).deps, true).call(nested, { orderId: "1" }));
+      expect(f.diff).toEqual([
+        { path: "lines[].sku", code: "rejected" },
+        { path: "{}", code: "rejected" },
+      ]);
+    });
+
+    test("at most 20 fields are reported", async () => {
+      const many = defineOperation({ ...renameOrder, rest: { method: "PATCH", path: "/api/x" }, variables: z.object(Object.fromEntries(Array.from({ length: 30 }, (_, i) => [`f${String(i).padStart(2, "0")}`, z.string()]))) });
+      const { fetch } = fakeFetch(() => json({ errors: Object.fromEntries(Array.from({ length: 30 }, (_, i) => [`f${String(i).padStart(2, "0")}`, "x"])) }, 400));
+      const f = await failure(client(makeSite(), makeDeps(fetch, home.dir).deps, true).call(many, Object.fromEntries(Array.from({ length: 30 }, (_, i) => [`f${String(i).padStart(2, "0")}`, "v"]))));
+      expect(f.diff).toHaveLength(20);
+      expect(f.message).toContain(" and 10 more");
+    });
+
+    test("a body with no recognizable fields stays generic", async () => {
+      for (const body of [{ error: "bad" }, { errors: [] }, { errors: "bad" }, { errors: {} }, "nope", null]) {
+        const f = await reject(body);
+        expect(f.fingerprint).toBe(`${op}::400`);
+        expect(f.diff).toEqual([]);
+        expect(f.message).not.toContain(" at ");
+      }
+    });
+
+    test("a GraphQL 400 is unchanged, even with an errors object", async () => {
+      const { fetch } = fakeFetch(() => json({ errors: { customerId: "no" } }, 400));
+      const f = await failure(client(makeSite(), makeDeps(fetch, home.dir).deps).call(listProducts, { customerId: "C" }));
+      expect(f.fingerprint).toBe("acme:shop:listProducts:input-rejected::400");
+      expect(f.diff).toEqual([]);
+    });
   });
 
   test("response failing Zod → drift zod, [] indices, type names only", async () => {
@@ -901,5 +1189,195 @@ describe("login.refresh: renew the session with plain fetch before Chrome (#94)"
     const theirs = saveSession(home.dir, { headers: { authorization: "Bearer new" }, ids: { customerId: "C-1" }, refresh: { token: "r2" }, savedAt: "2026-01-02T00:00:00.000Z" });
     await c.call(getCustomer, { customerId: "C-1" });
     expect(loadSession(home.dir)!.savedAt).toBe(theirs.savedAt);
+  });
+});
+
+describe("bot block: network with `blocked`, never Drift, no sign-in spent on it (#95)", () => {
+  const html = (body: string, status: number, headers: Record<string, string> = {}) =>
+    new Response(body, { status, headers: { "content-type": "text/html; charset=utf-8", ...headers } });
+  const challenge = "<!doctype html><title>Just a moment...</title><div id=cf-chl-widget>Checking your browser</div>";
+
+  const blocked = async (answer: () => Response, site = loginSite()) => {
+    saved();
+    const { fetch, calls } = fakeFetch(answer);
+    const { deps, loginCalls } = makeDeps(fetch, home.dir, [{ authorization: "Bearer new" }]);
+    const e = await failure(client(site, deps).call(getCustomer, { customerId: "C-1" }));
+    return { e, loginCalls, calls };
+  };
+
+  test("a 403 with Cloudflare's cf-mitigated header", async () => {
+    const { e, loginCalls, calls } = await blocked(() => html("<html>blocked</html>", 403, { "cf-mitigated": "challenge" }));
+    expect(e.kind).toBe("network");
+    expect(e.details.blocked).toBe("cloudflare");
+    expect(e.message).toMatch(/getCustomer: the site refused the request as automated traffic \(bot protection: cloudflare\)/);
+    expect(loginCalls).toEqual([]); // a sign-in would not get past it
+    expect(calls).toHaveLength(1); // nor would a retry
+  });
+
+  test("a challenge page with no header, as 403, 503 or even 200 where JSON is expected", async () => {
+    for (const status of [403, 503, 200]) {
+      const { e } = await blocked(() => html(challenge, status));
+      expect([status, e.kind, e.details.blocked]).toEqual([status, "network", "cloudflare"]);
+    }
+  });
+
+  test("other vendors' markers: DataDome, PerimeterX, Imperva, a captcha", async () => {
+    const cases: [Response, string][] = [
+      [html(`<script src="https://geo.captcha-delivery.com/captcha/"></script>`, 403), "datadome"],
+      [html(`<div id="px-captcha"></div>`, 403), "perimeterx"],
+      [html("Request unsuccessful. Incapsula incident ID: 0-0", 403), "imperva"],
+      [html(`<div class="g-recaptcha"></div>`, 403), "captcha"],
+    ];
+    for (const [res, vendor] of cases) expect((await blocked(() => res.clone())).e.details.blocked).toBe(vendor);
+  });
+
+  test("a plain refusal is still what it was: a JSON 403 is auth Drift after a sign-in, an HTML 404 is http Drift", async () => {
+    const auth = await blocked(() => json({ error: "forbidden" }, 403));
+    expect([auth.e.kind, auth.e.details.blocked]).toEqual(["drift", undefined]);
+    expect(auth.loginCalls).toEqual([true]);
+    const gone = await blocked(() => html("<html><h1>Not found</h1></html>", 404));
+    expect([gone.e.kind, gone.e.fingerprint]).toEqual(["drift", expect.stringContaining(":http::404")]);
+  });
+
+  test("blockSignal is not fooled by ordinary pages of protected sites (review)", () => {
+    const h = (o: Record<string, string> = {}) => new Headers({ "content-type": "text/html", ...o });
+    // DataDome tags ordinary answers with x-datadome too: a header alone is no block.
+    expect(blockSignal(401, h({ "x-datadome": "protected" }), "")).toBeUndefined();
+    expect(blockSignal(404, h({ "x-datadome": "protected" }), "<html>Not found</html>")).toBeUndefined();
+    // Cloudflare injects its challenge-platform script into ordinary pages.
+    expect(blockSignal(404, h(), `<html><h1>Not found</h1><script src="/cdn-cgi/challenge-platform/scripts/jsd/main.js"></script></html>`)).toBeUndefined();
+    // A sign-in page with a captcha on it is a sign-in page.
+    expect(blockSignal(401, h(), `<form action="/login"><div class="g-recaptcha"></div></form>`)).toBeUndefined();
+    expect(blockSignal(200, h(), `<form action="/login"><div class="g-recaptcha"></div></form>`)).toBeUndefined();
+    // Still blocks: a captcha wall, DataDome's captcha host, Cloudflare's challenge page.
+    expect(blockSignal(403, h(), `<div class="g-recaptcha"></div>`)).toBe("captcha");
+    expect(blockSignal(403, h({ "x-datadome": "protected" }), `<script src="https://geo.captcha-delivery.com/c.js"></script>`)).toBe("datadome");
+    expect(blockSignal(200, h(), "<title>Just a moment...</title>")).toBe("cloudflare");
+    // An API call is blocked with JSON by DataDome and PerimeterX (review 2).
+    expect(blockSignal(403, h(), { url: "https://geo.captcha-delivery.com/captcha/?initialCid=x" })).toBe("datadome");
+    expect(blockSignal(403, h(), { appId: "PXabc", blockScript: "/abc/captcha.js", jsClientSrc: "/abc/init.js" })).toBe("perimeterx");
+    expect(blockSignal(403, h(), { error: "forbidden" })).toBeUndefined();
+    expect(blockSignal(200, h(), { url: "https://geo.captcha-delivery.com/captcha/" })).toBeUndefined(); // data, not a refusal
+    // A sign-in page with a captcha stays a sign-in page, even as a 403 (review 2).
+    expect(blockSignal(403, h(), `<form action="/login"><input type="password" name="pw"><div class="g-recaptcha"></div></form>`)).toBeUndefined();
+    // Akamai writes its markers as HTML entities (review 2).
+    expect(blockSignal(403, h(), "<H1>Access Denied</H1> Reference&#32;&#35;18&#46;a1b2c3d4&#46;1700000000&#46;5e6f7a8b <P>https&#58;&#47;&#47;errors&#46;edgesuite&#46;net&#47;")).toBe("akamai");
+  });
+
+  test("a hook's own request that meets the wall is a block too, never a bug; renew keeps its token (review)", async () => {
+    const wall = () => html(challenge, 403);
+    // bootstrap's first request
+    const boot = makeSite({ bootstrap: async (ctx) => {
+      const res = await ctx.fetch(`${ctx.origin}/`);
+      if (!res.ok) throw new Error(`front page answered HTTP ${res.status}`);
+      return { headers: {} };
+    } });
+    const { fetch } = fakeFetch(wall);
+    const e = await failure(client(boot, makeDeps(fetch, home.dir).deps).call(getCustomer, { customerId: "C" }));
+    expect([e.kind, e.details.blocked]).toEqual(["network", "cloudflare"]);
+    // renew's request: only the token endpoint is walled, so Chrome signs in instead (review 2);
+    // the refresh token, which the site never took, stays.
+    saveSession(home.dir, { headers: { authorization: "Bearer old" }, ids: { customerId: "C-1" }, refresh: { token: "r1" } });
+    const renewing = loginSite({ login: { ...loginSite().login!, postLogin: async () => ({ customerId: "C-1" }), refresh: { renew: async (ctx) => {
+      const res = await ctx.fetch("https://auth.example.test/token");
+      return res.ok ? { headers: { authorization: "Bearer new" } } : null;
+    } } } });
+    const site401 = fakeFetch((r) =>
+      r.url.includes("auth.example.test") ? wall() : r.headers.authorization === "Bearer chrome" ? json({ data: { getCustomer: { id: "C-1", name: "n" } } }) : json({}, 401),
+    );
+    const d = makeDeps(site401.fetch, home.dir);
+    d.deps.login = async () => ({ headers: { authorization: "Bearer chrome" } });
+    const out: any = await client(renewing, d.deps).call(getCustomer, { customerId: "C-1" });
+    expect(out.data.getCustomer.id).toBe("C-1");
+    expect(d.notes.join("\n")).toContain("automated traffic");
+  });
+
+  test("a hook reads an answer as an Operation does: a JSON refusal is a block, an HTML page labelled JSON is read too (review 2)", async () => {
+    const boot = (answer: () => Response) => {
+      const site = makeSite({ bootstrap: async (ctx) => {
+        const res = await ctx.fetch(`${ctx.origin}/`);
+        if (!res.ok) throw new Error(`front page answered HTTP ${res.status}`);
+        return { headers: {} };
+      } });
+      return failure(client(site, makeDeps(fakeFetch(answer).fetch, home.dir).deps).call(getCustomer, { customerId: "C" }));
+    };
+    const dd = await boot(() => json({ url: "https://geo.captcha-delivery.com/captcha/?initialCid=x" }, 403));
+    expect([dd.kind, dd.details.blocked]).toEqual(["network", "datadome"]);
+    const mislabelled = await boot(() => new Response(challenge, { status: 403, headers: { "content-type": "application/json" } }));
+    expect([mislabelled.kind, mislabelled.details.blocked]).toEqual(["network", "cloudflare"]);
+  });
+
+  test("an ordinary page that mentions a reference number is no Akamai block (review 3)", () => {
+    const h = () => new Headers();
+    expect(blockSignal(200, h(), "<p>See Reference #2.1 in the terms</p>")).toBeUndefined();
+    expect(blockSignal(200, h(), "Order Reference #12345.0")).toBeUndefined();
+    expect(blockSignal(403, h(), "<H1>Access Denied</H1> Reference #18.5b3c1002.1700000000.1a2b3c")).toBe("akamai");
+  });
+
+  test("a hook's manual redirect to a captcha host is a block, not the hook's bug (review 3)", async () => {
+    const site = makeSite({ bootstrap: async (ctx) => {
+      const res = await ctx.fetch(`${ctx.origin}/`, { redirect: "manual" });
+      if (!res.ok) throw new Error(`front page answered HTTP ${res.status}`);
+      return { headers: {} };
+    } });
+    const { fetch } = fakeFetch(() => new Response(null, { status: 302, headers: { location: "https://geo.captcha-delivery.com/captcha/?initialCid=x" } }));
+    const e = await failure(client(site, makeDeps(fetch, home.dir).deps).call(getCustomer, { customerId: "C" }));
+    expect([e.kind, e.details.blocked]).toEqual(["network", "datadome"]);
+  });
+
+  test("a renew refused by the wall with no Chrome sign-in after it (the Setup page's check, MCP) reports the wall, not an expired sign-in (review 3)", async () => {
+    const wall = () => html(challenge, 403);
+    const site = loginSite({ login: { ...loginSite().login!, refresh: { renew: async (ctx) => {
+      const res = await ctx.fetch("https://auth.example.test/token");
+      return res.ok ? { headers: { authorization: "Bearer new" } } : null;
+    } } } });
+    const answer = (r: { url: string }) => (r.url.includes("auth.example.test") ? wall() : json({}, 401));
+    const session = { headers: { authorization: "Bearer old" }, ids: { customerId: "C-1" }, refresh: { token: "r1" }, savedAt: new Date().toISOString() };
+    // The Setup page's check: renew only.
+    const setup = await failure(new Client(site, makeDeps(fakeFetch(answer).fetch, home.dir).deps, { session, reauth: "renew" }).call(getCustomer, { customerId: "C-1" }));
+    expect([setup.kind, setup.details.blocked]).toEqual(["network", "cloudflare"]);
+    // MCP: the headless sign-in does not complete either.
+    saveSession(home.dir, session);
+    const mcp = makeDeps(fakeFetch(answer).fetch, home.dir);
+    mcp.deps.login = async () => null;
+    const viaMcp = await failure(new Client(site, mcp.deps, { surface: "mcp" }).call(getCustomer, { customerId: "C-1" }));
+    expect([viaMcp.kind, viaMcp.details.blocked]).toEqual(["network", "cloudflare"]);
+  });
+
+  test("a block that comes as a redirect to a captcha host is a block, not offsite Drift (review 2)", async () => {
+    saved();
+    const { fetch } = fakeFetch(() => new Response(null, { status: 302, headers: { location: "https://geo.captcha-delivery.com/captcha/?initialCid=x" } }));
+    const { deps } = makeDeps(fetch, home.dir);
+    const e = await failure(client(loginSite(), deps).call(getCustomer, { customerId: "C-1" }));
+    expect([e.kind, e.details.blocked]).toEqual(["network", "datadome"]);
+  });
+
+  test("ctx.cookies(): the session's cookie whatever the header's case, and only cookies of the site's own hosts (review 2)", async () => {
+    saveSession(home.dir, { headers: { Cookie: "sid=s1" }, ids: {} });
+    const asked: (string | undefined)[] = [];
+    let seen: Record<string, string> = {};
+    const site = loginSite({
+      accounts: async (ctx) => {
+        await ctx.fetch("https://auth.example.test/x");
+        await ctx.fetch(`${ctx.origin}/y`);
+        seen = await ctx.cookies();
+        return [];
+      },
+    });
+    const { fetch } = fakeFetch((r) =>
+      new Response("{}", { headers: [["content-type", "application/json"], ["set-cookie", r.url.includes("auth.example.test") ? "csrf=other-host" : "csrf=ours"]] }),
+    );
+    const { deps } = makeDeps(fetch, home.dir);
+    deps.cookies = async (cookie) => (asked.push(cookie), {});
+    await client(site, deps).listAccounts(true);
+    expect(asked).toEqual(["sid=s1"]);
+    expect(seen).toEqual({ csrf: "ours" });
+  });
+
+  test("a sessionProbe answered by a challenge is not a sign-out: no sign-in, the Operation reports the block", async () => {
+    const s = loginSite({ login: { ...loginSite().login!, sessionProbe: "/api/me" } });
+    const { e, loginCalls } = await blocked(() => html(challenge, 403), s);
+    expect([e.kind, e.details.blocked]).toEqual(["network", "cloudflare"]);
+    expect(loginCalls).toEqual([]);
   });
 });
