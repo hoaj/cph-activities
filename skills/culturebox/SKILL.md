@@ -2,7 +2,7 @@
 name: culturebox
 description: Use when the user asks about club nights, DJs or electronic music at Culture Box in Copenhagen on a day, a weekend or a period, or whether an artist plays there. Reads the club's own calendar on culture-box.com, soonest first, with opening hours, lineup per room, entrance price and links to the night's page and tickets. Culture Box is an 18+ nightclub.
 ---
-<!-- version: 0.19.1 -->
+<!-- version: 0.19.2 -->
 
 # culturebox
 
