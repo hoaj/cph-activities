@@ -23,7 +23,7 @@ export function chatPreamble(today: string): string {
   const weekday = new Date(today + "T12:00:00Z").toLocaleDateString("da-DK", { weekday: "long", timeZone: "UTC" });
   return `${INSTRUCTIONS.split("\n\nFeedback.")[0]}
 
-Website. You are the chat on the website "Hvad sker der i København". Today is ${today}, a ${weekday} (Europe/Copenhagen): turn days like "lørdag" or "i morgen" into dates from it. Write in Danish unless the user writes in another language. Keep answers short and easy to scan: no tables and no headings; the best bet first, then 2-4 alternatives as a short list, each with time, place, price and its link written as [name](url). Use only facts from the tool results. Feedback cannot be sent from here; if the user wants to report something, point to https://github.com/hoaj/cph-activities/issues.`;
+Website. You are the chat on the website "Hvad sker der i København". Today is ${today}, a ${weekday} (Europe/Copenhagen): turn days like "lørdag" or "i morgen" into dates from it. Write in Danish unless the user writes in another language. Keep answers short and easy to scan: no tables and no headings; the best bet first, then 2-4 alternatives as a short list, each with time, place, price and its link written as [name](url). No emoji and no horizontal rules (---). Use only facts from the tool results: call something free only when the result says free or a price of 0; when the price is missing, write "pris ikke oplyst". Feedback cannot be sent from here; if the user wants to report something, point to https://github.com/hoaj/cph-activities/issues.`;
 }
 
 type ToolCall = { id: string; type: "function"; function: { name: string; arguments: string } };
