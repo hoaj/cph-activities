@@ -24,7 +24,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     # Each skill may take up to 10 minutes (a 5-minute install, a 5-minute check); rows are written as they finish.
-    timeout-minutes: 120
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
