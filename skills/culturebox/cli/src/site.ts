@@ -8,7 +8,7 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "culturebox",
   repo: "hoaj/cph-activities",
-  version: "0.19.2",
+  version: "0.19.3",
   generatedWith: "0.23.0",
   origin: "https://culture-box.com",
   graphqlPath: "/graphql",
@@ -16,7 +16,7 @@ export default defineSite({
   needsChrome: false,
   // Whether the plugin repo's daily drift check (.github/workflows/drift-check.yml) runs this skill's read-only `check`. add-skill
   // asks; false keeps the skill out of it (a site that must not see traffic from CI, a short-lived sign-in).
-  dailyCheck: false,
+  dailyCheck: true,
   // When the site refuses plain fetch but answers a browser (a 403 or a challenge page where the
   // Capture saw JSON), send every request from a Chrome tab on the site instead. Slower: Chrome
   // starts once per run. browserWindow: true when it also refuses headless Chrome.
