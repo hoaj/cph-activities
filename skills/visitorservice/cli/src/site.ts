@@ -7,14 +7,14 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "visitorservice",
   repo: "hoaj/cph-activities",
-  version: "0.19.0",
+  version: "0.19.1",
   generatedWith: "0.23.0",
   origin: "https://visitorservice.kk.dk",
   graphqlPath: "/graphql",
   auth: "none" as Auth,
   needsChrome: false,
   // Whether the plugin repo's daily drift check (.github/workflows/drift-check.yml) runs this skill's read-only `check`.
-  dailyCheck: false,
+  dailyCheck: true,
   // Server-rendered Drupal pages, read through HTML Operations (operations/); no cookie or token needed.
   bootstrap: async () => ({ headers: {} }),
   // Non-GET requests the pages send that change no data, so check --writes lets them through.

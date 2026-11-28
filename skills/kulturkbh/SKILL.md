@@ -2,7 +2,7 @@
 name: kulturkbh
 description: Use when the user asks what is on in Copenhagen (talks, exhibitions, concerts, film, theatre, literature, food, active events), especially free or cheap ones, on a date, in a category or matching words. Lists events from kulturKBH (https://kulturkbh.dk) with a link to each event's own page, where the user reads more and books or buys tickets themselves.
 ---
-<!-- version: 0.19.0 -->
+<!-- version: 0.19.1 -->
 
 # kulturkbh
 

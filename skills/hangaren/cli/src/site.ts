@@ -8,14 +8,14 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "hangaren",
   repo: "hoaj/cph-activities",
-  version: "0.19.0",
+  version: "0.19.1",
   generatedWith: "0.23.0",
   origin: "https://www.hangaren.dk",
   graphqlPath: "/graphql",
   auth: "none" as Auth,
   needsChrome: false,
   // Whether the plugin repo's daily drift check (.github/workflows/drift-check.yml) runs this skill's read-only `check`.
-  dailyCheck: false,
+  dailyCheck: true,
   // A server-rendered Squarespace page, read through an HTML Operation (operations/); no cookie or token needed.
   bootstrap: async () => ({ headers: {} }),
   // Non-GET requests the pages send that change no data, so check --writes lets them through.
