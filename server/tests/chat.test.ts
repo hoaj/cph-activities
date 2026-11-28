@@ -24,6 +24,7 @@ test("the preamble keeps the server's instructions, drops feedback and names the
   expect(p).toContain("plan_outing");
   expect(p).not.toContain("send_feedback");
   expect(p).toContain("Today is 2026-11-28, a lørdag");
+  expect(p).toContain("No emoji");
 });
 
 test("a tool call runs against the real tools and the answer comes back", async () => {
