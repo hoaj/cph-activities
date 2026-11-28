@@ -2,14 +2,14 @@
 name: dmi
 description: Use when the user plans something in Copenhagen (Københavns and Frederiksberg Kommune) for a day or a few hours and the weather matters (outdoor vs indoor), or asks about the weather: DMI's forecast hour by hour for up to 10 days, with a dry/showers/wet verdict, temperature, wind and DMI's own text and warnings. Use the Commands table to see which Tasks it covers.
 ---
-<!-- version: 0.18.0 -->
+<!-- version: 0.19.0 -->
 
 # dmi
 
 - `bin/dmi` (`bin/dmi.exe` on Windows) in this skill's folder is a CLI for https://www.dmi.dk; below, `dmi` means that path. Every command prints exactly one JSON document on stdout; progress goes to stderr.
 - Write commands (marked in the table) print a dry run without `--confirm`. Show the user the dry run and get an explicit yes before rerunning with `--confirm`.
 - A Task that spans several logins or sites is never one command: chain commands from each CLI skill.
-- Session, network and input failures are handled here. Only Drift, bugs and missing Tasks go to the `cph-activities-feedback` skill.
+- Session, network and input failures are handled here. Only Drift, bugs (a bot block that keeps happening is one), and missing Tasks go to the `cph-activities-feedback` skill.
 
 ## Commands
 
@@ -36,6 +36,7 @@ A failure is `{"error": {"kind", "message", "next", ...}}` with a fixed exit cod
 | 3 | drift | Stop. Offer to file it with `cph-activities-feedback`, passing the envelope. File only on a yes |
 | 4 | session | Run `dmi login`; the user signs in in the Chrome window; rerun the command (only skills with `login` exit 4) |
 | 5 | network | Tell the user the site isn't responding, and stop |
+| 5, error has `blocked` | network | Tell the user the site refused the request as automated traffic, and stop; do not retry to find out. Ask the user whether it happens every time; if so, offer a bug report with `cph-activities-feedback` (the site blocks the CLI). File only on a yes |
 | The CLI can't do what the user asked | | Offer a feature request with `cph-activities-feedback` |
 | The user asks whether it works, or a failure looks odd | | Run `dmi check` and report what it prints |
 

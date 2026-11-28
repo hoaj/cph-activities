@@ -2,14 +2,14 @@
 name: billetto
 description: Use when the user asks what is on in Copenhagen at small venues, culture houses, clubs, talks, workshops, courses or parties, or searches for an event by words, date, category or free entry. Searches Billetto (https://billetto.dk) around the city centre, soonest first, with a link to each event's page where the user buys tickets themselves. Needs Google Chrome, which it opens unseen to read the search settings billetto.dk's own page uses.
 ---
-<!-- version: 0.18.0 -->
+<!-- version: 0.19.0 -->
 
 # billetto
 
 - `bin/billetto` (`bin/billetto.exe` on Windows) in this skill's folder is a CLI for https://billetto.dk; below, `billetto` means that path. Every command prints exactly one JSON document on stdout; progress goes to stderr.
 - Write commands (marked in the table) print a dry run without `--confirm`. Show the user the dry run and get an explicit yes before rerunning with `--confirm`.
 - A Task that spans several logins or sites is never one command: chain commands from each CLI skill.
-- Session, network and input failures are handled here. Only Drift, bugs and missing Tasks go to the `cph-activities-feedback` skill.
+- Session, network and input failures are handled here. Only Drift, bugs (a bot block that keeps happening is one), and missing Tasks go to the `cph-activities-feedback` skill.
 
 ## Commands
 
@@ -36,6 +36,7 @@ A failure is `{"error": {"kind", "message", "next", ...}}` with a fixed exit cod
 | 3 | drift | Stop. Offer to file it with `cph-activities-feedback`, passing the envelope. File only on a yes |
 | 4 | session | Run `billetto login`; the user signs in in the Chrome window; rerun the command (only skills with `login` exit 4) |
 | 5 | network | Tell the user the site isn't responding, and stop |
+| 5, error has `blocked` | network | Tell the user the site refused the request as automated traffic, and stop; do not retry to find out. Ask the user whether it happens every time; if so, offer a bug report with `cph-activities-feedback` (the site blocks the CLI). File only on a yes |
 | The CLI can't do what the user asked | | Offer a feature request with `cph-activities-feedback` |
 | The user asks whether it works, or a failure looks odd | | Run `billetto check` and report what it prints |
 
@@ -43,6 +44,13 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 
 ## When NOT to use
 
+- Buying tickets or signing up: the CLI never does it. Give the user the event's `url` so they buy themselves.
+- Big concerts and arenas sold through Ticketmaster: Billetto does not sell them.
+- Free and cheap museum and culture events picked by hand: that is the `kulturkbh` skill; ask both when the user wants everything.
+- Anything the Commands table does not list: offer a feature request instead of improvising, except what the lines at the end of this list name, which the user always does on the site.
+- Bulk scraping or automated polling of the site.
+- Remote mode (`mcp --http` on a host from `cph-activities-deploy`): the container has no Chrome, which this skill needs to read billetto.dk's search settings. Run it on your own machine.
+- `area` comes from the event's coordinates and the districts of Københavns Kommune plus Frederiksberg Kommune, or from its postcode when it has no coordinates; events `outside` Copenhagen are left out unless `--include-outside`.
 <!-- never:start -->
 - Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `PUT /1/*`; the user does it on the site.
 - Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `PATCH /1/*`; the user does it on the site.
@@ -52,10 +60,3 @@ On Drift the site has changed away from what the CLI understands. Stop the task 
 - Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `POST /1/indexes/*/clear`; the user does it on the site.
 - Billetto's search index is Billetto's: the CLI only searches it. The CLI never sends `POST /1/indexes/*/operation`; the user does it on the site.
 <!-- never:end -->
-- Buying tickets or signing up: the CLI never does it. Give the user the event's `url` so they buy themselves.
-- Big concerts and arenas sold through Ticketmaster: Billetto does not sell them.
-- Free and cheap museum and culture events picked by hand: that is the `kulturkbh` skill; ask both when the user wants everything.
-- Anything the Commands table does not list: offer a feature request instead of improvising.
-- Bulk scraping or automated polling of the site.
-- Remote mode (`mcp --http` on a host from `cph-activities-deploy`): the container has no Chrome, which this skill needs to read billetto.dk's search settings. Run it on your own machine.
-- `area` comes from the event's coordinates and the districts of Københavns Kommune plus Frederiksberg Kommune, or from its postcode when it has no coordinates; events `outside` Copenhagen are left out unless `--include-outside`.

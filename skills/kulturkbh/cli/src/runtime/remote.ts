@@ -9,6 +9,7 @@ import { getOAuthProtectedResourceMetadataUrl, mcpAuthRouter } from "@modelconte
 import { requireBearerAuth } from "@modelcontextprotocol/sdk/server/auth/middleware/bearerAuth.js";
 import { CallToolRequestSchema, ErrorCode, ListToolsRequestSchema, McpError } from "@modelcontextprotocol/sdk/types.js";
 import { Failure } from "./envelope";
+import { notResentNext, SIGN_IN_RENEWED, WRITE_NOT_RESENT, WRITE_SENT } from "./envelope";
 import { listedTools, toolResult, type McpTool, type ServerInfo } from "./mcp";
 import { OAuthStore, OwnerProvider, failedPage, returningPage, signedInPage } from "./owner-auth";
 import { redirectAllowed, type RemoteConfig } from "./remote-config";
@@ -76,7 +77,7 @@ function checkedStatus(dir: string, at: string, state: "valid" | "expired", uplo
  * request does not end a Session for good), so it is marked valid.
  */
 function sessionFailure(output: unknown, code: number, setup: SetupInfo): unknown {
-  const error = (output as { error?: { kind?: string; message?: string } } | null)?.error;
+  const error = (output as { error?: { kind?: string; message?: string; next?: string } } | null)?.error;
   if (!error || error.kind !== "session") {
     if (code === 0) {
       const status = readStatus(setup.dir);
@@ -84,11 +85,18 @@ function sessionFailure(output: unknown, code: number, setup: SetupInfo): unknow
     }
     return output;
   }
+  // A write that got a sign-in page and was not sent again (WRITE_SENT may stand in front, for an earlier write of the
+  // Task): the user checks on the site first, whatever the Owner does.
+  const notResent = typeof error.next === "string" && error.next.includes(WRITE_NOT_RESENT);
+  // Renewed here: the Session may work again, so it is not marked expired; the Owner is asked only if it ends this way again.
+  const renewed = notResent && error.next!.includes(SIGN_IN_RENEWED);
   const before = readStatus(setup.dir);
-  if (before.state !== "missing") {
+  if (before.state !== "missing" && !renewed) {
     checkedStatus(setup.dir, new Date(setup.now()).toISOString(), "expired", before.uploadedAt, String(error.message ?? ""));
   }
-  const next = `Ask the Owner to give this server a new Session at ${setup.url} (they run ${setup.skill} login on their computer and upload the session.json). Do not retry until they have.`;
+  const owner = `the Owner to give this server a new Session at ${setup.url} (they run ${setup.skill} login on their computer and upload the session.json)`;
+  const sent = (error as { writeSent?: boolean }).writeSent ? `${WRITE_SENT} ` : "";
+  const next = `${sent}${notResent ? notResentNext(renewed, `ask ${owner}`) : `Ask ${owner}. Do not retry until they have.`}`;
   return { error: { ...error, next } };
 }
 
@@ -101,8 +109,8 @@ function mcpServerFor(info: ServerInfo, tools: McpTool[], serial: <T>(fn: () => 
     const tool = byName.get(req.params.name);
     if (!tool) throw new McpError(ErrorCode.InvalidParams, `Unknown tool: ${req.params.name}`);
     // One call at a time, as over stdio, so two calls never refresh one Session together.
-    const { output, code } = await serial(() => tool.call((req.params.arguments ?? {}) as Record<string, unknown>));
-    return toolResult(sessionFailure(output, code, setup), code) as never;
+    const { output, code, matches } = await serial(() => tool.call((req.params.arguments ?? {}) as Record<string, unknown>));
+    return toolResult(sessionFailure(output, code, setup), code, tool, matches) as never;
   });
   return server;
 }

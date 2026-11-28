@@ -41,6 +41,11 @@ const server = Bun.serve({
       return new Response(`<!doctype html><script>document.cookie = "js_ok=1; path=/";</script>`, { headers: { "content-type": "text/html", "set-cookie": `csrf=${token}; Path=/` } });
     }
     if (url.pathname === "/account") return Response.redirect(`${loginHost.url.origin}/login`, 302);
+    // An ISO-8859-1 page whose only charset is in the page (#108): its bytes, not UTF-8 text.
+    if (url.pathname === "/latin1") {
+      const page = '<html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/></head><body><ul><li>København</li><li>Århus</li></ul></body></html>';
+      return new Response(Uint8Array.from([...page].map((c) => c.charCodeAt(0))), { headers: { "content-type": "text/html" } });
+    }
     if (!jsCookie) return new Response("blocked", { status: 403 });
     if (url.pathname === "/api/csrf") {
       const cookie = /(?:^|;\s*)csrf=([^;]+)/.exec(req.headers.get("cookie") ?? "")?.[1];
@@ -82,6 +87,15 @@ const renameOrder = defineOperation({
 const getMe = defineOperation({ name: "GET /api/me", effect: "read", rest: { method: "GET", path: "/api/me" }, variables: z.object({}), response: z.object({ id: z.string() }) });
 const getPrivate = defineOperation({ name: "GET /api/private", effect: "read", rest: { method: "GET", path: "/api/private" }, variables: z.object({}), response: z.object({ id: z.string() }) });
 
+const getTowns = defineOperation({
+  name: "GET /latin1",
+  effect: "read",
+  rest: { method: "GET", path: "/latin1" },
+  html: { fields: { towns: { css: "li", all: true } } },
+  variables: z.object({}),
+  response: z.object({ towns: z.array(z.string()) }),
+});
+
 const show = (name: string, op: ReturnType<typeof getOrder>) =>
   defineCommand({ name, summary: name, args: z.object({}), uses: [op], run: async (_a, ctx) => ctx.call(op, {}) });
 const ops = { current: getOrder("/api/orders/7"), old: getOrder("/api/old-orders/7"), csrf: getOrder("/api/csrf"), counter: getOrder("/api/counter"), sid: getOrder("/api/sid"), ok: getOrder("/api/ok") };
@@ -95,6 +109,7 @@ const commands = [
   defineCommand({ name: "order rename", summary: "rename", args: z.object({ name: z.string() }), uses: [renameOrder], run: async ({ name }, ctx) => ctx.call(renameOrder, { name }) }),
   defineCommand({ name: "me show", summary: "me", args: z.object({}), uses: [getMe], run: async (_a, ctx) => ctx.call(getMe, {}) }),
   defineCommand({ name: "private show", summary: "private", args: z.object({}), uses: [getPrivate], run: async (_a, ctx) => ctx.call(getPrivate, {}) }),
+  defineCommand({ name: "town list", summary: "towns", args: z.object({}), uses: [getTowns], run: async (_a, ctx) => ctx.call(getTowns, {}) }),
 ];
 
 let n = 0;
@@ -102,7 +117,7 @@ function app(overrides: Parameters<typeof makeSite>[0]): App {
   const site = makeSite({ skill: `shop${++n}`, origin: server.url.origin, needsChrome: true, ...overrides });
   return {
     site,
-    operations: [...Object.values(ops), renameOrder, getMe, getPrivate],
+    operations: [...Object.values(ops), renameOrder, getMe, getPrivate, getTowns],
     commands,
     deps: { env: { SITE_CLI_HOME: `${home.dir}/${site.skill}`, SITE_CLI_TEST: "1", SITE_CLI_NONINTERACTIVE: "1" }, retryDelays: [], note: () => {} },
   };
@@ -120,6 +135,14 @@ describe.skipIf(skip)("transport browser", () => {
     const { output, code } = await run(["order", "show"], app({ transport: "browser" }));
     expect({ output, code }).toEqual({ output: { id: "7", total: 5 }, code: 0 });
     expect(received.find((r) => r.path === "/api/orders/7")).toMatchObject({ method: "GET", jsCookie: true });
+  }, 60_000);
+
+  test("an ISO-8859-1 page read from the tab keeps æ, ø and å: its bytes are decoded by its charset (#108)", async () => {
+    // The page's Response.text() is always UTF-8, so the tab hands over the bytes instead.
+    for (const transport of [undefined, "browser"] as const) {
+      const { output, code } = await run(["town", "list"], app(transport ? { transport } : {}));
+      expect({ output, code, transport }).toEqual({ output: { towns: ["København", "Århus"] }, code: 0, transport });
+    }
   }, 60_000);
 
   test("a same-origin redirect is followed, as with fetch", async () => {
@@ -187,6 +210,77 @@ describe.skipIf(skip)("transport browser", () => {
     expect(code).toBe(0);
     const [first, second] = output as { id: string }[];
     expect(first!.id).not.toBe(second!.id);
+  }, 60_000);
+
+  test("a bootstrap reads its CSRF cookie with ctx.cookies() although the tab's own page load already took it (#95, cold read)", async () => {
+    // Like many sites, the front page sets the cookie only when the browser lacks it.
+    const tokens = new Set<string>();
+    const mini = miniSite(
+      () => new Response("<!doctype html><title>front</title>", { headers: { "content-type": "text/html" } }),
+      (req) => {
+        const path = new URL(req.url).pathname;
+        if (path === "/start") {
+          if (cookieOf(req, "csrf")) return new Response("<!doctype html>", { headers: { "content-type": "text/html" } });
+          const t = `t${tokens.size + 1}`;
+          tokens.add(t);
+          return new Response("<!doctype html>", { headers: { "content-type": "text/html", "set-cookie": `csrf=${t}; Path=/` } });
+        }
+        const c = cookieOf(req, "csrf");
+        return c && tokens.has(c) && req.headers.get("x-csrf-token") === c ? Response.json({ id: "ok", total: 0 }) : new Response("csrf", { status: 403 });
+      },
+    );
+    const a = app({
+      origin: mini.url.origin,
+      transport: "browser",
+      bootstrap: async (ctx) => {
+        await ctx.fetch(`${ctx.origin}/start`); // the tab may have loaded it already
+        await ctx.fetch(`${ctx.origin}/start`); // now it surely has: no Set-Cookie this time
+        const token = (await ctx.cookies()).csrf;
+        if (!token) throw new Error("no csrf cookie");
+        return { headers: { cookie: `csrf=${token}`, "x-csrf-token": token } };
+      },
+    });
+    expect(await run(["ok", "show"], a)).toEqual({ output: { id: "ok", total: 0 }, code: 0 });
+  }, 60_000);
+
+  test("ctx.cookies() holds a cookie the page load set on a narrower Path, as an XSRF cookie on /api (review 3)", async () => {
+    const mini = miniSite(
+      () => new Response("<!doctype html><title>front</title>", { headers: { "content-type": "text/html", "set-cookie": "xsrf=x1; Path=/api" } }),
+      (req) => (cookieOf(req, "xsrf") === "x1" && req.headers.get("x-xsrf") === "x1" ? Response.json({ id: "ok", total: 0 }) : new Response("xsrf", { status: 403 })),
+    );
+    const a = app({
+      origin: mini.url.origin,
+      transport: "browser",
+      bootstrap: async (ctx) => {
+        const token = (await ctx.cookies()).xsrf;
+        if (!token) throw new Error("no xsrf cookie");
+        return { headers: { "x-xsrf": token } };
+      },
+    });
+    expect(await run(["ok", "show"], a)).toEqual({ output: { id: "ok", total: 0 }, code: 0 });
+  }, 60_000);
+
+  test("ctx.cookies() on a site Chrome cannot load is a network failure, not an empty jar the hook takes for a bug (#95, review)", async () => {
+    // A listener that closes every connection as it opens: Chrome gets a real dropped connection, not a port its policy
+    // refuses (port 9 is on Chrome's restricted list: net::ERR_UNSAFE_PORT before any TCP attempt). The port stays held
+    // while the test runs, so a parallel file cannot take it the way it could a freed one.
+    const dropper = Bun.listen({ hostname: "127.0.0.1", port: 0, socket: { open: (s) => void s.end(), data() {} } });
+    try {
+      const a = app({
+        origin: `http://127.0.0.1:${dropper.port}`,
+        transport: "browser",
+        bootstrap: async (ctx) => {
+          const token = (await ctx.cookies()).csrf;
+          if (!token) throw new Error("no csrf cookie");
+          return { headers: { cookie: `csrf=${token}` } };
+        },
+      });
+      const r = await run(["ok", "show"], a);
+      expect(r.code).toBe(5);
+      expect((r.output as { error: { kind: string } }).error.kind).toBe("network");
+    } finally {
+      dropper.stop(true);
+    }
   }, 60_000);
 
   test("a front page that reloads itself once its script has run is waited for (review)", async () => {

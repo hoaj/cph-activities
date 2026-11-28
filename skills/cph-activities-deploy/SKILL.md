@@ -2,7 +2,7 @@
 name: cph-activities-deploy
 description: Deploys one of the cph-activities plugin's CLI skills as a remote MCP server on a host the user controls (Railway first), so claude.ai and the phone can use it, and walks the user through the Owner password, the Session upload and the connector. Use when the user wants cph-activities on claude.ai or on their phone, asks to deploy, host or put a cph-activities CLI skill online, or has trouble with its remote server, its Setup page or an expired Session there. Not for using cph-activities on the user's own computer (that is the CLI skill itself, or its local `mcp`), for anyone else's account, or for hosting it for other people.
 ---
-<!-- version: 0.18.0 -->
+<!-- version: 0.19.0 -->
 
 # cph-activities deploy
 
@@ -10,7 +10,7 @@ Runs one of this plugin's CLI skills in remote mode (`<skill> mcp --http`) on a 
 
 ## Pick the CLI skill
 
-The folders under `skills/` that have a `cli/` folder. Ask the Owner which one if there are several. Everything below runs from `skills/<skill>/`, which holds the `Dockerfile` and `.dockerignore`. Nothing host-specific lives there.
+The folders under `skills/` that have a `cli/` folder. Ask the Owner which one if there are several. A skill whose `cli/src/site.ts` sets `transport: "browser"` sends its requests from Chrome, which the image does not hold: its server refuses to start. Tell the Owner it cannot be deployed this way and stop. Everything below runs from `skills/<skill>/`, which holds the `Dockerfile` and `.dockerignore`. Nothing host-specific lives there.
 
 ## The contract
 
@@ -49,13 +49,18 @@ The guide covers the host's steps, in order, from the project to the first check
 
 ## Give the server a Session
 
-Skills whose Tasks need a sign-in only; the others skip this. On the Owner's computer run `bin/<skill> login`, then upload the `session.json` from the CLI skill's state dir (`~/.cph-activities/` when the skill is named `cph-activities`, else `~/.cph-activities-<skill>/`) on `https://<domain>/setup` with the Owner password. The page answers one of:
+Skills whose Tasks need a sign-in only; the others skip this. Which `session.json` to upload depends on the skill's `cli/src/site.ts`:
+
+- **No `login.refresh`:** on the Owner's computer run `bin/<skill> login`, then upload the `session.json` from the CLI skill's state dir (`~/.cph-activities/` when the skill is named `cph-activities`, else `~/.cph-activities-<skill>/`).
+- **With `login.refresh`:** the server needs a sign-in of its own. A refresh token usually works once, so a copy the computer also holds is spent by whichever renews first. Run `SITE_CLI_HOME="$(mktemp -d)" bin/<skill> login`: Chrome opens on a fresh profile, the Owner signs in, and the output's `stateDir` names a throwaway dir. Upload `<stateDir>/session.json`, then delete that dir (`rm -rf <stateDir>`). The computer's own sign-in is untouched.
+
+Upload it on `https://<domain>/setup` with the Owner password. The page answers one of:
 
 - "Session stored and checked against <site>." It works.
 - "Session stored, but not checked: ..." Fine. The page then shows the Session as unchecked.
 - "Not stored: <reason>." The old Session is kept. Fix the reason and upload again.
 
-The Session is never shown again; the Owner uploads a fresh one when it expires. Do not read or print the file yourself.
+The Session is never shown again; the Owner uploads a fresh one when it expires. A skill with `login.refresh` renews it on the server for as long as its refresh token lasts, so that is rare; upload a fresh one the same throwaway way. Do not read or print the file yourself.
 
 ## Connect claude.ai and the phone
 

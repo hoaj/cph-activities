@@ -118,7 +118,7 @@ describe("event list", () => {
 
 describe("lines", () => {
   test("a field with lines: true splits at <br> and block elements, and a source line break is a space", () => {
-    const fields = { text: { css: "div", lines: true } };
+    const fields = { text: { css: "div", lines: true as const } };
     const out = extractHtml("<div><p>One<br>Two\n   words</p><p> </p><ul><li>Three</li></ul><style>.x{}</style></div>", fields);
     expect(out).toEqual({ ok: true, value: { text: ["One", "Two words", "Three"] } });
     expect(extractHtml("<p>none</p>", fields)).toEqual({ ok: true, value: { text: [] } });

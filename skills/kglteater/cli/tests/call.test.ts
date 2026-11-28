@@ -355,6 +355,127 @@ describe("auth login", () => {
     expect(loginCalls).toEqual([true]);
   });
 
+  describe("a write redirected to a login host is never sent again (#123)", () => {
+    const toLoginHost = (status: number) => new Response(null, { status, headers: { location: "https://login.example.test/authorize?x=1" } });
+    for (const status of [302, 303, 307]) {
+      test(`a PATCH answered ${status} to a login host: one request, kind session, no sign-in`, async () => {
+        saved();
+        const { fetch, calls } = fakeFetch((r) => (r.headers.authorization === "Bearer new" ? json({ ok: true }) : toLoginHost(status)));
+        const { deps, loginCalls } = makeDeps(fetch, home.dir, [{ authorization: "Bearer new" }]);
+        const f = await failure(client(loginSite(), deps, true).call(renameOrder, { orderId: "7", name: "N" }));
+        expect(f.kind).toBe("session");
+        expect(f.message).toContain("not sent again");
+        expect(f.details.next).toContain("check on the site");
+        expect(f.details.next).toContain("Do not run it again until they confirm");
+        expect(calls.map((c) => c.method)).toEqual(["PATCH"]);
+        expect(loginCalls).toEqual([]);
+      });
+    }
+
+    test("a PATCH whose 303 leads on the origin, then to a login host, is not sent again either", async () => {
+      saved();
+      const { fetch, calls } = fakeFetch((r) => (r.method === "PATCH" ? new Response(null, { status: 303, headers: { location: "/done" } }) : toLoginHost(302)));
+      const { deps, loginCalls } = makeDeps(fetch, home.dir, [{ authorization: "Bearer new" }]);
+      const f = await failure(client(loginSite(), deps, true).call(renameOrder, { orderId: "7", name: "N" }));
+      expect(f.kind).toBe("session");
+      expect(calls.map((c) => c.method)).toEqual(["PATCH", "GET"]);
+      expect(loginCalls).toEqual([]);
+    });
+
+    test("a PATCH answered 401, signed in again and resent, then redirected to a login host: two requests, no further sign-in", async () => {
+      saved();
+      const { fetch, calls } = fakeFetch((r) => (r.headers.authorization === "Bearer new" ? toLoginHost(303) : json({}, 401)));
+      const { deps, loginCalls } = makeDeps(fetch, home.dir, [{ authorization: "Bearer new" }, { authorization: "Bearer newer" }]);
+      const f = await failure(client(loginSite(), deps, true).call(renameOrder, { orderId: "7", name: "N" }));
+      expect(f.kind).toBe("session");
+      expect(f.message).toContain("may have taken effect");
+      expect(calls.map((c) => c.method)).toEqual(["PATCH", "PATCH"]);
+      expect(loginCalls).toEqual([true]);
+    });
+
+    const withRefresh = (renew: (ctx: any) => Promise<unknown>) => loginSite({ login: { ...loginSite().login!, refresh: { renew: renew as never } } });
+
+    test("with login.refresh the session is still renewed (the write is not resent), so the next run is signed in", async () => {
+      saveSession(home.dir, { headers: { authorization: "Bearer old" }, ids: { customerId: "C-1" }, refresh: { token: "r1" } });
+      const { fetch, calls } = fakeFetch(() => toLoginHost(302));
+      const { deps, loginCalls } = makeDeps(fetch, home.dir);
+      const s = withRefresh(async (ctx) => (ctx.refresh.token === "r1" ? { headers: { ...ctx.headers, authorization: "Bearer new" }, refresh: { token: "r2" } } : null));
+      const f = await failure(client(s, deps, true).call(renameOrder, { orderId: "7", name: "N" }));
+      expect(f.kind).toBe("session");
+      expect(f.details.next).toContain("check on the site");
+      expect(f.details.next).toContain("the sign-in has been renewed");
+      expect(f.details.next).toContain("If it ends this way again, run `shop login` before running it again.");
+      expect(calls.map((c) => c.method)).toEqual(["PATCH"]);
+      expect(loginCalls).toEqual([]);
+      expect(loadSession(home.dir)!.headers.authorization).toBe("Bearer new");
+      expect(loadSession(home.dir)!.refresh).toEqual({ token: "r2" });
+    });
+
+    test("a renew hook that answers null or throws there keeps the write's own failure, with login in next", async () => {
+      for (const renew of [async () => null, async () => Promise.reject(new Error("boom"))]) {
+        home.cleanup();
+        home = tempHome();
+        saveSession(home.dir, { headers: { authorization: "Bearer old" }, ids: { customerId: "C-1" }, refresh: { token: "r1" } });
+        const { fetch, calls } = fakeFetch(() => toLoginHost(303));
+        const { deps, loginCalls } = makeDeps(fetch, home.dir);
+        const f = await failure(client(withRefresh(renew), deps, true).call(renameOrder, { orderId: "7", name: "N" }));
+        expect(f.kind).toBe("session");
+        expect(f.message).toContain("not sent again");
+        expect(f.details.next).toContain("`shop login`");
+        expect(calls.filter((c) => c.method === "PATCH")).toHaveLength(1);
+        expect(loginCalls).toEqual([]);
+      }
+    });
+  });
+
+  describe("a GraphQL write whose root field answered is not sent again on UNAUTHENTICATED below it (#123, reviews 2 and 3)", () => {
+    const renameCustomer = defineOperation({
+      name: "renameCustomer",
+      effect: "write",
+      graphql: "mutation renameCustomer($id: String!) { renameCustomer(id: $id) { id owner { email } } }",
+      variables: z.object({ id: z.string() }),
+      response: z.any(),
+    });
+    const unauthenticated = { message: "not signed in", path: ["renameCustomer", "owner"], extensions: { code: "UNAUTHENTICATED" } };
+
+    const ranButUnauthenticated = () => json({ data: { renameCustomer: { id: "C-1", owner: null } }, errors: [unauthenticated] });
+
+    test("root data plus an UNAUTHENTICATED field error: one request, no sign-in, kind session saying it may have taken effect", async () => {
+      saved();
+      const { fetch, calls } = fakeFetch(ranButUnauthenticated);
+      const { deps, loginCalls } = makeDeps(fetch, home.dir, [{ authorization: "Bearer new" }]);
+      const f = await failure(client(loginSite(), deps, true).call(renameCustomer, { id: "C-1" }));
+      expect(f.kind).toBe("session");
+      expect(f.message).toContain("not sent again");
+      expect(f.details.next).toStartWith("Tell the user the write may already have taken effect and was not sent again");
+      expect(f.details.next).toContain("`shop login`");
+      expect(calls).toHaveLength(1);
+      expect(loginCalls).toEqual([]);
+    });
+
+    test("with login.refresh it is renewed there, still not sent again", async () => {
+      saveSession(home.dir, { headers: { authorization: "Bearer old" }, ids: { customerId: "C-1" }, refresh: { token: "r1" } });
+      const { fetch, calls } = fakeFetch(ranButUnauthenticated);
+      const { deps, loginCalls } = makeDeps(fetch, home.dir);
+      const s = loginSite({ login: { ...loginSite().login!, refresh: { renew: async (ctx: any) => ({ headers: { ...ctx.headers, authorization: "Bearer new" }, refresh: { token: "r2" } }) } } });
+      const f = await failure(client(s, deps, true).call(renameCustomer, { id: "C-1" }));
+      expect(f.kind).toBe("session");
+      expect(f.details.next).toContain("the sign-in has been renewed");
+      expect(calls).toHaveLength(1);
+      expect(loginCalls).toEqual([]);
+      expect(loadSession(home.dir)!.headers.authorization).toBe("Bearer new");
+    });
+
+    test("UNAUTHENTICATED with a null root (the mutation did not run) still signs in and sends it again", async () => {
+      saved();
+      const { fetch, calls } = fakeFetch((r) => (r.headers.authorization === "Bearer new" ? json({ data: { renameCustomer: { id: "C-1", owner: null } } }) : json({ data: { renameCustomer: null }, errors: [unauthenticated] })));
+      const { deps, loginCalls } = makeDeps(fetch, home.dir, [{ authorization: "Bearer new" }]);
+      await client(loginSite(), deps, true).call(renameCustomer, { id: "C-1" });
+      expect(calls).toHaveLength(2);
+      expect(loginCalls).toEqual([true]);
+    });
+  });
+
   test("GraphQL UNAUTHENTICATED counts as logged out", async () => {
     saved();
     const { fetch } = fakeFetch((r) =>
@@ -516,6 +637,94 @@ describe("drift", () => {
       const f = await failure(client(makeSite(), makeDeps(fetch, home.dir).deps, true).call(renameOrder, { orderId: "1", name: "x" }));
       expect(f.fingerprint).toBe(`acme:shop:PATCH /api/orders/{orderId}:input-rejected::${status}`);
     }
+  });
+
+  describe("REST 400/422 that names the rejected fields", () => {
+    const reject = async (body: unknown, status = 400) => {
+      const { fetch } = fakeFetch(() => json(body, status));
+      return failure(client(makeSite(), makeDeps(fetch, home.dir).deps, true).call(renameOrder, { orderId: "1", name: "x" }));
+    };
+    const op = "acme:shop:PATCH /api/orders/{orderId}:input-rejected";
+
+    test("errors object: declared fields are named, other keys are {}, messages never leak", async () => {
+      const f = await reject({ errorMessages: [], errors: { name: 'Value "Kim Secret" is invalid', "kim@example.test": "x" } });
+      expect(f.fingerprint).toBe(`${op}:name:400`);
+      expect(f.diff).toEqual([
+        { path: "name", code: "rejected" },
+        { path: "{}", code: "rejected" },
+      ]);
+      expect(f.message).toContain("at name, {}");
+      const all = JSON.stringify({ m: f.message, d: f.details, diff: f.diff, fp: f.fingerprint });
+      expect(all).not.toContain("Kim Secret");
+      expect(all).not.toContain("kim@example.test");
+    });
+
+    test("a wrapped fieldErrors names the field; envelope keys, numbers and a route add nothing; no text leaks", async () => {
+      const f = await reject({ errors: { formErrors: ["Kim Secret"], fieldErrors: { name: ["Kim Secret is too short"] }, message: "Kim Secret", code: 7 } });
+      expect(f.fingerprint).toBe(`${op}:name:400`);
+      expect(f.diff).toEqual([{ path: "name", code: "rejected" }]);
+      expect(JSON.stringify({ m: f.message, d: f.details, diff: f.diff, fp: f.fingerprint })).not.toContain("Kim Secret");
+      for (const body of [{ errors: { message: "Kim Secret", code: "E1", status: 400 } }, { errors: { name: 5 } }, { errors: [{ path: "/api/orders/123" }] }]) {
+        const g = await reject(body);
+        expect(g.fingerprint).toBe(`${op}::400`);
+        expect(g.diff).toEqual([]);
+      }
+    });
+
+    test("a 422 works the same", async () => {
+      expect((await reject({ errors: { orderId: "no" } }, 422)).fingerprint).toBe(`${op}:orderId:422`);
+    });
+
+    test("errors array with field, path (string and array) and JSON:API pointer", async () => {
+      expect((await reject({ errors: [{ field: "name", message: "Kim Secret" }] })).fingerprint).toBe(`${op}:name:400`);
+      expect((await reject({ errors: [{ path: "name" }] })).fingerprint).toBe(`${op}:name:400`);
+      expect((await reject({ errors: [{ path: ["orderId", 0] }] })).fingerprint).toBe(`${op}:{}:400`);
+      expect((await reject({ errors: [{ source: { pointer: "/data/attributes/name" } }] })).fingerprint).toBe(`${op}:name:400`);
+      const mixed = await reject({ errors: [{ field: "name" }, { field: "name" }, { field: "nobody@example.test" }, { path: "name.first" }, 7, null] });
+      expect(mixed.diff).toEqual([
+        { path: "name", code: "rejected" },
+        { path: "{}", code: "rejected" },
+      ]);
+    });
+
+    test("fieldErrors object", async () => {
+      const f = await reject({ fieldErrors: { name: ["too short"], other: ["x"] } });
+      expect(f.fingerprint).toBe(`${op}:name:400`);
+    });
+
+    test("a nested path needs every segment declared; indices are []", async () => {
+      const nested = defineOperation({ ...renameOrder, variables: z.object({ orderId: z.string(), lines: z.array(z.object({ sku: z.string() })).optional() }) });
+      const { fetch } = fakeFetch(() => json({ errors: [{ path: ["lines", 3, "sku"] }, { field: "lines[2].sku" }, { field: "lines.nope" }] }, 400));
+      const f = await failure(client(makeSite(), makeDeps(fetch, home.dir).deps, true).call(nested, { orderId: "1" }));
+      expect(f.diff).toEqual([
+        { path: "lines[].sku", code: "rejected" },
+        { path: "{}", code: "rejected" },
+      ]);
+    });
+
+    test("at most 20 fields are reported", async () => {
+      const many = defineOperation({ ...renameOrder, rest: { method: "PATCH", path: "/api/x" }, variables: z.object(Object.fromEntries(Array.from({ length: 30 }, (_, i) => [`f${String(i).padStart(2, "0")}`, z.string()]))) });
+      const { fetch } = fakeFetch(() => json({ errors: Object.fromEntries(Array.from({ length: 30 }, (_, i) => [`f${String(i).padStart(2, "0")}`, "x"])) }, 400));
+      const f = await failure(client(makeSite(), makeDeps(fetch, home.dir).deps, true).call(many, Object.fromEntries(Array.from({ length: 30 }, (_, i) => [`f${String(i).padStart(2, "0")}`, "v"]))));
+      expect(f.diff).toHaveLength(20);
+      expect(f.message).toContain(" and 10 more");
+    });
+
+    test("a body with no recognizable fields stays generic", async () => {
+      for (const body of [{ error: "bad" }, { errors: [] }, { errors: "bad" }, { errors: {} }, "nope", null]) {
+        const f = await reject(body);
+        expect(f.fingerprint).toBe(`${op}::400`);
+        expect(f.diff).toEqual([]);
+        expect(f.message).not.toContain(" at ");
+      }
+    });
+
+    test("a GraphQL 400 is unchanged, even with an errors object", async () => {
+      const { fetch } = fakeFetch(() => json({ errors: { customerId: "no" } }, 400));
+      const f = await failure(client(makeSite(), makeDeps(fetch, home.dir).deps).call(listProducts, { customerId: "C" }));
+      expect(f.fingerprint).toBe("acme:shop:listProducts:input-rejected::400");
+      expect(f.diff).toEqual([]);
+    });
   });
 
   test("response failing Zod → drift zod, [] indices, type names only", async () => {
