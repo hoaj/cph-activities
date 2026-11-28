@@ -7,7 +7,7 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "visitorservice",
   repo: "hoaj/cph-activities",
-  version: "0.19.2",
+  version: "0.19.3",
   generatedWith: "0.23.0",
   origin: "https://visitorservice.kk.dk",
   graphqlPath: "/graphql",
