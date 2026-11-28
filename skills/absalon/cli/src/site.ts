@@ -7,7 +7,7 @@ export default defineSite({
   plugin: "cph-activities",
   skill: "absalon",
   repo: "hoaj/cph-activities",
-  version: "0.19.3",
+  version: "0.19.4",
   generatedWith: "0.23.0",
   origin: "https://absaloncph.dk",
   graphqlPath: "/graphql",

@@ -2,7 +2,7 @@
 name: visitorservice
 description: Use when the user asks which Christmas markets (julemarkeder) are open in Copenhagen (Københavns and Frederiksberg Kommune) on a day, a weekend or in December. Reads the municipality's Copenhagen Visitor Service calendar: each open day's hours, place, price, indoor or outdoor when the page says so, and a link. Has no flea markets.
 ---
-<!-- version: 0.19.3 -->
+<!-- version: 0.19.4 -->
 
 # visitorservice
 
