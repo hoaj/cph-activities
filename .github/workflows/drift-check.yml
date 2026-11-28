@@ -45,7 +45,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           # No secrets: every CLI skill here is auth: none. A login skill's session goes in as its own variable,
-          # SESSION_<PLUGIN>_<SKILL>: ${{ secrets.SESSION_<PLUGIN>_<SKILL> }}, never as toJSON(secrets): GitHub holds
+          # set from secrets.SESSION_<PLUGIN>_<SKILL>, never as toJSON(secrets): GitHub holds
           # a run that hands the job every secret for approval (action_required), so it never ran on its own.
           SITE_CLI_CHROME: /usr/bin/google-chrome
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

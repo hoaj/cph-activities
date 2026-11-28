@@ -2,7 +2,7 @@
 name: kultunaut
 description: Use when the user asks what is on in Copenhagen (Københavns and Frederiksberg Kommune) on a day or in a period. KultuNaut is the broadest calendar (concerts, theatre, exhibitions, talks, sport, church, children), and every event links to its KultuNaut page. Gives no prices.
 ---
-<!-- version: 0.19.3 -->
+<!-- version: 0.19.4 -->
 
 # kultunaut
 

@@ -2,7 +2,7 @@
 name: hangaren
 description: Use when the user asks for club nights, DJs or electronic music at Hangaren (Refshaleøen, Copenhagen), or what is on there on a day, a weekend or in a period, by time, price or artist. Reads Hangaren's own events page on hangaren.dk: start and end, line-up, entry price and age limit when stated, and links to the event and its ticket seller. Read only.
 ---
-<!-- version: 0.19.3 -->
+<!-- version: 0.19.4 -->
 
 # hangaren
 
