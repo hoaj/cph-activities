@@ -2,7 +2,7 @@
 name: cph-activities-feedback
 description: Files a problem with the cph-activities plugin as a GitHub issue on hoaj/cph-activities, after the user approves the text. Use when a cph-activities CLI exits 3 (drift) or 1 (bug), when the plugin keeps being refused as automated traffic (exit 5 with `blocked`; a bug) or cannot do a Task the user needs (a feature request), or when the user says "report this" about it. Not for exit 2 (input), 4 (session) or other exit 5 (network).
 ---
-<!-- version: 0.19.0 -->
+<!-- version: 0.19.1 -->
 
 # cph-activities feedback
 

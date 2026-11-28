@@ -195,6 +195,7 @@
     let html = "", list = false;
     for (const raw of esc(text).split("\n")) {
       const line = raw.trim().replace(/^#+\s*/, "");
+      if (/^[-*_]{3,}$/.test(line)) continue;
       const item = /^(?:[-*•]|\d+[.)])\s+(.*)$/.exec(line);
       if (item) { if (!list) { html += "<ul>"; list = true; } html += "<li>" + inline(item[1]) + "</li>"; continue; }
       if (list) { html += "</ul>"; list = false; }
