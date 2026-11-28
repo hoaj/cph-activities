@@ -15,7 +15,8 @@
 //
 // A skill whose site.ts says `dailyCheck: false` (the maintainer's answer when add-skill asked) is left out.
 // A login skill is checked only when the secret SESSION_<PLUGIN>_<SKILL> holds its session.json
-// (raw JSON or base64); the workflow passes all secrets as SECRETS_JSON. Without it the skill is
+// (raw JSON or base64); the workflow passes it, and ACCOUNT_<PLUGIN>_<SKILL>, as env variables of the same name
+// (SECRETS_JSON, a JSON object of secrets, is still read but the workflow no longer sets it). Without it the skill is
 // skipped with a notice. The check's output carries shapes and type names only, never site values,
 // and this script prints none of it beyond the Fingerprints and type-only diffs the issues hold.
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -362,7 +363,7 @@ export function main(argv: string[], exec: Exec = realExec, env: Record<string, 
     if (o.result === "install" || o.kind === "crash" || o.kind === "secret" || (o.unfiled ?? 0) > 0) red = true;
     console.error(`  ${o.result}: ${o.detail}`);
     // A login skill without its secret is a notice, not a failure: the run stays green.
-    if (o.result === "no-session") console.log(`::notice title=${s.skill} not checked::${s.skill} is a login skill and the secret ${secretName(s)} is not set (README: Daily drift check).`);
+    if (o.result === "no-session") console.log(`::notice title=${s.skill} not checked::${s.skill} is a login skill and the secret ${secretName(s)} is not set or not passed in by drift-check.yml (README: Daily drift check).`);
     let issues: number[] = [];
     if (["drift", "error", "session"].includes(o.result)) {
       // A GitHub failure must not lose the run: log it, note it in the summary, go on.

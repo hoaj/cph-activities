@@ -3,7 +3,8 @@
 # Fingerprint and labelled drift, as the Feedback skill files it, so `fix` picks it up and a user's
 # report of the same Drift lands on the same issue; a failing check opens a bug, an expired CI
 # session a ci-session issue. A login skill is checked only with its session in the secret
-# SESSION_<PLUGIN>_<SKILL> (README: Daily drift check); without it the skill is skipped with a notice.
+# SESSION_<PLUGIN>_<SKILL>, passed to the check step as its own env variable below (README: Daily drift
+# check); without it the skill is skipped with a notice.
 # Only for a plugin in its own repo: a shared repo of plugins schedules its own check.
 name: drift-check
 
@@ -44,9 +45,10 @@ jobs:
       - name: Check every CLI skill
         env:
           GH_TOKEN: ${{ github.token }}
-          # No secrets: every CLI skill here is auth: none. A login skill's session goes in as its own variable,
-          # set from secrets.SESSION_<PLUGIN>_<SKILL>, never as toJSON(secrets): GitHub holds
-          # a run that hands the job every secret for approval (action_required), so it never ran on its own.
+          # No secrets: every CLI skill here is auth: none. A login skill's SESSION_<PLUGIN>_<SKILL> (and, with
+          # several accounts, ACCOUNT_<PLUGIN>_<SKILL>) each go in as an env variable of the same name, set from
+          # secrets.<name>. Never toJSON(secrets): GitHub holds a run that hands the job every secret for
+          # approval (action_required), so it never ran on its own.
           SITE_CLI_CHROME: /usr/bin/google-chrome
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         # xvfb-run: a skill with browserWindow: true opens a Chrome window, which needs a display.

@@ -80,7 +80,7 @@ Changes are made with the site-cli-creator generator (`add-skill`, `add-task`, `
 
 `.github/workflows/drift-check.yml` runs every CLI skill's read-only `check` against its site each morning (and on demand: `gh workflow run drift-check.yml`), with the released binary. Drift opens an issue titled with its Fingerprint and labelled `drift`, the same issue a user's report would file, for `fix`; a failing check opens a `bug`, and an expired CI session a `ci-session` issue.
 
-Every CLI skill is in it unless its `site.ts` says `dailyCheck: false` (the answer you gave when it was added; change it there and bump to change it). A skill with a login is checked only with a CI session stored as the secret `SESSION_<PLUGIN>_<SKILL>` (upper case, `-` as `_`); until then it is skipped with a notice. Make it with a sign-in of its own, never a copy of your own `session.json` (the two would share a refresh token, and whichever renews first spends the other's):
+Every CLI skill is in it unless its `site.ts` says `dailyCheck: false` (the answer you gave when it was added; change it there and bump to change it). A skill with a login is checked only with a CI session stored as the secret `SESSION_<PLUGIN>_<SKILL>` (upper case, `-` as `_`) and passed to the check step in `drift-check.yml` as an env variable of the same name (`SESSION_<PLUGIN>_<SKILL>: ${{ secrets.SESSION_<PLUGIN>_<SKILL> }}`; never `toJSON(secrets)`, which makes GitHub hold every run for approval); until then it is skipped with a notice. Make it with a sign-in of its own, never a copy of your own `session.json` (the two would share a refresh token, and whichever renews first spends the other's):
 
 ```sh
 (cd skills/<skill> && export SITE_CLI_HOME="$(mktemp -d)" && bin/<skill> login && gh secret set SESSION_<PLUGIN>_<SKILL> --repo hoaj/cph-activities < "$SITE_CLI_HOME/session.json"; rm -rf "$SITE_CLI_HOME")
@@ -88,6 +88,6 @@ Every CLI skill is in it unless its `site.ts` says `dailyCheck: false` (the answ
 
 A site whose sign-in lasts only hours, or that rotates its refresh token on every renewal, needs this again when the check opens a `ci-session` issue.
 
-A CI login with several accounts is checked for the one in the secret `ACCOUNT_<PLUGIN>_<SKILL>` (an id as `--account` takes it); without it, `check` stops at the account choice and the run opens a `check: … (input)` issue.
+A CI login with several accounts is checked for the one in the secret `ACCOUNT_<PLUGIN>_<SKILL>` (an id as `--account` takes it), passed in the same way; without it, `check` stops at the account choice and the run opens a `check: … (input)` issue.
 
 A run that could not check a skill at all (no released binary to install, a crash) is red, so GitHub tells you. GitHub turns a scheduled workflow off after 60 days with no activity in the repo; turn it back on with `gh workflow enable drift-check.yml --repo hoaj/cph-activities`.
